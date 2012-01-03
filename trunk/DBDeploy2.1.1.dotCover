@@ -1,0 +1,11 @@
+<Configuration>
+  <CoverageFilters>
+    <IncludeFilters>
+      <Filter ModuleMask="*" ClassMask="*" FunctionMask="*" />
+    </IncludeFilters>
+    <ExcludeFilters />
+  </CoverageFilters>
+  <SnapshotDialog>
+    <InitialDirectory>C:\Source\Veracity\trunk\Utilities\DBDeploy\DBDeploy2</InitialDirectory>
+  </SnapshotDialog>
+</Configuration>
