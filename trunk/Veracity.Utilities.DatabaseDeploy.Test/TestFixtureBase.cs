@@ -31,7 +31,6 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
         /// </summary>
         private void TurnOnLogging()
         {
-
             log4net.Repository.ILoggerRepository[] repositories = log4net.LogManager.GetAllRepositories();
             IList<IAppender> toRemove;
 
@@ -82,8 +81,6 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
             {
                 rootLogger.RemoveAppender(appender);
             }
-
         }
-
     }
 }

@@ -12,22 +12,28 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
     using System;
     using System.Globalization;
 
-    using Veracity.Utilities.DatabaseDeploy.ScriptGeneration;
-
     using log4net;
+
+    using Veracity.Utilities.DatabaseDeploy.ScriptGeneration;
 
     /// <summary>
     /// Replaces Tokens in strings.
     /// </summary>
     public class TokenReplacer : ITokenReplacer
     {
+        #region Constants and Fields
+
         /// <summary>
         ///   Creates the default logger
         /// </summary>
         private static readonly ILog log = LogManager.GetLogger(typeof(TokenReplacer));
 
+        #endregion
+
+        #region Constructors and Destructors
+
         /// <summary>
-        /// Initializes a new instance of the TokenReplacer class
+        ///   Initializes a new instance of the TokenReplacer class
         /// </summary>
         public TokenReplacer()
         {
@@ -39,21 +45,33 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
             this.Script = new ScriptFile();
         }
 
+        #endregion
+
+        #region Public Properties
+
         /// <summary>
-        /// Gets or sets the current version.
+        ///   Gets or sets the current version.
         /// </summary>
         public int CurrentVersion { get; set; }
 
         /// <summary>
-        /// Gets or sets the current script being worked on.
+        ///   Gets or sets the current script being worked on.
         /// </summary>
         public IScriptFile Script { get; set; }
 
+        #endregion
+
+        #region Public Methods
+
         /// <summary>
-        /// Performs a replacement on the string that is passed in.  This assumes that any properties, such as current version, that are needed have been set.
+        /// Performs a replacement on the string that is passed in. This assumes that any properties, such as current version, that are needed have been set.
         /// </summary>
-        /// <param name="stringToParse">The string to parse.</param>
-        /// <returns>A string that has been fully replaced.</returns>
+        /// <param name="stringToParse">
+        /// The string to parse. 
+        /// </param>
+        /// <returns>
+        /// A string that has been fully replaced. 
+        /// </returns>
         public string Replace(string stringToParse)
         {
             if (log.IsDebugEnabled)
@@ -78,5 +96,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
 
             return result;
         }
+
+        #endregion
     }
 }

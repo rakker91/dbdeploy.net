@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="StringReplacer.cs" company="Veracity Solutions, Inc.">
+// <copyright file="StringReplaceExtension.cs" company="Veracity Solutions, Inc.">
 //   Copyright (c) Veracity Solutions, Inc. 2012.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
 // </copyright>
 //  <summary>
@@ -31,7 +31,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
         /// Performs a string replacement on the given string.
         /// </summary>
         /// <param name="value">
-        /// The value that will have replacement done against it.
+        /// The value that will have replacement done against it. 
         /// </param>
         /// <param name="oldValue">
         /// What to search for in the string. 

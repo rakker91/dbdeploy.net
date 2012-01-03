@@ -14,6 +14,7 @@ namespace Veracity.Utilities.DatabaseDeploy.FileManagement
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -46,6 +47,7 @@ namespace Veracity.Utilities.DatabaseDeploy.FileManagement
         /// <summary>
         /// A proxy for certain IO functions to make this class more testable.
         /// </summary>
+        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed. Suppression is OK here.")]
         private readonly IIoProxy ioProxy;
 
         /// <summary>
@@ -64,6 +66,7 @@ namespace Veracity.Utilities.DatabaseDeploy.FileManagement
         /// The configuration service. 
         /// </param>
         /// <param name="ioProxy">Represents a proxy for certain file system functions</param>
+        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed. Suppression is OK here.")]
         public FileService(IConfigurationService configurationService, IIoProxy ioProxy)
         {
             if (log.IsDebugEnabled)
