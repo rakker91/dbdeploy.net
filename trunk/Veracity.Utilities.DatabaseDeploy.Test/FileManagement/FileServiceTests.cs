@@ -136,13 +136,13 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.FileManagement
         [Test]
         public void ThatGetScriptFilesReturnsFileList()
         {
-            var ioProxyMock = new Mock<IIoProxy>(MockBehavior.Strict);
+            var mock = new Mock<IIoProxy>(MockBehavior.Strict);
             IConfigurationService config = new ConfigurationService();
             this.SetupConfiguration(config);
 
-            ioProxyMock.Setup(i => i.GetFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>())).Returns(this.GetFiles());
+            mock.Setup(i => i.GetFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>())).Returns(this.GetFiles());
 
-            IFileService fileService = new FileService(config, ioProxyMock.Object);
+            IFileService fileService = new FileService(config, mock.Object);
 
             IDictionary<int, IScriptFile> scripts = fileService.GetScriptFiles();
 
@@ -156,13 +156,13 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.FileManagement
         [Test]
         public void ThatDuplicateScriptsAreDetected()
         {
-            var ioProxyMock = new Mock<IIoProxy>(MockBehavior.Strict);
+            var mock = new Mock<IIoProxy>(MockBehavior.Strict);
             IConfigurationService config = new ConfigurationService();
             this.SetupConfiguration(config);
 
-            ioProxyMock.Setup(i => i.GetFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>())).Returns(this.GetFilesWithDuplicate());
+            mock.Setup(i => i.GetFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>())).Returns(this.GetFilesWithDuplicate());
 
-            IFileService fileService = new FileService(config, ioProxyMock.Object);
+            IFileService fileService = new FileService(config, mock.Object);
 
             Assert.Throws<System.Exception>(() => fileService.GetScriptFiles());
         }
@@ -175,16 +175,16 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.FileManagement
         {
             string passedFileName = string.Empty;
             string expectedContents = "ChangeScript";
-            var ioProxyMock = new Mock<IIoProxy>(MockBehavior.Strict);
+            var mock = new Mock<IIoProxy>(MockBehavior.Strict);
             IConfigurationService config = new ConfigurationService();
             this.SetupConfiguration(config);
-            IFileService fileService = new FileService(config, ioProxyMock.Object);
+            IFileService fileService = new FileService(config, mock.Object);
 
             using (MemoryStream stream = new MemoryStream())
             {
                 using (StreamWriter writer = new StreamWriter(stream))
                 {
-                    ioProxyMock.Setup(i => i.GetStreamWriter(It.IsAny<string>())).Callback<string>(name => { passedFileName = name; }).Returns(writer);
+                    mock.Setup(i => i.GetStreamWriter(It.IsAny<string>())).Callback<string>(name => { passedFileName = name; }).Returns(writer);
                     fileService.WriteChangeScript(expectedContents);
                 }
             }
@@ -202,16 +202,16 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.FileManagement
         {
             string passedFileName = string.Empty;
             string expectedContents = "Undo Script";
-            var ioProxyMock = new Mock<IIoProxy>(MockBehavior.Strict);
+            var mock = new Mock<IIoProxy>(MockBehavior.Strict);
             IConfigurationService config = new ConfigurationService();
             this.SetupConfiguration(config);
-            IFileService fileService = new FileService(config, ioProxyMock.Object);
+            IFileService fileService = new FileService(config, mock.Object);
 
             using (MemoryStream stream = new MemoryStream())
             {
                 using (StreamWriter writer = new StreamWriter(stream))
                 {
-                    ioProxyMock.Setup(i => i.GetStreamWriter(It.IsAny<string>())).Callback<string>(name => { passedFileName = name; }).Returns(writer);
+                    mock.Setup(i => i.GetStreamWriter(It.IsAny<string>())).Callback<string>(name => { passedFileName = name; }).Returns(writer);
                     fileService.WriteUndoScript(expectedContents);
                 }
             }
@@ -228,19 +228,19 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.FileManagement
         public void ThatScriptListWrites()
         {
             string passedFileName = string.Empty;
-            var ioProxyMock = new Mock<IIoProxy>(MockBehavior.Strict);
+            var mock = new Mock<IIoProxy>(MockBehavior.Strict);
             IConfigurationService config = new ConfigurationService();
             this.SetupConfiguration(config);
-            IFileService fileService = new FileService(config, ioProxyMock.Object);
+            IFileService fileService = new FileService(config, mock.Object);
 
-            ioProxyMock.Setup(i => i.GetFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>())).Returns(this.GetFiles());
+            mock.Setup(i => i.GetFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>())).Returns(this.GetFiles());
             IDictionary<int, IScriptFile> scripts = fileService.GetScriptFiles();
 
             using (MemoryStream stream = new MemoryStream())
             {
                 using (StreamWriter writer = new StreamWriter(stream))
                 {
-                    ioProxyMock.Setup(i => i.GetStreamWriter(It.IsAny<string>())).Callback<string>(name => { passedFileName = name; }).Returns(writer);
+                    mock.Setup(i => i.GetStreamWriter(It.IsAny<string>())).Callback<string>(name => { passedFileName = name; }).Returns(writer);
                     fileService.WriteScriptList(scripts);
                 }
             }

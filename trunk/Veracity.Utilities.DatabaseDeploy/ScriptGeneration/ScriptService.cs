@@ -13,14 +13,12 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
 
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
     using System.Text;
 
-    using Veracity.Utilities.DatabaseDeploy.Configuration;
-
     using log4net;
 
+    using Veracity.Utilities.DatabaseDeploy.Configuration;
     using Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances;
     using Veracity.Utilities.DatabaseDeploy.FileManagement;
     using Veracity.Utilities.DatabaseDeploy.Utilities;
@@ -40,6 +38,11 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
         private static readonly ILog log = LogManager.GetLogger(typeof(ScriptService));
 
         /// <summary>
+        ///   The configuration service to use for processing.
+        /// </summary>
+        private readonly IConfigurationService configurationService;
+
+        /// <summary>
         ///   The database service to use for generating scripts
         /// </summary>
         private readonly IDatabaseService databaseService;
@@ -50,17 +53,12 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
         private readonly IFileService fileService;
 
         /// <summary>
-        /// The token replacer to use for processing.
+        ///   The token replacer to use for processing.
         /// </summary>
         private readonly ITokenReplacer tokenReplacer;
 
         /// <summary>
-        /// The configuration service to use for processing.
-        /// </summary>
-        private readonly IConfigurationService configurationService;
-
-        /// <summary>
-        /// Reprents the token to use for undo files.
+        ///   Reprents the token to use for undo files.
         /// </summary>
         private string undoToken = string.Empty;
 
@@ -84,8 +82,12 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
         /// <param name="fileService">
         /// the File service to use for file requests. 
         /// </param>
-        /// <param name="tokenReplacer">The token replacer to use for script processing.</param>
-        /// <param name="configurationService">The configuration service to use for processing.</param>
+        /// <param name="tokenReplacer">
+        /// The token replacer to use for script processing. 
+        /// </param>
+        /// <param name="configurationService">
+        /// The configuration service to use for processing. 
+        /// </param>
         public ScriptService(IDatabaseService databaseService, IFileService fileService, ITokenReplacer tokenReplacer, IConfigurationService configurationService)
         {
             if (log.IsDebugEnabled)
@@ -203,13 +205,45 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
         #region Methods
 
         /// <summary>
+        /// Appends a script to the contents of the current building script.
+        /// </summary>
+        /// <param name="scriptToUse">
+        /// The script to use for the append. 
+        /// </param>
+        /// <param name="changeScript">
+        /// The overall change script 
+        /// </param>
+        private void AppendScript(string scriptToUse, StringBuilder changeScript)
+        {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug(LogUtility.GetContext(scriptToUse, changeScript));
+            }
+
+            string scriptContents = this.databaseService.GetScriptFromFile(scriptToUse);
+
+            scriptContents = this.tokenReplacer.Replace(scriptContents);
+
+            changeScript.AppendLine(scriptContents);
+
+            if (log.IsDebugEnabled)
+            {
+                log.Debug(LogUtility.GetResult());
+            }
+        }
+
+        /// <summary>
         /// Appends a script to the output file
         /// </summary>
         /// <param name="changeScript">
         /// The overall change script 
         /// </param>
-        /// <param name="scriptContents">The contents of the script file.</param>
-        /// <param name="undo">True if an undo script is being generated, false otherwise.</param>
+        /// <param name="scriptContents">
+        /// The contents of the script file. 
+        /// </param>
+        /// <param name="undo">
+        /// True if an undo script is being generated, false otherwise. 
+        /// </param>
         private void AppendScriptBody(StringBuilder changeScript, string scriptContents, bool undo)
         {
             if (log.IsDebugEnabled)
@@ -238,33 +272,7 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
             }
             else
             {
-                changeScript.AppendLine(scriptPortion);                
-            }
-        }
-
-        /// <summary>
-        /// Appends a script to the contents of the current building script.
-        /// </summary>
-        /// <param name="scriptToUse">The script to use for the append.</param>
-        /// <param name="changeScript">
-        /// The overall change script 
-        /// </param>
-        private void AppendScript(string scriptToUse, StringBuilder changeScript)
-        {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(scriptToUse, changeScript));
-            }
-
-            string scriptContents = this.databaseService.GetScriptFromFile(scriptToUse);
-
-            scriptContents = this.tokenReplacer.Replace(scriptContents);
-
-            changeScript.AppendLine(scriptContents);
-
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult());
+                changeScript.AppendLine(scriptPortion);
             }
         }
 

@@ -153,7 +153,6 @@ namespace Veracity.Utilities.DatabaseDeploy
 
             if (scripts.Any())
             {
-
                 if (log.IsInfoEnabled)
                 {
                     log.Info(string.Format("Writing found file list into {0}", this.configurationService.ScriptListFile));

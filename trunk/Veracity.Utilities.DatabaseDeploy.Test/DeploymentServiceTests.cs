@@ -297,7 +297,6 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
             scriptServiceMock.Verify(script => script.BuildChangeScript(It.IsAny<IDictionary<int, IScriptFile>>()), Times.Never());
         }
 
-
         #endregion
 
         #region Methods

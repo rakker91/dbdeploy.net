@@ -11,11 +11,11 @@ namespace Veracity.Utilities.DatabaseDeploy.IoC
 {
     #region Usings
 
+    using log4net;
+
     using Microsoft.Practices.Unity;
 
     using Veracity.Utilities.DatabaseDeploy.Utilities;
-
-    using log4net;
 
     #endregion
 
@@ -27,14 +27,14 @@ namespace Veracity.Utilities.DatabaseDeploy.IoC
         #region Constants and Fields
 
         /// <summary>
-        ///   Creates the default logger
-        /// </summary>
-        private static readonly ILog log = LogManager.GetLogger(typeof(Container));
-
-        /// <summary>
         ///   Used for locking
         /// </summary>
         private static readonly object lockObject = new object();
+
+        /// <summary>
+        ///   Creates the default logger
+        /// </summary>
+        private static readonly ILog log = LogManager.GetLogger(typeof(Container));
 
         /// <summary>
         ///   The container to use for IoC
@@ -65,11 +65,19 @@ namespace Veracity.Utilities.DatabaseDeploy.IoC
             }
         }
 
+        #endregion
+
+        #region Public Methods
+
         /// <summary>
         /// Registers an instance of the given type.
         /// </summary>
-        /// <typeparam name="T">The type that we're registering for.</typeparam>
-        /// <param name="instance">The instance we're regsitering.</param>
+        /// <typeparam name="T">
+        /// The type that we're registering for. 
+        /// </typeparam>
+        /// <param name="instance">
+        /// The instance we're regsitering. 
+        /// </param>
         public static void RegisterInstance<T>(T instance)
         {
             if (log.IsDebugEnabled)
@@ -78,29 +86,6 @@ namespace Veracity.Utilities.DatabaseDeploy.IoC
             }
 
             UnityContainer.RegisterInstance(typeof(T), instance);
-
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult());
-            }
-        }
-
-        /// <summary>
-        /// Sets the lifetime manager for a registration.  If the type isn't yet registered, will add a lifetime manager to the registration.  If the type is already registered, it will do nothing.
-        /// </summary>
-        /// <typeparam name="T">The type that will be resolved.</typeparam>
-        /// <param name="lifetimeManager">The lifetime manager to use.</param>
-        public static void SetLifetimeManager<T>(LifetimeManager lifetimeManager)
-        {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(lifetimeManager));
-            }
-
-            if (!UnityContainer.IsRegistered<T>())
-            {
-                UnityContainer.RegisterType<T>(lifetimeManager);
-            }
 
             if (log.IsDebugEnabled)
             {
@@ -119,6 +104,33 @@ namespace Veracity.Utilities.DatabaseDeploy.IoC
             }
 
             container = null;
+
+            if (log.IsDebugEnabled)
+            {
+                log.Debug(LogUtility.GetResult());
+            }
+        }
+
+        /// <summary>
+        /// Sets the lifetime manager for a registration. If the type isn't yet registered, will add a lifetime manager to the registration. If the type is already registered, it will do nothing.
+        /// </summary>
+        /// <typeparam name="T">
+        /// The type that will be resolved. 
+        /// </typeparam>
+        /// <param name="lifetimeManager">
+        /// The lifetime manager to use. 
+        /// </param>
+        public static void SetLifetimeManager<T>(LifetimeManager lifetimeManager)
+        {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug(LogUtility.GetContext(lifetimeManager));
+            }
+
+            if (!UnityContainer.IsRegistered<T>())
+            {
+                UnityContainer.RegisterType<T>(lifetimeManager);
+            }
 
             if (log.IsDebugEnabled)
             {

@@ -98,7 +98,6 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
             string result = formatter.FormatCollection(numbers);
 
             Assert.That(result, Is.EqualTo(expectedResult));
-
         }
 
         /// <summary>
@@ -124,7 +123,6 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
             string result = formatter.FormatCollection(numbers);
 
             Assert.That(result, Is.EqualTo(expectedResult));
-
         }
 
         /// <summary>

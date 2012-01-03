@@ -63,7 +63,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances
         /// The file service to use for file operations. 
         /// </param>
         /// <param name="tokenReplacer">
-        /// The token Replacer.
+        /// The token Replacer. 
         /// </param>
         public DatabaseServiceBase(IConfigurationService configurationService, IFileService fileService, ITokenReplacer tokenReplacer)
         {
@@ -164,31 +164,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances
 
             string fileName = Path.Combine(this.ConfigurationService.DatabaseScriptPath, scriptFileName);
 
-            string result = this.FileService.GetFileContents(fileName, true);            
-
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult(result));
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Gets a script and prepares it for execution.
-        /// </summary>
-        /// <param name="scriptFileName">The name of the script to get</param>
-        /// <returns>A sql string read for execution.</returns>
-        protected internal virtual string GetCommandText(string scriptFileName)
-        {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(scriptFileName));
-            }
-
-            string contents = this.GetScriptFromFile(scriptFileName);
-
-            string result = this.tokenReplacer.Replace(contents);
+            string result = this.FileService.GetFileContents(fileName, true);
 
             if (log.IsDebugEnabled)
             {
@@ -215,6 +191,34 @@ namespace Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Gets a script and prepares it for execution.
+        /// </summary>
+        /// <param name="scriptFileName">
+        /// The name of the script to get 
+        /// </param>
+        /// <returns>
+        /// A sql string read for execution. 
+        /// </returns>
+        protected internal virtual string GetCommandText(string scriptFileName)
+        {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug(LogUtility.GetContext(scriptFileName));
+            }
+
+            string contents = this.GetScriptFromFile(scriptFileName);
+
+            string result = this.tokenReplacer.Replace(contents);
+
+            if (log.IsDebugEnabled)
+            {
+                log.Debug(LogUtility.GetResult(result));
+            }
+
+            return result;
+        }
 
         /// <summary>
         /// Ensures that the changelog table exists.

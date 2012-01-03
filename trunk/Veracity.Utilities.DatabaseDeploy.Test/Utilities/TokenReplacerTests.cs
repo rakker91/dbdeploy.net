@@ -93,7 +93,6 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
             string result = tp.Replace(token);
 
             Assert.That(result, Is.EqualTo(1.ToString(CultureInfo.InvariantCulture)));
-
         }
 
         /// <summary>
