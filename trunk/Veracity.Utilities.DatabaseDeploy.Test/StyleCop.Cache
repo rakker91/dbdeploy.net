@@ -1,0 +1,51 @@
+<stylecopresultscache>
+  <version>11</version>
+  <project key="1454652021">
+    <configuration>DEBUG;TRACE</configuration>
+  </project>
+  <sourcecode name="DeploymentServiceTests.cs" parser="StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>12/28/2011 12:28:41</timestamp>
+      <milliseconds>572</milliseconds>
+    </settings>
+    <timestamp>12/28/2011 12:30:47</timestamp>
+    <milliseconds>628</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="ContainerTests.cs" parser="StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>12/28/2011 12:28:41</timestamp>
+      <milliseconds>572</milliseconds>
+    </settings>
+    <timestamp>12/28/2011 12:30:47</timestamp>
+    <milliseconds>622</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="AssemblyInfo.cs" parser="StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>12/28/2011 12:28:41</timestamp>
+      <milliseconds>572</milliseconds>
+    </settings>
+    <timestamp>12/28/2011 12:31:52</timestamp>
+    <milliseconds>379</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="DbDeployTests.cs" parser="StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>12/28/2011 12:28:41</timestamp>
+      <milliseconds>572</milliseconds>
+    </settings>
+    <timestamp>12/28/2011 12:30:47</timestamp>
+    <milliseconds>594</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="ConfigurationServiceTests.cs" parser="StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>12/28/2011 12:28:41</timestamp>
+      <milliseconds>572</milliseconds>
+    </settings>
+    <timestamp>12/28/2011 12:30:47</timestamp>
+    <milliseconds>610</milliseconds>
+    <violations />
+  </sourcecode>
+</stylecopresultscache>
