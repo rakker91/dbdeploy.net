@@ -1,0 +1,69 @@
+<Configuration>
+  <SharedSolutionTemplateManager>
+    <LiveTemplates>
+      <Template uid="5b9ba011-a2e8-4e3f-9044-bbecf1cab307" shortcut="getset" description="Inserts the Gets or Sets comment" text="Gets or sets $PROPERTYNAME$" reformat="True" shortenQualifiedReferences="True">
+        <Context>
+          <CSharpContext context="Everywhere" minimumLanguageVersion="2.0" />
+        </Context>
+        <Categories />
+        <Variables>
+          <Variable name="PROPERTYNAME" expression="typeMember()" initialRange="-1" />
+        </Variables>
+        <CustomProperties />
+      </Template>
+      <Template uid="c0f7e50d-8e83-49ff-b85b-ed0b78c108c3" shortcut="debug" description="Inserts a debugging statement with a string value" text="if (log.IsDebugEnabled)&#xD;&#xA;{&#xD;&#xA;	log.Debug(string.Format(&quot;$VALUE$&quot;));&#xD;&#xA;}" reformat="True" shortenQualifiedReferences="True">
+        <Context>
+          <CSharpContext context="Expression" minimumLanguageVersion="2.0" />
+        </Context>
+        <Categories />
+        <Variables>
+          <Variable name="VALUE" expression="constant(&quot;&quot;)" initialRange="-1" />
+        </Variables>
+        <CustomProperties />
+      </Template>
+      <Template uid="2d0e963d-68fd-4f10-9a24-ee3d147130e4" shortcut="debugContext" description="Creates the default debugging method with a call to LogUtility.GetContext" text="if (log.IsDebugEnabled)&#xD;&#xA;{&#xD;&#xA;	log.Debug(LogUtility.GetContext($PARAMTERS$));&#xD;&#xA;}" reformat="True" shortenQualifiedReferences="True">
+        <Context>
+          <CSharpContext context="Expression" minimumLanguageVersion="2.0" />
+        </Context>
+        <Categories />
+        <Variables>
+          <Variable name="PARAMTERS" expression="parameterOfType(&quot;System.Object&quot;)" initialRange="0" />
+        </Variables>
+        <CustomProperties />
+      </Template>
+      <Template uid="5022905b-72f2-48d6-83bb-c2a5c98aad51" shortcut="logCreate" description="Creates the logger to use for the class" text="/// &lt;summary&gt;&#xD;&#xA;///   Creates the default logger&#xD;&#xA;/// &lt;/summary&gt;&#xD;&#xA;private static readonly ILog log = LogManager.GetLogger(typeof($CLASSNAME$));&#xD;&#xA;" reformat="True" shortenQualifiedReferences="True">
+        <Context>
+          <CSharpContext context="TypeMember" minimumLanguageVersion="2.0" />
+        </Context>
+        <Categories />
+        <Variables>
+          <Variable name="CLASSNAME" expression="typeName()" initialRange="-1" />
+        </Variables>
+        <CustomProperties />
+      </Template>
+      <Template uid="b6a97cc6-ef52-4eb1-8995-b05bd9f0c077" shortcut="debugResult" description="Inserts a debugging statement with a result value appeneded" text="if (log.IsDebugEnabled)&#xD;&#xA;{&#xD;&#xA;	log.Debug(LogUtility.GetResult($RESULT$));&#xD;&#xA;}" reformat="True" shortenQualifiedReferences="True">
+        <Context>
+          <CSharpContext context="Everywhere" minimumLanguageVersion="2.0" />
+        </Context>
+        <Categories />
+        <Variables>
+          <Variable name="RESULT" expression="variableOfType(&quot;System.Object&quot;)" initialRange="0" />
+        </Variables>
+        <CustomProperties />
+      </Template>
+      <Template uid="cc7be0fa-ea50-460c-9cda-8b13549f3b91" shortcut="fh" description="Imputs a file header into the " text="//-----------------------------------------------------------------------&#xD;&#xA;// &lt;copyright file=&quot;$FILENAME$&quot; company=&quot;$COMPANY$&quot;&gt;&#xD;&#xA;//     Copyright (c) $COMPANY$ $YEAR$. All rights reserved.&#xD;&#xA;// &lt;/copyright&gt;&#xD;&#xA;// &lt;summary&gt;&#xD;&#xA;//     Created By: $USER$&#xD;&#xA;// &lt;/summary&gt;&#xD;&#xA;//-----------------------------------------------------------------------" reformat="True" shortenQualifiedReferences="True">
+        <Context>
+          <CSharpContext context="TypeAndNamespace" minimumLanguageVersion="2.0" />
+        </Context>
+        <Categories />
+        <Variables>
+          <Variable name="FILENAME" expression="getFileName()" initialRange="-1" />
+          <Variable name="COMPANY" expression="constant(&quot;Order By Mobile, Inc.&quot;)" initialRange="-1" />
+          <Variable name="YEAR" expression="getCurrentDate(&quot;yyyy&quot;)" initialRange="-1" />
+          <Variable name="USER" expression="getFullUserName()" initialRange="-1" />
+        </Variables>
+        <CustomProperties />
+      </Template>
+    </LiveTemplates>
+  </SharedSolutionTemplateManager>
+</Configuration>
