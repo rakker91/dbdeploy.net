@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Veracity.Utilities.Database
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Veracity.Utilities.DatabaseDeploy.Console", "Veracity.Utilities.DatabaseDeploy.Console\Veracity.Utilities.DatabaseDeploy.Console.csproj", "{64737C72-30B7-45BD-A1EF-216A4C4F53FB}"
 EndProject
+Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "Veracity.Utilities.DatabaseDeploy.Documentation", "Veracity.Utilities.DatabaseDeploy.Documentation\Veracity.Utilities.DatabaseDeploy.Documentation.shfbproj", "{990B95C5-80AD-4E0A-A90F-F5D3CC907A8A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,15 @@ Global
 		{64737C72-30B7-45BD-A1EF-216A4C4F53FB}.Release|Mixed Platforms.Build.0 = Release|x86
 		{64737C72-30B7-45BD-A1EF-216A4C4F53FB}.Release|x86.ActiveCfg = Release|x86
 		{64737C72-30B7-45BD-A1EF-216A4C4F53FB}.Release|x86.Build.0 = Release|x86
+		{990B95C5-80AD-4E0A-A90F-F5D3CC907A8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{990B95C5-80AD-4E0A-A90F-F5D3CC907A8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{990B95C5-80AD-4E0A-A90F-F5D3CC907A8A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{990B95C5-80AD-4E0A-A90F-F5D3CC907A8A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{990B95C5-80AD-4E0A-A90F-F5D3CC907A8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{990B95C5-80AD-4E0A-A90F-F5D3CC907A8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{990B95C5-80AD-4E0A-A90F-F5D3CC907A8A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{990B95C5-80AD-4E0A-A90F-F5D3CC907A8A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{990B95C5-80AD-4E0A-A90F-F5D3CC907A8A}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
