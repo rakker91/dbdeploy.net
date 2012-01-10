@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5535FF9C-3ABB-4133-B16F-73D68BE23930}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Examples</RootNamespace>
+    <AssemblyName>Examples</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Veracity.Utilities.DatabaseDeploy.Console\Veracity.Utilities.DatabaseDeploy.Console.csproj">
+      <Project>{64737C72-30B7-45BD-A1EF-216A4C4F53FB}</Project>
+      <Name>Veracity.Utilities.DatabaseDeploy.Console</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Veracity.Utilities.DatabaseDeploy\Veracity.Utilities.DatabaseDeploy.csproj">
+      <Project>{81281CF4-A227-4F5A-A3FF-FE89D32A9741}</Project>
+      <Name>Veracity.Utilities.DatabaseDeploy</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="database.targets" />
+    <None Include="rebuild.bat" />
+    <None Include="Tools\MSBuild.Extension.Pack\MSBuild.ExtensionPack.dll.config" />
+    <None Include="Tools\MSBuild.Extension.Pack\MSBuild.ExtensionPack.tasks" />
+    <None Include="Tools\MSBuild.Extension.Pack\MSBuild.ExtensionPack.VersionNumber.targets" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Readme.txt" />
+    <Content Include="Scripts\Deployed\1 Create MyUsers.sql" />
+    <Content Include="Scripts\Deployed\2 Add Admin User.sql" />
+    <Content Include="Scripts\Rebuild\0002 Create Admin User.sql" />
+    <Content Include="Scripts\TestData\1 Add Some Users.sql" />
+    <Content Include="Tools\MSBuild.Extension.Pack\Interop.COMAdmin.dll" />
+    <Content Include="Tools\MSBuild.Extension.Pack\Interop.IWshRuntimeLibrary.dll" />
+    <Content Include="Tools\MSBuild.Extension.Pack\MSBuild.ExtensionPack.dll" />
+    <Content Include="Tools\MSBuild.Extension.Pack\MSBuild.ExtensionPack.pdb" />
+    <Content Include="Tools\MSBuild.Extension.Pack\MSBuild.ExtensionPack.Sql2005.dll" />
+    <Content Include="Tools\MSBuild.Extension.Pack\MSBuild.ExtensionPack.Sql2005.pdb" />
+    <Content Include="Tools\MSBuild.Extension.Pack\MSBuild.ExtensionPack.Sql2008.dll" />
+    <Content Include="Tools\MSBuild.Extension.Pack\MSBuild.ExtensionPack.Sql2008.pdb" />
+    <Content Include="Tools\MSBuild.Extension.Pack\MSBuild.ExtensionPack.TaskFactory.Dlr.dll" />
+    <Content Include="Tools\MSBuild.Extension.Pack\MSBuild.ExtensionPack.TaskFactory.Dlr.pdb" />
+    <Content Include="Tools\MSBuild.Extension.Pack\MSBuild.ExtensionPack.TaskFactory.PowerShell.dll" />
+    <Content Include="Tools\MSBuild.Extension.Pack\MSBuild.ExtensionPack.TaskFactory.PowerShell.pdb" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy Examples.dll.config databasedeploy.exe.config</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
