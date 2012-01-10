@@ -6,6 +6,6 @@ SELECT @currentDatabaseVersion = MAX(change_number) FROM changelog
 IF (@currentDatabaseVersion <> $(CurrentVersion))
 BEGIN
     SET @errMsg = 'Error: current database version is not $(CurrentVersion), but ' + CONVERT(VARCHAR, @currentDatabaseVersion)
-    RAISERROR (@errMsg, 20, 1)
+    RAISERROR (@errMsg, 18, 1)
 END
 GO

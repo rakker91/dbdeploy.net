@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Veracity.Utilities.Database
 EndProject
 Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "Veracity.Utilities.DatabaseDeploy.Documentation", "Veracity.Utilities.DatabaseDeploy.Documentation\Veracity.Utilities.DatabaseDeploy.Documentation.shfbproj", "{990B95C5-80AD-4E0A-A90F-F5D3CC907A8A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{57DBD356-7F79-428E-9B32-917F050A6823}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples", "Examples\Examples.csproj", "{5535FF9C-3ABB-4133-B16F-73D68BE23930}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,9 +62,22 @@ Global
 		{990B95C5-80AD-4E0A-A90F-F5D3CC907A8A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{990B95C5-80AD-4E0A-A90F-F5D3CC907A8A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{990B95C5-80AD-4E0A-A90F-F5D3CC907A8A}.Release|x86.ActiveCfg = Release|Any CPU
+		{5535FF9C-3ABB-4133-B16F-73D68BE23930}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{5535FF9C-3ABB-4133-B16F-73D68BE23930}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{5535FF9C-3ABB-4133-B16F-73D68BE23930}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{5535FF9C-3ABB-4133-B16F-73D68BE23930}.Debug|x86.ActiveCfg = Debug|x86
+		{5535FF9C-3ABB-4133-B16F-73D68BE23930}.Debug|x86.Build.0 = Debug|x86
+		{5535FF9C-3ABB-4133-B16F-73D68BE23930}.Release|Any CPU.ActiveCfg = Release|x86
+		{5535FF9C-3ABB-4133-B16F-73D68BE23930}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{5535FF9C-3ABB-4133-B16F-73D68BE23930}.Release|Mixed Platforms.Build.0 = Release|x86
+		{5535FF9C-3ABB-4133-B16F-73D68BE23930}.Release|x86.ActiveCfg = Release|x86
+		{5535FF9C-3ABB-4133-B16F-73D68BE23930}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5535FF9C-3ABB-4133-B16F-73D68BE23930} = {57DBD356-7F79-428E-9B32-917F050A6823}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
