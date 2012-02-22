@@ -83,6 +83,16 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
         /// </remarks>
         bool UseTransactions { get; set; }
 
+        /// <summary>
+        /// Gets or sets the schema to use as a prefix for the change log table.
+        /// </summary>
+        string Schema { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the change log table.
+        /// </summary>
+        string ChangeLog { get; set; }
+
         #endregion
     }
 }

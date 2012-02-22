@@ -73,6 +73,16 @@ namespace Veracity.Utilities.DatabaseDeploy.BuildTasks
         public IDeploymentService DeploymentService { get; set; }
 
         /// <summary>
+        /// Gets or sets the schema to use as a prefix for the change log table.  Defaults to dbo.
+        /// </summary>
+        public string Schema { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the change log table.  Defaults to changelog
+        /// </summary>
+        public string ChangeLog { get; set; }
+
+        /// <summary>
         ///   Gets or sets the last change to apply to the database. The default is int.MaxValue. The max is int.MaxValue.
         /// </summary>
         public int LastChangeToApply
@@ -166,6 +176,8 @@ namespace Veracity.Utilities.DatabaseDeploy.BuildTasks
                 this.ConfigurationService.RootDirectory = this.RootDirectory;
                 this.ConfigurationService.SearchPattern = this.SearchPattern;
                 this.ConfigurationService.UndoOutputFile = this.UndoFile;
+                this.ConfigurationService.Schema = this.Schema;
+                this.ConfigurationService.ChangeLog = this.ChangeLog;
 
                 this.DeploymentService.BuildDeploymentScript();
 

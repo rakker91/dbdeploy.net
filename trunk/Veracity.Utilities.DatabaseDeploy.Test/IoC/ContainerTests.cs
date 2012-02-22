@@ -72,6 +72,22 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.IoC
             Container.Reset();
         }
 
+        /// <summary>
+        /// Tests that the auto resolver gives the same instance with per thread mapping using an attribute.
+        /// </summary>
+        [Test]
+        public void ThatAutoResolverRespectsAttributeLifetime()
+        {
+            Container.Reset();
+
+            IMockIoCClass mockClass1 = Container.UnityContainer.Resolve<IMockIoCClass>();
+            IMockIoCClass mockClass2 = Container.UnityContainer.Resolve<IMockIoCClass>();
+
+            Assert.That(mockClass1, Is.EqualTo(mockClass2));
+
+            Container.Reset();            
+        }
+
         #endregion
     }
 }

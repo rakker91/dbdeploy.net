@@ -76,7 +76,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Database
 
             fileServiceMock.Setup(f => f.GetFileContents(It.IsAny<string>(), It.IsAny<bool>())).Returns(fileContents).Verifiable();
 
-            BogusDatabaseMock databaseService = new BogusDatabaseMock(configurationService, fileServiceMock.Object, new TokenReplacer());
+            BogusDatabaseMock databaseService = new BogusDatabaseMock(configurationService, fileServiceMock.Object, new TokenReplacer(configurationService));
 
             databaseService.DataSetToReturn = this.GetDataset();
 

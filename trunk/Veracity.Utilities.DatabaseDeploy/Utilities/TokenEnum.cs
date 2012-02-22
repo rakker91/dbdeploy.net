@@ -46,6 +46,16 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
         /// </summary>
         public const string ScriptNameToken = "$(ScriptName)";
 
+        /// <summary>
+        /// Used for schema token replacement
+        /// </summary>
+        public const string SchemaToken = "$(Schema)";
+
+        /// <summary>
+        /// Used for change log token replacement.
+        /// </summary>
+        public const string ChangeLogToken = "$(ChangeLog)";
+
         #endregion
     }
 }

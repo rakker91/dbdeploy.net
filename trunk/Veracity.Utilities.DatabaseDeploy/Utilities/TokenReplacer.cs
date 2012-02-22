@@ -12,6 +12,8 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
     using System;
     using System.Globalization;
 
+    using Veracity.Utilities.DatabaseDeploy.Configuration;
+
     using log4net;
 
     using Veracity.Utilities.DatabaseDeploy.ScriptGeneration;
@@ -28,6 +30,11 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
         /// </summary>
         private static readonly ILog log = LogManager.GetLogger(typeof(TokenReplacer));
 
+        /// <summary>
+        /// The configuration service to use.
+        /// </summary>
+        private IConfigurationService configurationService;
+
         #endregion
 
         #region Constructors and Destructors
@@ -43,6 +50,20 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
             }
 
             this.Script = new ScriptFile();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the TokenReplacer class
+        /// </summary>
+        /// <param name="configurationService">The configuration service to use for this instance</param>
+        public TokenReplacer(IConfigurationService configurationService) : this()
+        {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug(LogUtility.GetContext(configurationService));
+            }
+
+            this.configurationService = configurationService;
         }
 
         #endregion
@@ -88,6 +109,8 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
             result = result.ReplaceEx(TokenEnum.ScriptIdToken, this.Script.Id.ToString(CultureInfo.InvariantCulture));
             result = result.ReplaceEx(TokenEnum.ScriptNameToken, this.Script.FileName);
             result = result.ReplaceEx(TokenEnum.ScriptDescriptionToken, this.Script.Description);
+            result = result.ReplaceEx(TokenEnum.SchemaToken, this.configurationService.Schema);
+            result = result.ReplaceEx(TokenEnum.ChangeLogToken, this.configurationService.ChangeLog);
 
             if (log.IsDebugEnabled)
             {
