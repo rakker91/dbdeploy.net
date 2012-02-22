@@ -73,7 +73,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
 
             IDictionary<int, IScriptFile> changes = this.GetChanges();
 
-            IScriptService scriptService = new ScriptService(databaseServiceMock.Object, fileServiceMock.Object, new TokenReplacer(), new ConfigurationService());
+            IScriptService scriptService = new ScriptService(databaseServiceMock.Object, fileServiceMock.Object, new TokenReplacer(new ConfigurationService()), new ConfigurationService());
 
             string result = scriptService.BuildChangeScript(changes);
 
@@ -123,7 +123,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
 
             IDictionary<int, IScriptFile> changes = this.GetChanges();
 
-            IScriptService scriptService = new ScriptService(databaseServiceMock.Object, fileServiceMock.Object, new TokenReplacer(), new ConfigurationService());
+            IScriptService scriptService = new ScriptService(databaseServiceMock.Object, fileServiceMock.Object, new TokenReplacer(new ConfigurationService()), new ConfigurationService());
 
             string result = scriptService.BuildUndoScript(changes);
 

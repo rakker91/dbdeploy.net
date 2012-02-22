@@ -69,6 +69,7 @@
     <Compile Include="FileManagement\IoProxy.cs" />
     <Compile Include="IDeploymentService.cs" />
     <Compile Include="IoC\Container.cs" />
+    <Compile Include="IoC\LifetimePolicyEnum.cs" />
     <Compile Include="ScriptGeneration\IScriptFile.cs" />
     <Compile Include="ScriptGeneration\ScriptFile.cs" />
     <Compile Include="Database\DatabaseTypesEnum.cs" />
@@ -135,6 +136,42 @@
     <Content Include="Database\Scripts\mssql\UndoToken.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Database\Scripts\ora\changelog.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Database\Scripts\ora\ChangeScriptFooter.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Database\Scripts\ora\ChangeScriptHeader.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Database\Scripts\ora\EnsureChangeLogExists.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Database\Scripts\ora\GetChangeLog.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Database\Scripts\ora\ScriptFooter.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Database\Scripts\ora\ScriptHeader.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Database\Scripts\ora\UndoFooter.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Database\Scripts\ora\UndoHeader.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Database\Scripts\ora\UndoScriptFooter.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Database\Scripts\ora\UndoScriptHeader.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Database\Scripts\ora\UndoToken.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -144,7 +181,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Database\Scripts\mysql\" />
-    <Folder Include="Database\Scripts\ora\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

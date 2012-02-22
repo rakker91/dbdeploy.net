@@ -80,6 +80,8 @@
     <Compile Include="DeploymentServiceTests.cs" />
     <Compile Include="FileManagement\FileServiceTests.cs" />
     <Compile Include="IoC\ContainerTests.cs" />
+    <Compile Include="IoC\IMockIoCClass.cs" />
+    <Compile Include="IoC\MockIoCClass.cs" />
     <Compile Include="NullAppender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScriptGeneration\ScriptFileTests.cs" />

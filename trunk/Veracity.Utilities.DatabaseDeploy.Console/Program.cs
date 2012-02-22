@@ -140,6 +140,8 @@ namespace Veracity.Utilities.DatabaseDeploy.Console
                 ConfigurationService.RootDirectory = GetSetting<string>("RootDirectory");
                 ConfigurationService.SearchPattern = GetSetting<string>("SearchPattern");
                 ConfigurationService.UndoOutputFile = GetSetting<string>("UndoFile");
+                ConfigurationService.Schema = GetSetting<string>("Schema");
+                ConfigurationService.ChangeLog = GetSetting<string>("ChangeLog");
 
                 DeploymentService.BuildDeploymentScript();
             }

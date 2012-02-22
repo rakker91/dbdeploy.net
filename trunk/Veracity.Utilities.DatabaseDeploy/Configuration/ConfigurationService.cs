@@ -97,6 +97,16 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
         /// </summary>
         private string undoOutputFile = DefaultUndoFile;
 
+        /// <summary>
+        /// The schema
+        /// </summary>
+        private string schema = "dbo";
+
+        /// <summary>
+        /// The changelog table.
+        /// </summary>
+        private string changeLog = "changelog";
+
         #endregion
 
         #region Constructors and Destructors
@@ -186,6 +196,44 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
                 if (value != null && value.Trim() != string.Empty)
                 {
                     this.outputFile = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the schema to use as a prefix for the change log table.
+        /// </summary>
+        public string Schema
+        {
+            get
+            {
+                return this.schema;
+            }
+
+            set
+            {
+                if (value != null && value.Trim() != string.Empty)
+                {
+                    this.schema = value;
+                }                
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the name of the change log table.
+        /// </summary>
+        public string ChangeLog
+        {
+            get
+            {
+                return this.changeLog;
+            }
+
+            set
+            {
+                if (value != null && value.Trim() != string.Empty)
+                {
+                    this.changeLog = value;
                 }
             }
         }

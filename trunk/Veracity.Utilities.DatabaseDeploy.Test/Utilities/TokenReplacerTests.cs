@@ -14,6 +14,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
 
     using NUnit.Framework;
 
+    using Veracity.Utilities.DatabaseDeploy.Configuration;
     using Veracity.Utilities.DatabaseDeploy.ScriptGeneration;
     using Veracity.Utilities.DatabaseDeploy.Utilities;
 
@@ -29,7 +30,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
         [Test]
         public void ThatCurrentDateTimeReplaces()
         {
-            ITokenReplacer tp = new TokenReplacer();
+            ITokenReplacer tp = new TokenReplacer(new ConfigurationService());
             string token = TokenEnum.CurrentDateTimeToken;
 
             string result = tp.Replace(token);
@@ -43,7 +44,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
         [Test]
         public void ThatCurrentUserReplaces()
         {
-            ITokenReplacer tp = new TokenReplacer();
+            ITokenReplacer tp = new TokenReplacer(new ConfigurationService());
             string token = TokenEnum.CurrentUserToken;
 
             string result = tp.Replace(token);
@@ -57,7 +58,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
         [Test]
         public void ThatCurrentVersionReplaces()
         {
-            ITokenReplacer tp = new TokenReplacer();
+            ITokenReplacer tp = new TokenReplacer(new ConfigurationService());
             tp.CurrentVersion = 500;
             string token = TokenEnum.CurrentVersionToken;
 
@@ -72,7 +73,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
         [Test]
         public void ThatCurrentVersionDoesntFailWithoutVersion()
         {
-            ITokenReplacer tp = new TokenReplacer();
+            ITokenReplacer tp = new TokenReplacer(new ConfigurationService());
             string token = TokenEnum.CurrentVersionToken;
 
             string result = tp.Replace(token);
@@ -86,7 +87,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
         [Test]
         public void ThatScriptIdReplaces()
         {
-            ITokenReplacer tp = new TokenReplacer();
+            ITokenReplacer tp = new TokenReplacer(new ConfigurationService());
             tp.Script = new ScriptFile() { Id = 1, Description = "1", FileName = "1.sql" };
             string token = TokenEnum.ScriptIdToken;
 
@@ -101,7 +102,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
         [Test]
         public void ThatScriptIdReplacesWithoutScript()
         {
-            ITokenReplacer tp = new TokenReplacer();
+            ITokenReplacer tp = new TokenReplacer(new ConfigurationService());
             string token = TokenEnum.ScriptIdToken;
 
             string result = tp.Replace(token);
@@ -115,7 +116,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
         [Test]
         public void ThatScriptNameReplaces()
         {
-            ITokenReplacer tp = new TokenReplacer();
+            ITokenReplacer tp = new TokenReplacer(new ConfigurationService());
 
             tp.Script = new ScriptFile() { Id = 1, Description = "1", FileName = "1.sql" };
             
@@ -132,7 +133,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
         [Test]
         public void ThatScriptNameReplacesWithoutScript()
         {
-            ITokenReplacer tp = new TokenReplacer();
+            ITokenReplacer tp = new TokenReplacer(new ConfigurationService());
 
             string token = TokenEnum.ScriptNameToken;
 
@@ -147,7 +148,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
         [Test]
         public void ThatScriptDescriptionReplaces()
         {
-            ITokenReplacer tp = new TokenReplacer();
+            ITokenReplacer tp = new TokenReplacer(new ConfigurationService());
             tp.Script = new ScriptFile() { Id = 1, Description = "1", FileName = "1.sql" };
 
             string token = TokenEnum.ScriptDescriptionToken;
@@ -163,7 +164,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
         [Test]
         public void ThatScriptDescriptionReplacesWithoutScript()
         {
-            ITokenReplacer tp = new TokenReplacer();
+            ITokenReplacer tp = new TokenReplacer(new ConfigurationService());
             string token = TokenEnum.ScriptDescriptionToken;
 
             string result = tp.Replace(token);

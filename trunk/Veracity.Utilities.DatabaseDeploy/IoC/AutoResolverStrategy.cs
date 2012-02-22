@@ -17,6 +17,7 @@ namespace Veracity.Utilities.DatabaseDeploy.IoC
     using System.Reflection;
 
     using Microsoft.Practices.ObjectBuilder2;
+    using Microsoft.Practices.Unity;
 
     #endregion
 
@@ -105,9 +106,28 @@ namespace Veracity.Utilities.DatabaseDeploy.IoC
 
                             // look for persistant policies for this interface name
                             ILifetimePolicy lifetime = context.PersistentPolicies.Get<ILifetimePolicy>(oldKey);
+                            
+                            // assuming that a code defined register type policy overrides an attribute
                             if (lifetime != null)
                             {
                                 context.PersistentPolicies.Set(lifetime, newBuildKey);
+                            }
+                            else
+                            {
+                                object[] attributes = concreteType.GetCustomAttributes(typeof(IoCMappingAttribute), false);
+                                IoCMappingAttribute attribute = null;
+                                if (attributes.Length > 0)
+                                {
+                                    attribute = (IoCMappingAttribute)attributes[0];
+                                }
+
+                                if (attribute != null)
+                                {
+                                    string typeName = "Microsoft.Practices.Unity." + Enum.GetName(typeof(LifetimePolicyEnum), attribute.LifetimePolicyName);
+                                    string assemblyName = Assembly.GetAssembly(typeof(TransientLifetimeManager)).FullName;
+                                    LifetimeManager newLifetime = (LifetimeManager)AppDomain.CurrentDomain.CreateInstanceAndUnwrap(assemblyName, typeName);
+                                    Container.UnityContainer.RegisterType(oldKey.Type, newBuildKey.Type, newLifetime);
+                                }
                             }
                         }
                     }
