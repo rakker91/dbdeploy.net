@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Veracity.Utilities.DatabaseDeploy", "Veracity.Utilities.DatabaseDeploy\Veracity.Utilities.DatabaseDeploy.csproj", "{81281CF4-A227-4F5A-A3FF-FE89D32A9741}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Veracity.Utilities.DatabaseDeploy.Test", "Veracity.Utilities.DatabaseDeploy.Test\Veracity.Utilities.DatabaseDeploy.Test.csproj", "{E34E9A63-1E8B-4F90-A85E-778729E24F2A}"
@@ -12,6 +12,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{57DBD356-7F79-428E-9B32-917F050A6823}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples", "Examples\Examples.csproj", "{5535FF9C-3ABB-4133-B16F-73D68BE23930}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{BE39B671-D650-485B-B5B6-A456FC7AC5CE}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

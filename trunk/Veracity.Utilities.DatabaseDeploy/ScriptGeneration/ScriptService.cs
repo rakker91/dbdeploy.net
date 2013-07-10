@@ -125,7 +125,7 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
 
             this.undoToken = this.databaseService.GetScriptFromFile(DatabaseScriptEnum.UndoToken);
 
-            this.tokenReplacer.CurrentVersion = changes.Keys.Min();
+            this.tokenReplacer.CurrentVersion = changes.Keys.Min() - 1;
 
             this.AppendScript(DatabaseScriptEnum.ChangeScriptHeader, changeScript);
 
