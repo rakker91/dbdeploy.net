@@ -1,0 +1,2 @@
+REM Will cause a different database to be used, but leave all other settings at what is in the app.config file.
+DatabaseDeploy -c "Server=localhost;Database=dbdeployCmd;User ID=MyUser;Password=MyPassword1;Trusted_Connection=False;Encrypt=True;"
