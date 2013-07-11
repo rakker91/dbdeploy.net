@@ -271,7 +271,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
 
             set
             {
-                if (value.Trim() != string.Empty)
+                if (value != null && value.Trim() != string.Empty)
                 {
                     this.rootDirectory = value;
                 }
