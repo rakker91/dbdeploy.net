@@ -9,4 +9,4 @@ The database.targets file contains all of the magic to make this happen.
 
 For a manual deployment, simply run databasedeploy.exe after you have modified databasedeploy.config to have the appropriate values.
 
-The rebuild uses the MSBuild extensions pack (http://msbuildextensionpack.codeplex.com/) which is partially installed in the Tools directory.
+The rebuild uses the MSBuild extensions pack (http://msbuildextensionpack.codeplex.com/) which is installed as a NuGet Package.

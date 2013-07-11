@@ -14,6 +14,9 @@ namespace Veracity.Utilities.DatabaseDeploy.Console
     using System;
     using System.Configuration;
 
+    using CommandLine;
+    using CommandLine.Text;
+
     using log4net;
 
     using Microsoft.Practices.Unity;
@@ -143,11 +146,79 @@ namespace Veracity.Utilities.DatabaseDeploy.Console
                 ConfigurationService.Schema = GetSetting<string>("Schema");
                 ConfigurationService.ChangeLog = GetSetting<string>("ChangeLog");
 
+                ParseCommandLine(args);
+
                 DeploymentService.BuildDeploymentScript();
             }
             catch (Exception ex)
             {
                 log.Error(ex);
+            }
+        }
+
+        /// <summary>
+        /// Parses the command line paramters
+        /// </summary>
+        /// <param name="args">The arguments passed on the command line.</param>
+        private static void ParseCommandLine(string[] args)
+        {
+            if (args.Length > 0)
+            {
+                Options options = new Options();
+
+                if (CommandLine.Parser.Default.ParseArgumentsStrict(args, options))
+                {
+                    ParserSettings settings = new ParserSettings();
+                    
+                    ConfigurationService.ConnectionString = options.ConnectionString != string.Empty
+                                                                ? options.ConnectionString
+                                                                : ConfigurationService.ConnectionString;
+
+                    switch (options.DatabaseManagementSystem)
+                    {
+                        case "mssql":
+                            ConfigurationService.DatabaseManagementSystem = DatabaseTypesEnum.SqlServer;
+                            break;
+                        case "ora":
+                            ConfigurationService.DatabaseManagementSystem = DatabaseTypesEnum.Oracle;
+                            break;
+                        case "mysql":
+                            ConfigurationService.DatabaseManagementSystem = DatabaseTypesEnum.MySql;
+                            break;
+                    }
+
+                    ConfigurationService.LastChangeToApply = options.LastChangeToApply != default(int)
+                                                                ? options.LastChangeToApply
+                                                                : ConfigurationService.LastChangeToApply;
+
+                    ConfigurationService.OutputFile = options.OutputFile != string.Empty
+                                                                ? options.OutputFile
+                                                                : ConfigurationService.OutputFile;
+
+                    ConfigurationService.Recursive = options.Recursive != default(bool)
+                                                                ? options.Recursive
+                                                                : ConfigurationService.Recursive;
+
+                    ConfigurationService.RootDirectory = options.RootDirectory != string.Empty
+                                                                ? options.RootDirectory
+                                                                : ConfigurationService.RootDirectory;
+
+                    ConfigurationService.SearchPattern = options.SearchPattern != string.Empty
+                                                                ? options.SearchPattern
+                                                                : ConfigurationService.SearchPattern;
+
+                    ConfigurationService.UndoOutputFile = options.UndoOutputFile != string.Empty
+                                                                ? options.UndoOutputFile
+                                                                : ConfigurationService.UndoOutputFile;
+
+                    ConfigurationService.Schema = options.Schema != string.Empty
+                                                                ? options.Schema
+                                                                : ConfigurationService.Schema;
+
+                    ConfigurationService.ChangeLog = options.ChangeLog != string.Empty
+                                                         ? options.ChangeLog
+                                                         : ConfigurationService.ChangeLog;
+                }
             }
         }
 
