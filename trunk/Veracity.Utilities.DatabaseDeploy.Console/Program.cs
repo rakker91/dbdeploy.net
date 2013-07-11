@@ -157,7 +157,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Console
         }
 
         /// <summary>
-        /// Parses the command line paramters
+        /// Parses the command line parameters
         /// </summary>
         /// <param name="args">The arguments passed on the command line.</param>
         private static void ParseCommandLine(string[] args)
