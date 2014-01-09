@@ -88,14 +88,14 @@ namespace Veracity.Utilities.DatabaseDeploy.Console
         [Option('u', "UndoOutputFile", HelpText = "The file that will contain undo scripts.", Required = false)]
         public string UndoOutputFile { get; set; }
 
-        /// <summary>
-        ///   Gets or sets a value indicating whether or not transactions should be used for each script
-        /// </summary>
-        /// <remarks>
-        ///   In my opinion, this option should not be used. Instead, put a transaction in the actual script file itself, as needed.
-        /// </remarks>
-        [Option('t', "UseTransactions", HelpText = "Whether or not transactions should be used.  Personally, I'd put them in the script.", Required = false)]
-        public bool UseTransactions { get; set; }
+        /////// <summary>
+        ///////   Gets or sets a value indicating whether or not transactions should be used for each script
+        /////// </summary>
+        /////// <remarks>
+        ///////   In my opinion, this option should not be used. Instead, put a transaction in the actual script file itself, as needed.
+        /////// </remarks>
+        ////[Option('t', "UseTransactions", HelpText = "Whether or not transactions should be used.  Personally, I'd put them in the script.", Required = false)]
+        ////public bool UseTransactions { get; set; }
 
         /// <summary>
         /// Gets or sets the schema to use as a prefix for the change log table.
