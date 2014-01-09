@@ -335,13 +335,13 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
             }
         }
 
-        /// <summary>
-        ///   Gets or sets a value indicating whether or not transactions should be used for each script
-        /// </summary>
-        /// <remarks>
-        ///   In my opinion, this option should not be used. Instead, put a transaction in the actual script file itself, as needed.
-        /// </remarks>
-        public bool UseTransactions { get; set; }
+        /////// <summary>
+        ///////   Gets or sets a value indicating whether or not transactions should be used for each script
+        /////// </summary>
+        /////// <remarks>
+        ///////   In my opinion, this option should not be used. Instead, put a transaction in the actual script file itself, as needed.
+        /////// </remarks>
+        ////public bool UseTransactions { get; set; }
 
         #endregion
 
@@ -370,7 +370,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
             builder.AppendLine(string.Format("ScriptListFile: {0}", this.ScriptListFile));
             builder.AppendLine(string.Format("SearchPattern: {0}", this.SearchPattern));
             builder.AppendLine(string.Format("UndoOutputFile: {0}", this.UndoOutputFile));
-            builder.AppendLine(string.Format("UseTransactions: {0}", this.UseTransactions));
+            ////builder.AppendLine(string.Format("UseTransactions: {0}", this.UseTransactions));
 
             string result = builder.ToString();
 

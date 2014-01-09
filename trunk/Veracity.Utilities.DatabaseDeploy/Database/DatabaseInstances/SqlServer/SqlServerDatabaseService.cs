@@ -92,7 +92,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances.SqlServer
 
             string script = this.GetCommandText(scriptFileName);
 
-            string[] commands = script.Split(new string[] { "GO\r\n", "GO ", "GO\t" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] commands = script.Split(new string[] { "GO\r\n", "GO ", "GO\t", "GO\n" }, StringSplitOptions.RemoveEmptyEntries);
 
             using (SqlConnection connection = new SqlConnection(this.ConfigurationService.ConnectionString))
             {

@@ -7,7 +7,7 @@
 		<RebuildDirectory>.\Scripts\Rebuild</RebuildDirectory>
 		<TestDataDirectory>.\Scripts\TestData</TestDataDirectory>
 		<DbDeploy>.\dbdeploy</DbDeploy>
-		<SqlTasks>.\bin\debug</SqlTasks>
+		<SqlTasks>.\dbdeploy</SqlTasks>
 		<User>MyUser</User>
 		<Password>MyPassword1</Password>
 		<BCP>bcp</BCP>
