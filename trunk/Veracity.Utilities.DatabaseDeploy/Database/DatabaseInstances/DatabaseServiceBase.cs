@@ -67,10 +67,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances
         /// </param>
         public DatabaseServiceBase(IConfigurationService configurationService, IFileService fileService, ITokenReplacer tokenReplacer)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(configurationService, fileService, tokenReplacer));
-            }
+            log.DebugIfEnabled(LogUtility.GetContext(configurationService, fileService, tokenReplacer));
 
             this.ConfigurationService = configurationService;
             this.FileService = fileService;
@@ -119,10 +116,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances
         /// </returns>
         public IDictionary<int, IChangeLog> GetAppliedChanges()
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext());
-            }
+            log.DebugIfEnabled(LogUtility.GetContext());
 
             IDictionary<int, IChangeLog> result = new ConcurrentDictionary<int, IChangeLog>();
 
@@ -138,10 +132,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances
                 result.Add(changeLog.ChangeNumber, changeLog);
             }
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult(result));
-            }
+            log.DebugIfEnabled(LogUtility.GetResult(result));
 
             return result;
         }
@@ -157,19 +148,13 @@ namespace Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances
         /// </returns>
         public string GetScriptFromFile(string scriptFileName)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(scriptFileName));
-            }
+            log.DebugIfEnabled(LogUtility.GetContext(scriptFileName));
 
             string fileName = Path.Combine(this.ConfigurationService.DatabaseScriptPath, scriptFileName);
 
             string result = this.FileService.GetFileContents(fileName, true);
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult(result));
-            }
+            log.DebugIfEnabled(LogUtility.GetResult(result));
 
             return result;
         }
@@ -203,19 +188,13 @@ namespace Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances
         /// </returns>
         protected internal virtual string GetCommandText(string scriptFileName)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(scriptFileName));
-            }
+            log.DebugIfEnabled(LogUtility.GetContext(scriptFileName));
 
             string contents = this.GetScriptFromFile(scriptFileName);
 
             string result = this.tokenReplacer.Replace(contents);
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult(result));
-            }
+            log.DebugIfEnabled(LogUtility.GetResult(result));
 
             return result;
         }
@@ -225,17 +204,11 @@ namespace Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances
         /// </summary>
         private void EnsureChangelogExists()
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext());
-            }
+            log.DebugIfEnabled(LogUtility.GetContext());
 
             this.ExecuteScript(DatabaseScriptEnum.EnsureChangeLogExists);
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult());
-            }
+            log.DebugIfEnabled(LogUtility.GetResult());
         }
 
         /// <summary>
@@ -246,17 +219,11 @@ namespace Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances
         /// </returns>
         private DataSet GetChangelog()
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext());
-            }
+            log.DebugIfEnabled(LogUtility.GetContext());
 
             DataSet result = this.RunScript(DatabaseScriptEnum.GetChangeLog);
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult(result));
-            }
+            log.DebugIfEnabled(LogUtility.GetResult(result));
 
             return result;
         }

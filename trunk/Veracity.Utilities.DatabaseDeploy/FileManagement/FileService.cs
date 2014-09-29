@@ -69,10 +69,7 @@ namespace Veracity.Utilities.DatabaseDeploy.FileManagement
         [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed. Suppression is OK here.")]
         public FileService(IConfigurationService configurationService, IIoProxy ioProxy)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(configurationService, ioProxy));
-            }
+            log.DebugIfEnabled(LogUtility.GetContext(configurationService, ioProxy));
 
             this.configurationService = configurationService;
             this.ioProxy = ioProxy;
@@ -87,33 +84,27 @@ namespace Veracity.Utilities.DatabaseDeploy.FileManagement
         /// </summary>
         public void CleanupPastRuns()
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext());
-            }
+            log.DebugIfEnabled(LogUtility.GetContext());
 
-            FileInfo output = new FileInfo(this.configurationService.OutputFile);
+            var output = new FileInfo(this.configurationService.OutputFile);
             if (output.Exists)
             {
                 output.Delete();
             }
 
-            FileInfo undo = new FileInfo(this.configurationService.UndoOutputFile);
+            var undo = new FileInfo(this.configurationService.UndoOutputFile);
             if (undo.Exists)
             {
                 undo.Delete();
             }
 
-            FileInfo scriptList = new FileInfo(this.configurationService.ScriptListFile);
+            var scriptList = new FileInfo(this.configurationService.ScriptListFile);
             if (scriptList.Exists)
             {
                 scriptList.Delete();
             }
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult());
-            }
+            log.DebugIfEnabled(LogUtility.GetResult());
         }
 
         /// <summary>
@@ -130,10 +121,7 @@ namespace Veracity.Utilities.DatabaseDeploy.FileManagement
         /// </returns>
         public string GetFileContents(string fileName, bool useCache)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(fileName, useCache));
-            }
+            log.DebugIfEnabled(LogUtility.GetContext(fileName, useCache));
 
             string result;
 
@@ -147,10 +135,7 @@ namespace Veracity.Utilities.DatabaseDeploy.FileManagement
                 {
                     try
                     {
-                        using (StreamReader reader = this.ioProxy.GetStreamReader(fileName))
-                        {
-                            result = reader.ReadToEnd();
-                        }
+                        result = File.ReadAllText(fileName);
 
                         if (useCache)
                         {
@@ -171,10 +156,7 @@ namespace Veracity.Utilities.DatabaseDeploy.FileManagement
                 }
             }
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult(result));
-            }
+            log.DebugIfEnabled(LogUtility.GetResult(result));
 
             return result;
         }
@@ -187,19 +169,17 @@ namespace Veracity.Utilities.DatabaseDeploy.FileManagement
         /// </returns>
         public IDictionary<int, IScriptFile> GetScriptFiles()
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext());
-            }
+            log.DebugIfEnabled(LogUtility.GetContext());
 
             IDictionary<int, IScriptFile> result = new ConcurrentDictionary<int, IScriptFile>();
 
             string[] files = this.ioProxy.GetFiles(this.configurationService.RootDirectory, this.configurationService.SearchPattern, this.configurationService.Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
 
+            ScriptFile.FileNamePattern = this.configurationService.FileNamePattern;
             foreach (string file in files)
             {
                 IScriptFile scriptFile = new ScriptFile();
-                scriptFile.Parse(file);
+                scriptFile.Parse(this, file);
 
                 if (result.ContainsKey(scriptFile.Id))
                 {
@@ -211,10 +191,7 @@ namespace Veracity.Utilities.DatabaseDeploy.FileManagement
                 result.Add(scriptFile.Id, scriptFile);
             }
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult(result));
-            }
+            log.DebugIfEnabled(LogUtility.GetResult(result));
 
             return result;
         }
@@ -227,17 +204,11 @@ namespace Veracity.Utilities.DatabaseDeploy.FileManagement
         /// </param>
         public void WriteChangeScript(string changeScript)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(changeScript));
-            }
+            log.DebugIfEnabled(LogUtility.GetContext(changeScript));
 
             this.WriteStringToFile(this.configurationService.OutputFile, changeScript);
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult());
-            }
+            log.DebugIfEnabled(LogUtility.GetResult());
         }
 
         /// <summary>
@@ -248,10 +219,7 @@ namespace Veracity.Utilities.DatabaseDeploy.FileManagement
         /// </param>
         public void WriteScriptList(IDictionary<int, IScriptFile> scripts)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(scripts));
-            }
+            log.DebugIfEnabled(LogUtility.GetContext(scripts));
 
             StringBuilder textList = new StringBuilder();
             string root = this.configurationService.RootDirectory;
@@ -270,10 +238,7 @@ namespace Veracity.Utilities.DatabaseDeploy.FileManagement
 
             this.WriteStringToFile(this.configurationService.ScriptListFile, textList.ToString());
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult());
-            }
+            log.DebugIfEnabled(LogUtility.GetResult());
         }
 
         /// <summary>
@@ -284,17 +249,11 @@ namespace Veracity.Utilities.DatabaseDeploy.FileManagement
         /// </param>
         public void WriteUndoScript(string undoScript)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(undoScript));
-            }
+            log.DebugIfEnabled(LogUtility.GetContext(undoScript));
 
             this.WriteStringToFile(this.configurationService.UndoOutputFile, undoScript);
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult());
-            }
+            log.DebugIfEnabled(LogUtility.GetResult());
         }
 
         #endregion
@@ -312,22 +271,52 @@ namespace Veracity.Utilities.DatabaseDeploy.FileManagement
         /// </param>
         private void WriteStringToFile(string fileName, string content)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(fileName, content));
-            }
+            log.DebugIfEnabled(LogUtility.GetContext(fileName, content));
 
             using (StreamWriter writer = this.ioProxy.GetStreamWriter(fileName))
             {
                 writer.Write(content);
             }
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult());
-            }
+            log.DebugIfEnabled(LogUtility.GetResult());
         }
 
         #endregion
+
+
+        /// <summary>
+        /// Gets the lines from a file
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public string[] GetLinesFromFile(string fileName)
+        {
+            log.DebugIfEnabled(LogUtility.GetContext(fileName));
+
+            string[] result;
+
+            if (this.ioProxy.Exists(fileName))
+            {
+                try
+                {
+                    result = ioProxy.ReadAllLines(fileName);
+                }
+                catch (IOException ex)
+                {
+                    log.Error(ex);
+                    throw;
+                }
+            }
+            else
+            {
+                string message = string.Format("The file \"{0}\" does not exist.", fileName);
+                log.Error(message);
+                throw new FileNotFoundException(message, fileName);
+            }
+
+            log.DebugIfEnabled(LogUtility.GetResult(result));
+
+            return result;
+        }
     }
 }

@@ -80,17 +80,11 @@ namespace Veracity.Utilities.DatabaseDeploy.IoC
         /// </param>
         public static void RegisterInstance<T>(T instance)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(instance));
-            }
+            log.DebugIfEnabled(LogUtility.GetContext(instance));
 
             UnityContainer.RegisterInstance(typeof(T), instance);
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult());
-            }
+            log.DebugIfEnabled(LogUtility.GetResult());
         }
 
         /// <summary>
@@ -98,17 +92,11 @@ namespace Veracity.Utilities.DatabaseDeploy.IoC
         /// </summary>
         public static void Reset()
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext());
-            }
+            log.DebugIfEnabled(LogUtility.GetContext());
 
             container = null;
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult());
-            }
+            log.DebugIfEnabled(LogUtility.GetResult());
         }
 
         /// <summary>
@@ -122,20 +110,14 @@ namespace Veracity.Utilities.DatabaseDeploy.IoC
         /// </param>
         public static void SetLifetimeManager<T>(LifetimeManager lifetimeManager)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(lifetimeManager));
-            }
+            log.DebugIfEnabled(LogUtility.GetContext(lifetimeManager));
 
             if (!UnityContainer.IsRegistered<T>())
             {
                 UnityContainer.RegisterType<T>(lifetimeManager);
             }
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult());
-            }
+            log.DebugIfEnabled(LogUtility.GetResult());
         }
 
         #endregion

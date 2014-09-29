@@ -85,22 +85,19 @@ namespace Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances.SqlServer
         /// </param>
         public override void ExecuteScript(string scriptFileName, params DbParameter[] parameters)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(scriptFileName, parameters));
-            }
+            log.DebugIfEnabled(LogUtility.GetContext(scriptFileName, parameters));
 
-            string script = this.GetCommandText(scriptFileName);
+            string script = GetCommandText(scriptFileName);
 
-            string[] commands = script.Split(new string[] { "GO\r\n", "GO ", "GO\t", "GO\n" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] commands = script.Split(new [] { "GO" }, StringSplitOptions.RemoveEmptyEntries);
 
-            using (SqlConnection connection = new SqlConnection(this.ConfigurationService.ConnectionString))
+            using (var connection = new SqlConnection(ConfigurationService.ConnectionString))
             {
                 connection.Open();
 
                 foreach (string subScript in commands)
                 {
-                    using (SqlCommand command = new SqlCommand(subScript, connection))
+                    using (var command = new SqlCommand(subScript, connection))
                     {
                         command.Parameters.AddRange(parameters);
                         command.ExecuteNonQuery();
@@ -123,24 +120,18 @@ namespace Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances.SqlServer
         /// </returns>
         public override DataSet RunScript(string scriptFileName, params DbParameter[] parameters)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(scriptFileName, parameters));
-            }
+            log.DebugIfEnabled(LogUtility.GetContext(scriptFileName, parameters));
 
-            string script = this.GetCommandText(scriptFileName);
-            DataSet result = new DataSet();
+            string script = GetCommandText(scriptFileName);
+            var result = new DataSet();
 
-            using (SqlDataAdapter adapter = new SqlDataAdapter(script, this.ConfigurationService.ConnectionString))
+            using (var adapter = new SqlDataAdapter(script, ConfigurationService.ConnectionString))
             {
                 adapter.SelectCommand.Parameters.AddRange(parameters);
                 adapter.Fill(result);
             }
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult(result));
-            }
+            log.DebugIfEnabled(LogUtility.GetResult(result));
 
             return result;
         }

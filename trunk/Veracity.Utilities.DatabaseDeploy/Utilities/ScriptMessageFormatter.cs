@@ -46,10 +46,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
         /// </returns>
         public string FormatCollection(ICollection<int> values)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(values));
-            }
+            log.DebugIfEnabled(LogUtility.GetContext(values));
 
             string result;
 
@@ -88,10 +85,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
                 result = "No scripts found.";
             }
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult(result));
-            }
+            log.DebugIfEnabled(LogUtility.GetResult(result));
 
             return result;
         }
@@ -114,10 +108,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
         /// </param>
         private void AppendRange(StringBuilder textString, int lastNumber, int rangeStart)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(textString, lastNumber, rangeStart));
-            }
+            log.DebugIfEnabled(LogUtility.GetContext(textString, lastNumber, rangeStart));
 
             if (lastNumber == rangeStart)
             {
@@ -139,10 +130,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
                 textString.Append(", ");
             }
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult());
-            }
+            log.DebugIfEnabled(LogUtility.GetResult());
         }
 
         #endregion

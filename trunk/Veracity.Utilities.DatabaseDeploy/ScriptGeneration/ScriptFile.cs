@@ -7,6 +7,9 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Text.RegularExpressions;
+using Veracity.Utilities.DatabaseDeploy.FileManagement;
+
 namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
 {
     #region Usings
@@ -32,14 +35,29 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
         /// </summary>
         private static readonly ILog log = LogManager.GetLogger(typeof(ScriptFile));
 
+        private static Regex regexFileName = new Regex(@"(\d+)(\s+)?(.+)?");
         #endregion
 
         #region Public Properties
 
         /// <summary>
+        /// Pattern used to parse the file names
+        /// </summary>
+        public static string FileNamePattern
+        {
+            get { return regexFileName.ToString(); }
+            set { regexFileName = new Regex(value); }
+        }
+
+        /// <summary>
         ///   Gets or sets the description for this file.
         /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Gets or sets the contents of the script
+        /// </summary>
+        public string Contents { get; set; }
 
         /// <summary>
         ///   Gets or sets the file info for this script
@@ -63,22 +81,26 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
         /// <summary>
         /// Parses a file info for the information needed in the script
         /// </summary>
-        /// <param name="filePath">
-        /// The file info to parse 
+        /// <param name="fileService">
+        ///     Service to deal with files
         /// </param>
-        public void Parse(string filePath)
+        /// <param name="filePath">
+        ///     The file info to parse 
+        /// </param>
+        public void Parse(IFileService fileService, string filePath)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(filePath));
-            }
+            log.DebugIfEnabled(LogUtility.GetContext(fileService, filePath));
 
             this.FileName = filePath.Trim();
-            FileInfo info = new FileInfo(this.FileName);
-
-            this.FileInfo = info;
-
+            this.FileInfo = new FileInfo(this.FileName);
             this.GetIdAndDescription();
+            this.ReadContents(fileService, filePath);
+        }
+
+        private void ReadContents(IFileService fileService, string filePath)
+        {
+            var lines = fileService.GetLinesFromFile(filePath);
+            Contents = lines.Combine();
         }
 
         #endregion
@@ -90,48 +112,31 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
         /// </summary>
         private void GetIdAndDescription()
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext());
-            }
+            log.DebugIfEnabled(LogUtility.GetContext());
 
-            int idLocation = this.FileInfo.Name.IndexOf(' ');
-
+            Match m = regexFileName.Match(Path.GetFileNameWithoutExtension(FileInfo.Name));
+            var success = m.Success && m.Groups.Count > 1;
             int id = 0;
-            bool success = false;
-
-            // this can happen if they don't put a description into the file.
-            if (idLocation == -1)
+            if (success)
             {
-                idLocation = this.FileInfo.Name.IndexOf('.');
-                if (idLocation != -1)
-                {
-                    success = int.TryParse(this.FileInfo.Name.Substring(0, idLocation), out id);
-                    idLocation = 0;
-                }
+                success = int.TryParse(m.Groups[1].Value, out id);
             }
-            else
-            {
-                success = int.TryParse(this.FileInfo.Name.Substring(0, idLocation), out id);
-            }
-
             if (!success)
             {
                 string message = string.Format(
-                    "The file {0} is formed incorrectly.  The file must start with a value that will convert to an int followed by a space followed by the description of the file.  For example:  0001 MyScriptFile.sql", this.FileInfo.FullName);
+                    "The file {0} is formed incorrectly.  The file must match this format: {1}",
+                    this.FileInfo.FullName, FileNamePattern);
                 log.Error(message);
                 throw new Exception(message);
             }
 
-            string description = this.FileInfo.Name.Substring(idLocation).Trim();
-
             this.Id = id;
-            this.Description = description;
-
-            if (log.IsDebugEnabled)
+            if (m.Groups.Count > 3)
             {
-                log.Debug(LogUtility.GetResult());
+                this.Description = m.Groups[3].Value;
             }
+
+            log.DebugIfEnabled(LogUtility.GetResult());
         }
 
         #endregion

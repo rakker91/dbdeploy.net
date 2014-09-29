@@ -7,13 +7,16 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using Oracle.DataAccess.Client;
+
 namespace Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances.Oracle
 {
     #region Usings
 
-    using System;
     using System.Data;
     using System.Data.Common;
+
+    using log4net;
 
     using Veracity.Utilities.DatabaseDeploy.Configuration;
     using Veracity.Utilities.DatabaseDeploy.FileManagement;
@@ -26,6 +29,15 @@ namespace Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances.Oracle
     /// </summary>
     public class OracleDatabaseService : DatabaseServiceBase, IOracleDatabaseService
     {
+        #region Constants and Fields
+
+        /// <summary>
+        ///   Creates the default logger
+        /// </summary>
+        private static readonly ILog log = LogManager.GetLogger(typeof(OracleDatabaseService));
+
+        #endregion
+
         #region Constructors and Destructors
 
         /// <summary>
@@ -73,7 +85,20 @@ namespace Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances.Oracle
         /// </param>
         public override void ExecuteScript(string scriptFileName, params DbParameter[] parameters)
         {
-            throw new NotImplementedException();
+            log.DebugIfEnabled(LogUtility.GetContext(scriptFileName, parameters));
+
+            string script = GetCommandText(scriptFileName);
+
+            using (var connection = new OracleConnection(ConfigurationService.ConnectionString))
+            {
+                connection.Open();
+
+                using (var command = new OracleCommand(script, connection))
+                {
+                    command.Parameters.AddRange(parameters);
+                    command.ExecuteNonQuery();
+                }
+            }
         }
 
         /// <summary>
@@ -90,7 +115,20 @@ namespace Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances.Oracle
         /// </returns>
         public override DataSet RunScript(string scriptFileName, params DbParameter[] parameters)
         {
-            throw new NotImplementedException();
+            log.DebugIfEnabled(LogUtility.GetContext(scriptFileName, parameters));
+
+            string script = GetCommandText(scriptFileName);
+            var result = new DataSet();
+
+            using (var adapter = new OracleDataAdapter(script, ConfigurationService.ConnectionString))
+            {
+                adapter.SelectCommand.Parameters.AddRange(parameters);
+                adapter.Fill(result);
+            }
+
+            log.DebugIfEnabled(LogUtility.GetResult(result));
+
+            return result;
         }
 
         #endregion

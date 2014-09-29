@@ -10,7 +10,8 @@
 namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
 {
     using NUnit.Framework;
-
+    using Moq;
+    using Veracity.Utilities.DatabaseDeploy.FileManagement;
     using Veracity.Utilities.DatabaseDeploy.ScriptGeneration;
 
     /// <summary>
@@ -25,12 +26,14 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
         [Test]
         public void ThatRegularFileNameParsesCorrectly()
         {
+            var fileServiceMock = new Mock<IFileService>();
+            fileServiceMock.Setup(f => f.GetLinesFromFile(It.IsAny<string>())).Returns(new string[0]);
             ScriptFile script = new ScriptFile();
             string fileName = "1 Script.sql";
-            script.Parse(fileName);
+            script.Parse(fileServiceMock.Object, fileName);
 
             Assert.That(script.Id, Is.EqualTo(1));
-            Assert.That(script.Description, Is.EqualTo("Script.sql"));
+            Assert.That(script.Description, Is.EqualTo("Script"));
             Assert.That(script.FileName, Is.EqualTo(fileName));
         }
 
@@ -40,9 +43,11 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
         [Test]
         public void ThatMissingIdIsCaught()
         {
+            var fileServiceMock = new Mock<IFileService>();
+            fileServiceMock.Setup(f => f.GetLinesFromFile(It.IsAny<string>())).Returns(new string[0]);
             ScriptFile script = new ScriptFile();
             string fileName = "My Script.sql";
-            Assert.Throws<System.Exception>(() => script.Parse(fileName));
+            Assert.Throws<System.Exception>(() => script.Parse(fileServiceMock.Object, fileName));
         }
 
         /// <summary>
@@ -51,12 +56,14 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
         [Test]
         public void ThatExtraZerosAreAccepted()
         {
+            var fileServiceMock = new Mock<IFileService>();
+            fileServiceMock.Setup(f => f.GetLinesFromFile(It.IsAny<string>())).Returns(new string[0]);
             ScriptFile script = new ScriptFile();
             string fileName = "00001 Script.sql";
-            script.Parse(fileName);
+            script.Parse(fileServiceMock.Object, fileName);
 
             Assert.That(script.Id, Is.EqualTo(1));
-            Assert.That(script.Description, Is.EqualTo("Script.sql"));
+            Assert.That(script.Description, Is.EqualTo("Script"));
             Assert.That(script.FileName, Is.EqualTo(fileName));
         }
 
@@ -66,12 +73,14 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
         [Test]
         public void ThatExtraSpacesAreRemoved()
         {
+            var fileServiceMock = new Mock<IFileService>();
+            fileServiceMock.Setup(f => f.GetLinesFromFile(It.IsAny<string>())).Returns(new string[0]);
             ScriptFile script = new ScriptFile();
             string fileName = "  0001   Script.sql  ";
-            script.Parse(fileName);
+            script.Parse(fileServiceMock.Object, fileName);
 
             Assert.That(script.Id, Is.EqualTo(1));
-            Assert.That(script.Description, Is.EqualTo("Script.sql"));
+            Assert.That(script.Description, Is.EqualTo("Script"));
             Assert.That(script.FileName, Is.EqualTo("0001   Script.sql"));
         }
 
@@ -81,13 +90,15 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
         [Test]
         public void ThatScriptDescriptionStartingWithNumberWorks()
         {
+            var fileServiceMock = new Mock<IFileService>();
+            fileServiceMock.Setup(f => f.GetLinesFromFile(It.IsAny<string>())).Returns(new string[0]);
             ScriptFile script = new ScriptFile();
             string fileName = "1 1 Script.sql";
-            script.Parse(fileName);
+            script.Parse(fileServiceMock.Object, fileName);
 
             Assert.That(script.Id, Is.EqualTo(1));
-            Assert.That(script.Description, Is.EqualTo("1 Script.sql"));
-            Assert.That(script.FileName, Is.EqualTo(fileName));   
+            Assert.That(script.Description, Is.EqualTo("1 Script"));
+            Assert.That(script.FileName, Is.EqualTo(fileName));
         }
 
         /// <summary>
@@ -96,12 +107,14 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
         [Test]
         public void ThatNoDescriptionWorksAsExpected()
         {
+            var fileServiceMock = new Mock<IFileService>();
+            fileServiceMock.Setup(f => f.GetLinesFromFile(It.IsAny<string>())).Returns(new string[0]);
             ScriptFile script = new ScriptFile();
             string fileName = "1.sql";
-            script.Parse(fileName);
+            script.Parse(fileServiceMock.Object, fileName);
 
             Assert.That(script.Id, Is.EqualTo(1));
-            Assert.That(script.Description, Is.EqualTo(fileName));
+            Assert.That(script.Description, Is.EqualTo(string.Empty));
             Assert.That(script.FileName, Is.EqualTo(fileName));
         }
     }

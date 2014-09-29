@@ -141,6 +141,8 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.FileManagement
             this.SetupConfiguration(config);
 
             mock.Setup(i => i.GetFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>())).Returns(this.GetFiles());
+            mock.Setup(i => i.Exists(It.IsAny<string>())).Returns(true);
+            mock.Setup(i => i.ReadAllLines(It.IsAny<string>())).Returns(new string[0]);
 
             IFileService fileService = new FileService(config, mock.Object);
 
@@ -160,7 +162,9 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.FileManagement
             IConfigurationService config = new ConfigurationService();
             this.SetupConfiguration(config);
 
+            mock.Setup(i => i.Exists(It.IsAny<string>())).Returns(true);
             mock.Setup(i => i.GetFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>())).Returns(this.GetFilesWithDuplicate());
+            mock.Setup(i => i.ReadAllLines(It.IsAny<string>())).Returns(new string[0]);
 
             IFileService fileService = new FileService(config, mock.Object);
 
@@ -234,6 +238,8 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.FileManagement
             IFileService fileService = new FileService(config, mock.Object);
 
             mock.Setup(i => i.GetFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>())).Returns(this.GetFiles());
+            mock.Setup(i => i.Exists(It.IsAny<string>())).Returns(true);
+            mock.Setup(i => i.ReadAllLines(It.IsAny<string>())).Returns(new string[0]);
             IDictionary<int, IScriptFile> scripts = fileService.GetScriptFiles();
 
             using (MemoryStream stream = new MemoryStream())

@@ -30,12 +30,14 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
         [Test]
         public void ThatCurrentDateTimeReplaces()
         {
+            var dateTime = new DateTime(2014, 09, 17, 17, 42, 55);
+            TimeProvider.Current = new MockTimeProvider(dateTime);
             ITokenReplacer tp = new TokenReplacer(new ConfigurationService());
             string token = TokenEnum.CurrentDateTimeToken;
 
             string result = tp.Replace(token);
 
-            Assert.That(result, Is.EqualTo(DateTime.Now.ToString("g")));
+            Assert.That(result, Is.EqualTo(dateTime.ToString("g")));
         }
 
         /// <summary>

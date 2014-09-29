@@ -1,3 +1,11 @@
-﻿--With oracle, you must manually create your changelog table.  Sorry. :(
---If you know of a good way to replicate something similar to what's in the EnsureChangeLogExists
---script in the mssql directory, please let me know.
+﻿declare c integer;
+begin
+select count(*) into c
+from all_tables
+where
+table_name = 'CHANGELOG';
+
+IF c != 1 THEN
+  execute immediate 'CREATE TABLE changelog ( change_number NUMBER(6), complete_dt DATE, applied_by VARCHAR2(100), description VARCHAR2(500), script_hash VARCHAR(100) )';
+END IF;
+end;

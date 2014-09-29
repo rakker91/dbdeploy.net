@@ -12,6 +12,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Console
     #region Usings
 
     using System;
+    using System.ComponentModel;
     using System.Configuration;
 
     using CommandLine;
@@ -74,26 +75,16 @@ namespace Veracity.Utilities.DatabaseDeploy.Console
         /// </returns>
         private static T GetSetting<T>(string setting)
         {
-            if (log.IsDebugEnabled)
+            log.DebugIfEnabled(LogUtility.GetContext(setting));
+
+            var result = default(T);
+            var value = ConfigurationManager.AppSettings[setting];
+            if (value != null)
             {
-                log.Debug(LogUtility.GetContext(setting));
+                result = (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(value);
             }
 
-            AppSettingsReader reader = new AppSettingsReader();
-            T result;
-            try
-            {
-                result = (T)reader.GetValue(setting, typeof(T));
-            }
-            catch (Exception)
-            {
-                result = default(T);
-            }
-
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult(result));
-            }
+            log.DebugIfEnabled(LogUtility.GetResult(result));
 
             return result;
         }
@@ -106,17 +97,14 @@ namespace Veracity.Utilities.DatabaseDeploy.Console
         /// </param>
         private static void Main(string[] args)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(args));
-            }
+            log.DebugIfEnabled(LogUtility.GetContext(args));
 
             try
             {
-                Container.UnityContainer.RegisterType<IConfigurationService>(new PerThreadLifetimeManager());
+                IoC.Container.UnityContainer.RegisterType<IConfigurationService>(new PerThreadLifetimeManager());
 
-                ConfigurationService = Container.UnityContainer.Resolve<IConfigurationService>();
-                DeploymentService = Container.UnityContainer.Resolve<IDeploymentService>();
+                ConfigurationService = IoC.Container.UnityContainer.Resolve<IConfigurationService>();
+                DeploymentService = IoC.Container.UnityContainer.Resolve<IDeploymentService>();
 
                 ConfigurationService.ConnectionString = GetSetting<string>("ConnectionString");
 
@@ -142,6 +130,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Console
                 ConfigurationService.Recursive = GetSetting<bool>("Recursive");
                 ConfigurationService.RootDirectory = GetSetting<string>("RootDirectory");
                 ConfigurationService.SearchPattern = GetSetting<string>("SearchPattern");
+                ConfigurationService.FileNamePattern = GetSetting<string>("FileNamePattern");
                 ConfigurationService.UndoOutputFile = GetSetting<string>("UndoFile");
                 ConfigurationService.Schema = GetSetting<string>("Schema");
                 ConfigurationService.ChangeLog = GetSetting<string>("ChangeLog");
@@ -206,6 +195,10 @@ namespace Veracity.Utilities.DatabaseDeploy.Console
                     ConfigurationService.SearchPattern = options.SearchPattern != string.Empty
                                                                 ? options.SearchPattern
                                                                 : ConfigurationService.SearchPattern;
+
+                    ConfigurationService.FileNamePattern = options.FileNamePattern != string.Empty
+                                                                ? options.FileNamePattern
+                                                                : ConfigurationService.FileNamePattern;
 
                     ConfigurationService.UndoOutputFile = options.UndoOutputFile != string.Empty
                                                                 ? options.UndoOutputFile

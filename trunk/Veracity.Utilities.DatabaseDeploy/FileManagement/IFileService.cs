@@ -44,6 +44,17 @@ namespace Veracity.Utilities.DatabaseDeploy.FileManagement
         string GetFileContents(string fileName, bool useCache);
 
         /// <summary>
+        /// Reads the lines of a file from disc
+        /// </summary>
+        /// <param name="fileName">
+        /// The name of the file to read. 
+        /// </param>
+        /// <returns>
+        /// A string containing the contents of the file. 
+        /// </returns>
+        string[] GetLinesFromFile(string fileName);
+
+        /// <summary>
         /// Gets a list of script files from disk
         /// </summary>
         /// <returns>

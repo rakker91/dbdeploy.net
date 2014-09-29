@@ -90,10 +90,7 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
         /// </param>
         public ScriptService(IDatabaseService databaseService, IFileService fileService, ITokenReplacer tokenReplacer, IConfigurationService configurationService)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(databaseService, fileService, tokenReplacer, configurationService));
-            }
+            log.DebugIfEnabled(LogUtility.GetContext(databaseService, fileService, tokenReplacer, configurationService));
 
             this.databaseService = databaseService;
             this.fileService = fileService;
@@ -116,10 +113,7 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
         /// </returns>
         public string BuildChangeScript(IDictionary<int, IScriptFile> changes)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(changes));
-            }
+            log.DebugIfEnabled(LogUtility.GetContext(changes));
 
             StringBuilder changeScript = new StringBuilder();
 
@@ -133,20 +127,16 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
 
             foreach (int key in sortedKeys)
             {
-                string scriptContents = this.fileService.GetFileContents(changes[key].FileName, false);
-
-                this.tokenReplacer.Script = changes[key];
+                var scriptFile = changes[key];
+                this.tokenReplacer.Script = scriptFile;
                 this.AppendScript(DatabaseScriptEnum.ScriptHeader, changeScript);
-                this.AppendScriptBody(changeScript, scriptContents, false);
+                this.AppendScriptBody(changeScript, scriptFile.Contents, false);
                 this.AppendScript(DatabaseScriptEnum.ScriptFooter, changeScript);
             }
 
             this.AppendScript(DatabaseScriptEnum.ChangeScriptFooter, changeScript);
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult(changeScript));
-            }
+            log.DebugIfEnabled(LogUtility.GetResult(changeScript));
 
             return changeScript.ToString();
         }
@@ -162,10 +152,7 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
         /// </returns>
         public string BuildUndoScript(IDictionary<int, IScriptFile> changes)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(changes));
-            }
+            log.DebugIfEnabled(LogUtility.GetContext(changes));
 
             StringBuilder undoScript = new StringBuilder();
 
@@ -192,10 +179,7 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
 
             this.AppendScript(DatabaseScriptEnum.UndoScriptFooter, undoScript);
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult(undoScript));
-            }
+            log.DebugIfEnabled(LogUtility.GetResult(undoScript));
 
             return undoScript.ToString();
         }
@@ -215,10 +199,7 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
         /// </param>
         private void AppendScript(string scriptToUse, StringBuilder changeScript)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(scriptToUse, changeScript));
-            }
+            log.DebugIfEnabled(LogUtility.GetContext(scriptToUse, changeScript));
 
             string scriptContents = this.databaseService.GetScriptFromFile(scriptToUse);
 
@@ -226,10 +207,7 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
 
             changeScript.AppendLine(scriptContents);
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult());
-            }
+            log.DebugIfEnabled(LogUtility.GetResult());
         }
 
         /// <summary>
@@ -246,10 +224,7 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
         /// </param>
         private void AppendScriptBody(StringBuilder changeScript, string scriptContents, bool undo)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(changeScript, scriptContents, undo));
-            }
+            log.DebugIfEnabled(LogUtility.GetContext(changeScript, scriptContents, undo));
 
             string scriptPortion;
             string undoPortion = string.Empty;

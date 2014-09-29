@@ -69,10 +69,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
         /// </returns>
         public static string GetContext(params object[] passedValues)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(string.Format("GetContext called."));
-            }
+            log.DebugIfEnabled("GetContext called.");
 
             string result = "Unable to build context.";
 
@@ -98,10 +95,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
 
             currentDepth--;
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(string.Format("GetContext finished.  Result={0}", result));
-            }
+            log.DebugIfEnabled("GetContext finished.  Result={0}", result);
 
             return result;
         }
@@ -114,10 +108,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
         /// </returns>
         public static string GetResult()
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(string.Format("GetResult called."));
-            }
+            log.DebugIfEnabled("GetResult called.");
 
             return GetResult(null);
         }
@@ -133,10 +124,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
         /// </returns>
         public static string GetResult(object result)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(string.Format("GetResult(object) called."));
-            }
+            log.DebugIfEnabled("GetResult(object) called.");
 
             MethodBase currentMethod = GetCurrentMethod();
             StringBuilder logResult = new StringBuilder();
@@ -150,10 +138,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
                 logResult.Append("|~");
             }
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(string.Format("GetResult Completed.  Result={0}", logResult));
-            }
+            log.DebugIfEnabled("GetResult Completed.  Result={0}", logResult);
 
             return logResult.ToString();
         }
@@ -179,10 +164,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
         /// </returns>
         private static string BuildLoggingStatement(MethodBase currentMethod, ParameterInfo[] methodParameters, object[] passedValues)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(string.Format("BuildLoggingStatement Called."));
-            }
+            log.DebugIfEnabled("BuildLoggingStatement Called.");
 
             StringBuilder loggingStatement = new StringBuilder();
 
@@ -197,10 +179,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
 
             string result = loggingStatement.ToString();
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(string.Format("BuildLoggingStatement Complete.  Result = {0}", result));
-            }
+            log.DebugIfEnabled("BuildLoggingStatement Complete.  Result = {0}", result);
 
             return result;
         }
@@ -213,10 +192,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
         /// </returns>
         private static MethodBase GetCurrentMethod()
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(string.Format("GetCurrentMethod called."));
-            }
+            log.DebugIfEnabled("GetCurrentMethod called.");
 
             MethodBase result = null;
 
@@ -228,10 +204,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
                 result = frames.Select(frame => frame.GetMethod()).FirstOrDefault(method => method.DeclaringType != typeof(LogUtility) && method.Name != "Wrap");
             }
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(string.Format("GetCurrentMethod Complete"));
-            }
+            log.DebugIfEnabled("GetCurrentMethod Complete");
 
             return result;
         }
@@ -247,10 +220,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
         /// </param>
         private static void GetGenericTypes(StringBuilder loggingStatement, Type[] genericTypes)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(string.Format("GetGenericTypes called."));
-            }
+            log.DebugIfEnabled("GetGenericTypes called.");
 
             loggingStatement.Append("<");
             bool first = true;
@@ -270,10 +240,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
 
             loggingStatement.Append(">");
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(string.Format("GetGenericTypes complete."));
-            }
+            log.DebugIfEnabled("GetGenericTypes complete.");
         }
 
         /// <summary>
@@ -290,10 +257,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
         /// </param>
         private static void GetMethodDeclaration(StringBuilder loggingStatement, MethodBase currentMethod, ParameterInfo[] methodParameters)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(string.Format("GetMethodDeclaration Called"));
-            }
+            log.DebugIfEnabled("GetMethodDeclaration Called");
 
             loggingStatement.Append(currentMethod.Name);
             if (currentMethod.IsGenericMethod)
@@ -334,10 +298,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
 
             loggingStatement.Append(")");
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(string.Format("GetMethodDeclaration Complete"));
-            }
+            log.DebugIfEnabled("GetMethodDeclaration Complete");
         }
 
         /// <summary>
@@ -354,10 +315,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
         /// </param>
         private static void GetMethodParameterValues(StringBuilder loggingStatement, ParameterInfo[] methodParameters, object[] passedValues)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(string.Format("GetMethodParameterValues called."));
-            }
+            log.DebugIfEnabled("GetMethodParameterValues called.");
 
             int passedLocation = 0;
             bool first = true;
@@ -405,10 +363,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
                 loggingStatement.Append(" :|");
             }
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(string.Format("GetMethodParameterValues complete."));
-            }
+            log.DebugIfEnabled("GetMethodParameterValues complete.");
         }
 
         /// <summary>
@@ -422,10 +377,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
         /// </returns>
         private static string GetObjectValue(object value)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(string.Format("GetObjectValue(object) called."));
-            }
+            log.DebugIfEnabled("GetObjectValue(object) called.");
 
             return GetObjectValue(value, new Dictionary<object, string>(), new List<object>());
         }
@@ -447,10 +399,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
         /// </returns>
         private static string GetObjectValue(object value, IDictionary<object, string> appendedObjects, IList<object> seenObjects)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(string.Format("GetObjectValue called."));
-            }
+            log.DebugIfEnabled("GetObjectValue called.");
 
             StringBuilder builder = new StringBuilder();
             string result;
@@ -515,10 +464,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
                 }
             }
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(string.Format("GetObjectValue complete.  Result={0}", result));
-            }
+            log.DebugIfEnabled("GetObjectValue complete.  Result={0}", result);
 
             return result;
         }
@@ -534,10 +480,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
         /// </returns>
         private static bool IsArray(object valueToCheck)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(string.Format("IsArray Called"));
-            }
+            log.DebugIfEnabled("IsArray Called");
 
             bool result = false;
 
@@ -549,10 +492,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
                 }
             }
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(string.Format("IsArray Complete.  Result ={0}", result));
-            }
+            log.DebugIfEnabled("IsArray Complete.  Result ={0}", result);
 
             return result;
         }
@@ -571,10 +511,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
         /// </param>
         private static void ValidateParameters(MethodBase currentMethod, ParameterInfo[] methodParameters, object[] passedValues)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(string.Format("ValidateParameters called."));
-            }
+            log.DebugIfEnabled("ValidateParameters called.");
 
             if (methodParameters == null)
             {
@@ -605,10 +542,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
                 }
             }
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(string.Format("ValidateParameters complete."));
-            }
+            log.DebugIfEnabled("ValidateParameters complete.");
         }
 
         #endregion
