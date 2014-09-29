@@ -42,7 +42,7 @@
     <StartupObject />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\Debug\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
@@ -65,7 +65,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="database.targets" />
-    <None Include="packages.config" />
     <None Include="rebuild.bat" />
   </ItemGroup>
   <ItemGroup>
@@ -74,69 +73,6 @@
     <Content Include="Scripts\Deployed\2 Add Admin User.sql" />
     <Content Include="Scripts\Rebuild\0002 Create Admin User.sql" />
     <Content Include="Scripts\TestData\1 Add Some Users.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Interop.COMAdmin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=10d297e8e737fe34, processorArchitecture=MSIL">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-      <Private>True</Private>
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\Interop.COMAdmin.dll</HintPath>
-    </Reference>
-    <Reference Include="Interop.IWshRuntimeLibrary, Version=1.0.0.0, Culture=neutral, PublicKeyToken=10d297e8e737fe34, processorArchitecture=MSIL">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-      <Private>True</Private>
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\Interop.IWshRuntimeLibrary.dll</HintPath>
-    </Reference>
-    <Reference Include="Ionic.Zip">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\Ionic.Zip.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack, Version=4.0.0.0, Culture=neutral, PublicKeyToken=10d297e8e737fe34, processorArchitecture=MSIL">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.BizTalk">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.BizTalk.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.Git">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.Git.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.Iis7">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.Iis7.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.Loggers">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.Loggers.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.Sql2005, Version=4.0.0.0, Culture=neutral, PublicKeyToken=10d297e8e737fe34, processorArchitecture=MSIL">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.Sql2005.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.Sql2008, Version=4.0.0.0, Culture=neutral, PublicKeyToken=10d297e8e737fe34, processorArchitecture=MSIL">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.Sql2008.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.Sql2012">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.Sql2012.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.StyleCop">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.StyleCop.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.Sync">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.Sync.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.TaskFactory.Dlr, Version=4.0.0.0, Culture=neutral, PublicKeyToken=10d297e8e737fe34, processorArchitecture=MSIL">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.TaskFactory.Dlr.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.TaskFactory.PowerShell, Version=4.0.0.0, Culture=neutral, PublicKeyToken=10d297e8e737fe34, processorArchitecture=MSIL">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.TaskFactory.PowerShell.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.Tfs">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.Tfs.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.Tfs2010">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.Tfs2010.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.Tfs2012">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.Tfs2012.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.WindowsVirtualPC">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.WindowsVirtualPC.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
