@@ -67,7 +67,8 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Configuration
         [Test]
         public void ThatDefaultDatabaseSetupExists()
         {
-            IConfigurationService config = new ConfigurationService();
+            var config = new ConfigurationService();
+            config.SetupDatabaseType();
             IDatabaseService db = Container.UnityContainer.Resolve<IDatabaseService>();
 
             Assert.That(db, Is.TypeOf<SqlServerDatabaseService>());

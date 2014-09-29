@@ -7,6 +7,8 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using Veracity.Utilities.DatabaseDeploy.FileManagement;
+
 namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
 {
     #region Usings
@@ -38,6 +40,11 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
         string FileName { get; set; }
 
         /// <summary>
+        /// Gets or sets the contents of the script read in from the files
+        /// </summary>
+        string Contents { get; set; }
+
+        /// <summary>
         ///   Gets or sets the script Id. These must be unique
         /// </summary>
         int Id { get; set; }
@@ -49,10 +56,13 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
         /// <summary>
         /// Parses a file.
         /// </summary>
-        /// <param name="filePath">
-        /// The file that is going to be parsed. 
+        /// <param name="fileService">
+        ///     The service that interacts with files
         /// </param>
-        void Parse(string filePath);
+        /// <param name="filePath">
+        ///     The file that is going to be parsed. 
+        /// </param>
+        void Parse(IFileService fileService, string filePath);
 
         #endregion
     }

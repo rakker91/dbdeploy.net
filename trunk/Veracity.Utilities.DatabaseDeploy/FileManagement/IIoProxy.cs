@@ -45,5 +45,12 @@ namespace Veracity.Utilities.DatabaseDeploy.FileManagement
         /// <param name="fileName">The file to check.</param>
         /// <returns>True if it exists, false otherwise.</returns>
         bool Exists(string fileName);
+
+        /// <summary>
+        /// Read all lines from a file
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        string[] ReadAllLines(string fileName);
     }
 }

@@ -12,6 +12,8 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.BuildTask
     using System;
     using System.IO;
 
+    using ApprovalTests;
+
     using Microsoft.Practices.Unity;
 
     using Moq;
@@ -36,14 +38,13 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.BuildTask
         public void ThatExecuteSetupsCorrectly()
         {
             IConfigurationService configurationService = new ConfigurationService();
-            var deploymentServiceMock = new Mock<IDeploymentService>(MockBehavior.Strict);
-
-            deploymentServiceMock.Setup(d => d.BuildDeploymentScript()).Verifiable();
-
             Container.RegisterInstance(configurationService);
+
+            var deploymentServiceMock = new Mock<IDeploymentService>(MockBehavior.Strict);
+            deploymentServiceMock.Setup(d => d.BuildDeploymentScript()).Verifiable();
             Container.RegisterInstance(deploymentServiceMock.Object);
 
-            DbDeploy deploy = new DbDeploy();
+            var deploy = new DbDeploy();
             deploy.ConnectionString = "Connection String";
             deploy.DatabaseType = "mssql";
             deploy.LastChangeToApply = 500;
@@ -55,16 +56,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.BuildTask
 
             deploy.Execute();
 
-            Assert.That(configurationService, Is.EqualTo(deploy.ConfigurationService));
-
-            Assert.That(configurationService.ConnectionString, Is.EqualTo("Connection String"));
-            Assert.That(configurationService.DatabaseManagementSystem, Is.EqualTo(DatabaseTypesEnum.SqlServer));
-            Assert.That(configurationService.LastChangeToApply, Is.EqualTo(500));
-            Assert.That(configurationService.OutputFile, Is.EqualTo("Output File"));
-            Assert.That(configurationService.UndoOutputFile, Is.EqualTo("Undo File"));
-            Assert.That(configurationService.Recursive, Is.True);
-            Assert.That(configurationService.RootDirectory, Is.EqualTo(Path.Combine(Environment.CurrentDirectory, "Root Directory")));
-            Assert.That(configurationService.SearchPattern, Is.EqualTo("*.sql"));
+            Approvals.Verify(configurationService);
 
             deploy.DatabaseType = "ora";
             deploy.Execute();

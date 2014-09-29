@@ -38,7 +38,8 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Database
         {
             BogusDatabaseMock constructorTest = new BogusDatabaseMock();
 
-            IConfigurationService configurationService = new ConfigurationService();
+            var configurationService = new ConfigurationService();
+            configurationService.SetupDatabaseType();
             var fileServiceMock = new Mock<IFileService>(MockBehavior.Strict);
 
             string scriptFileName = "MyScript.sql";
@@ -69,14 +70,15 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Database
         [Test]
         public void ThatGetAppliedChangesReturnsChangelog()
         {
-            IConfigurationService configurationService = new ConfigurationService();
+            var configurationService = new ConfigurationService();
+            configurationService.SetupDatabaseType();
             var fileServiceMock = new Mock<IFileService>(MockBehavior.Strict);
 
             string fileContents = "File Contents";
 
             fileServiceMock.Setup(f => f.GetFileContents(It.IsAny<string>(), It.IsAny<bool>())).Returns(fileContents).Verifiable();
 
-            BogusDatabaseMock databaseService = new BogusDatabaseMock(configurationService, fileServiceMock.Object, new TokenReplacer(configurationService));
+            var databaseService = new BogusDatabaseMock(configurationService, fileServiceMock.Object, new TokenReplacer(configurationService));
 
             databaseService.DataSetToReturn = this.GetDataset();
 

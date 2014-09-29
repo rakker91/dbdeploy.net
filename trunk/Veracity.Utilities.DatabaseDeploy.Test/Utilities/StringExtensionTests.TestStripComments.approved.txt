@@ -1,0 +1,3 @@
+﻿nocomments[0] = line which has no comment
+nocomments[1] = 
+nocomments[2] = a line which has stuff 

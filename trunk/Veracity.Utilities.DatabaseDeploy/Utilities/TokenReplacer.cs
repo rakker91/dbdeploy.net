@@ -44,10 +44,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
         /// </summary>
         public TokenReplacer()
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext());
-            }
+            log.DebugIfEnabled(LogUtility.GetContext());
 
             this.Script = new ScriptFile();
         }
@@ -56,12 +53,10 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
         /// Initializes a new instance of the TokenReplacer class
         /// </summary>
         /// <param name="configurationService">The configuration service to use for this instance</param>
-        public TokenReplacer(IConfigurationService configurationService) : this()
+        public TokenReplacer(IConfigurationService configurationService)
+            : this()
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(configurationService));
-            }
+            log.DebugIfEnabled(LogUtility.GetContext(configurationService));
 
             this.configurationService = configurationService;
         }
@@ -95,15 +90,12 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
         /// </returns>
         public string Replace(string stringToParse)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(stringToParse));
-            }
+            log.DebugIfEnabled(LogUtility.GetContext(stringToParse));
 
             // There are far more elegant ways to do this (tokenization and such), but brute force will work fine here.
             string result = stringToParse;
 
-            result = result.ReplaceEx(TokenEnum.CurrentDateTimeToken, DateTime.Now.ToString("g"));
+            result = result.ReplaceEx(TokenEnum.CurrentDateTimeToken, TimeProvider.Current.Now.ToString("g"));
             result = result.ReplaceEx(TokenEnum.CurrentUserToken, Environment.UserName);
             result = result.ReplaceEx(TokenEnum.CurrentVersionToken, this.CurrentVersion.ToString(CultureInfo.InvariantCulture));
             result = result.ReplaceEx(TokenEnum.ScriptIdToken, this.Script.Id.ToString(CultureInfo.InvariantCulture));
@@ -112,10 +104,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
             result = result.ReplaceEx(TokenEnum.SchemaToken, this.configurationService.Schema);
             result = result.ReplaceEx(TokenEnum.ChangeLogToken, this.configurationService.ChangeLog);
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult(result));
-            }
+            log.DebugIfEnabled(LogUtility.GetResult(result));
 
             return result;
         }

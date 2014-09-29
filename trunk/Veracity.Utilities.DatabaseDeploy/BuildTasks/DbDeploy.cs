@@ -41,9 +41,12 @@ namespace Veracity.Utilities.DatabaseDeploy.BuildTasks
         private static readonly ILog log = LogManager.GetLogger(typeof(DbDeploy));
 
         /// <summary>
-        ///   Represents the last changes that can be applied.
+        /// The constructor of the DbDeploy object
         /// </summary>
-        private int lastChangeToApply = int.MaxValue;
+        public DbDeploy()
+        {
+            LastChangeToApply = int.MaxValue;
+        }
 
         #endregion
 
@@ -85,18 +88,7 @@ namespace Veracity.Utilities.DatabaseDeploy.BuildTasks
         /// <summary>
         ///   Gets or sets the last change to apply to the database. The default is int.MaxValue. The max is int.MaxValue.
         /// </summary>
-        public int LastChangeToApply
-        {
-            get
-            {
-                return this.lastChangeToApply;
-            }
-
-            set
-            {
-                this.lastChangeToApply = value;
-            }
-        }
+        public int LastChangeToApply { get; set; }
 
         /// <summary>
         ///   Gets or sets the output file where the generated script will be placed. The default is DbDeploy.sql in the same directory where dbdeploy is run.
@@ -120,9 +112,14 @@ namespace Veracity.Utilities.DatabaseDeploy.BuildTasks
         public string RootDirectory { get; set; }
 
         /// <summary>
-        ///   Gets or sets the search pattern to use for file parsing. The default is "*.sql"
+        ///   Gets or sets the search pattern to use for finding script files. The default is "*.sql"
         /// </summary>
         public string SearchPattern { get; set; }
+
+        /// <summary>
+        /// Gets or sets the pattern to use for parsing the name of the script file
+        /// </summary>
+        public string FileNamePattern { get; set; }
 
         #endregion
 
@@ -139,15 +136,12 @@ namespace Veracity.Utilities.DatabaseDeploy.BuildTasks
             FileInfo log4netConfig = new FileInfo(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "log4net.config"));
             log4net.Config.XmlConfigurator.ConfigureAndWatch(log4netConfig);
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext());
-            }
+            log.DebugIfEnabled(LogUtility.GetContext());
 
             bool result = false;
             try
             {
-                Container.SetLifetimeManager<IConfigurationService>(new PerThreadLifetimeManager());   
+                Container.SetLifetimeManager<IConfigurationService>(new PerThreadLifetimeManager());
 
                 Container.UnityContainer.BuildUp(this);
 

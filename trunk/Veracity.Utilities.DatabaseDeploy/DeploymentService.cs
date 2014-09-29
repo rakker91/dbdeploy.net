@@ -86,10 +86,7 @@ namespace Veracity.Utilities.DatabaseDeploy
         /// </param>
         public DeploymentService(IDatabaseService databaseService, IConfigurationService configurationService, IScriptService scriptService, IFileService fileService, IScriptMessageFormatter scriptMessageFormatter)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(databaseService, configurationService, scriptService, fileService, scriptMessageFormatter));
-            }
+            log.DebugIfEnabled(LogUtility.GetContext(databaseService, configurationService, scriptService, fileService, scriptMessageFormatter));
 
             this.databaseService = databaseService;
             this.configurationService = configurationService;
@@ -97,10 +94,7 @@ namespace Veracity.Utilities.DatabaseDeploy
             this.fileService = fileService;
             this.scriptMessageFormatter = scriptMessageFormatter;
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult());
-            }
+            log.DebugIfEnabled(LogUtility.GetResult());
         }
 
         #endregion
@@ -127,107 +121,64 @@ namespace Veracity.Utilities.DatabaseDeploy
         /// </summary>
         public void BuildDeploymentScript()
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext());
-            }
+            log.DebugIfEnabled(LogUtility.GetContext());
 
-            if (log.IsInfoEnabled)
-            {
-                log.Info(string.Format("Starting dbdeploy run with settings:\n{0}", this.configurationService));
-            }
+            log.InfoIfEnabled("Starting dbdeploy run with settings:\n{0}", this.configurationService);
 
-            if (log.IsInfoEnabled)
-            {
-                log.Info("Cleaning up past runs.");
-            }
+            log.InfoIfEnabled("Cleaning up past runs.");
 
             this.fileService.CleanupPastRuns();
 
-            if (log.IsInfoEnabled)
-            {
-                log.Info("Getting available script files.");
-            }
+            log.InfoIfEnabled("Getting available script files.");
 
             IDictionary<int, IScriptFile> scripts = this.fileService.GetScriptFiles();
 
             if (scripts.Any())
             {
-                if (log.IsInfoEnabled)
-                {
-                    log.Info(string.Format("Writing found file list into {0}", this.configurationService.ScriptListFile));
-                }
-
+                log.InfoIfEnabled("Writing found file list into {0}", this.configurationService.ScriptListFile);
                 this.fileService.WriteScriptList(scripts);
+                log.InfoIfEnabled("Found scripts {0}.", this.scriptMessageFormatter.FormatCollection(scripts.Keys));
 
-                if (log.IsInfoEnabled)
-                {
-                    log.Info(string.Format("Found scripts {0}.  Getting applied changes.", this.scriptMessageFormatter.FormatCollection(scripts.Keys)));
-                }
-
+                log.InfoIfEnabled("Getting applied changes.");
                 IDictionary<int, IChangeLog> changes = this.databaseService.GetAppliedChanges();
+                log.InfoIfEnabled("Found scripts {0}.", this.scriptMessageFormatter.FormatCollection(changes.Keys));
 
-                if (log.IsInfoEnabled)
-                {
-                    log.Info(string.Format("Found scripts {0}.  Getting scripts to apply.", this.scriptMessageFormatter.FormatCollection(changes.Keys)));
-                }
-
+                log.InfoIfEnabled("Getting scripts to apply.");
                 IDictionary<int, IScriptFile> scriptsToApply = this.GetScriptsToApply(scripts, changes);
 
                 if (scriptsToApply.Any())
                 {
-                    if (log.IsInfoEnabled)
-                    {
-                        log.Info(string.Format("Scripts {0} need to be applied.  Building change script.", this.scriptMessageFormatter.FormatCollection(scriptsToApply.Keys)));
-                    }
+                    log.InfoIfEnabled("Scripts {0} need to be applied.",
+                        this.scriptMessageFormatter.FormatCollection(scriptsToApply.Keys));
 
+                    log.InfoIfEnabled("Building change script.");
                     string changeScript = this.scriptService.BuildChangeScript(scriptsToApply);
 
-                    if (log.IsInfoEnabled)
-                    {
-                        log.Info(string.Format("Building undo script for scripts {0}.", this.scriptMessageFormatter.FormatCollection(changes.Keys)));
-                    }
+                    log.InfoIfEnabled("Building undo script for scripts {0}.",
+                        this.scriptMessageFormatter.FormatCollection(changes.Keys));
 
                     string undoScript = this.scriptService.BuildUndoScript(scriptsToApply);
-                    if (log.IsInfoEnabled)
-                    {
-                        log.Info(string.Format("Writing change script to {0}", this.configurationService.OutputFile));
-                    }
+                    log.InfoIfEnabled("Writing change script to {0}", this.configurationService.OutputFile);
 
                     this.fileService.WriteChangeScript(changeScript);
 
-                    if (log.IsInfoEnabled)
-                    {
-                        log.Info(string.Format("Writing undo change script to {0}", this.configurationService.UndoOutputFile));
-                    }
+                    log.InfoIfEnabled("Writing undo change script to {0}", this.configurationService.UndoOutputFile);
 
                     this.fileService.WriteUndoScript(undoScript);
                 }
                 else
                 {
-                    if (log.IsInfoEnabled)
-                    {
-                        log.Info(string.Format("No changes need to be applied.  Skipping script generation."));
-                    }
+                    log.InfoIfEnabled("No changes need to be applied.  Skipping script generation.");
                 }
             }
             else
             {
-                if (log.IsInfoEnabled)
-                {
-                    log.Info(string.Format("No scripts found at {0}.  Skipping script generation.", this.configurationService.RootDirectory));
-                }                
+                log.InfoIfEnabled("No scripts found at {0}.  Skipping script generation.", this.configurationService.RootDirectory);
             }
 
-            if (log.IsInfoEnabled)
-            {
-                log.Info("Deployment generation complete.");
-            }
+            log.InfoIfEnabled("Deployment generation complete.");
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult());
-            }
+            log.DebugIfEnabled(LogUtility.GetResult());
         }
 
         #endregion
@@ -248,10 +199,7 @@ namespace Veracity.Utilities.DatabaseDeploy
         /// </returns>
         private IDictionary<int, IScriptFile> GetScriptsToApply(IDictionary<int, IScriptFile> availableScripts, IDictionary<int, IChangeLog> appliedChanges)
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext(availableScripts, appliedChanges));
-            }
+            log.DebugIfEnabled(LogUtility.GetContext(availableScripts, appliedChanges));
 
             IDictionary<int, IScriptFile> scriptsToApply = new Dictionary<int, IScriptFile>();
             int[] sortedKeys = availableScripts.Keys.OrderBy(k => k).ToArray();
@@ -260,10 +208,7 @@ namespace Veracity.Utilities.DatabaseDeploy
             {
                 if (key > this.configurationService.LastChangeToApply)
                 {
-                    if (log.IsInfoEnabled)
-                    {
-                        log.Info(string.Format("LastChangeToApply == {0}.  Skipping remaining scripts.", this.configurationService.LastChangeToApply));
-                    }
+                    log.InfoIfEnabled("LastChangeToApply == {0}.  Skipping remaining scripts.", this.configurationService.LastChangeToApply);
 
                     break;
                 }
@@ -271,10 +216,7 @@ namespace Veracity.Utilities.DatabaseDeploy
                 scriptsToApply.Add(key, availableScripts[key]);
             }
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult(scriptsToApply));
-            }
+            log.DebugIfEnabled(LogUtility.GetResult(scriptsToApply));
 
             return scriptsToApply;
         }

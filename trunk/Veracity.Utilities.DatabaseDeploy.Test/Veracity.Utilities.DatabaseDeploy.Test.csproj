@@ -26,6 +26,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\Veracity.Utilities.DatabaseDeploy.Test.XML</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -37,6 +38,12 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ApprovalTests">
+      <HintPath>..\packages\ApprovalTests.3.0.7\lib\net40\ApprovalTests.dll</HintPath>
+    </Reference>
+    <Reference Include="ApprovalUtilities">
+      <HintPath>..\packages\ApprovalUtilities.3.0.7\lib\net35\ApprovalUtilities.dll</HintPath>
+    </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
       <Private>True</Private>
@@ -78,8 +85,9 @@
     <Compile Include="ScriptGeneration\ScriptFileTests.cs" />
     <Compile Include="ScriptGeneration\ScriptServiceTests.cs" />
     <Compile Include="TestFixtureBase.cs" />
+    <Compile Include="Utilities\MockTimeProvider.cs" />
     <Compile Include="Utilities\ScriptMessageFormatterTests.cs" />
-    <Compile Include="Utilities\StringReplaceExtensionTests.cs" />
+    <Compile Include="Utilities\StringExtensionTests.cs" />
     <Compile Include="Utilities\TokenReplacerTests.cs" />
   </ItemGroup>
   <ItemGroup>

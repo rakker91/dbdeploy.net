@@ -88,9 +88,14 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
         private string scriptListFile = DefaultScriptListFile;
 
         /// <summary>
-        ///   The search pattern to use for queries
+        ///   The search pattern to use for finding script files
         /// </summary>
         private string searchPattern = "*.sql";
+
+        /// <summary>
+        ///   The pattern to use for parsing the name of the script file
+        /// </summary>
+        private string fileNamePattern = @"(\d+)(\s+)?(.+)?";
 
         /// <summary>
         ///   The undo output file.
@@ -116,12 +121,8 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
         /// </summary>
         public ConfigurationService()
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext());
-            }
-
-            this.SetupDatabaseType();
+            log.DebugIfEnabled(LogUtility.GetContext());
+            //NOTE: Can't call SetupDatabaseType until the correct type has been registered
         }
 
         #endregion
@@ -215,7 +216,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
                 if (value != null && value.Trim() != string.Empty)
                 {
                     this.schema = value;
-                }                
+                }
             }
         }
 
@@ -298,7 +299,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
         }
 
         /// <summary>
-        ///   Gets or sets the search pattern to use for file parsing
+        ///   Gets or sets the search pattern to use for finding script files
         /// </summary>
         public string SearchPattern
         {
@@ -312,6 +313,25 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
                 if (value != null && value.Trim() != string.Empty)
                 {
                     this.searchPattern = value;
+                }
+            }
+        }
+
+        /// <summary>
+        ///   Gets or sets the pattern to use for parsing the name of the script file
+        /// </summary>
+        public string FileNamePattern
+        {
+            get
+            {
+                return this.fileNamePattern;
+            }
+
+            set
+            {
+                if (value != null && value.Trim() != string.Empty)
+                {
+                    this.fileNamePattern = value;
                 }
             }
         }
@@ -355,10 +375,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
         /// </returns>
         public override string ToString()
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext());
-            }
+            log.DebugIfEnabled(LogUtility.GetContext());
 
             StringBuilder builder = new StringBuilder();
             builder.AppendLine(string.Format("ConnectionString: {0}", this.ConnectionString));
@@ -369,15 +386,13 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
             builder.AppendLine(string.Format("RootDirectory: {0}", this.RootDirectory));
             builder.AppendLine(string.Format("ScriptListFile: {0}", this.ScriptListFile));
             builder.AppendLine(string.Format("SearchPattern: {0}", this.SearchPattern));
+            builder.AppendLine(string.Format("FileNamePattern: {0}", this.FileNamePattern));
             builder.AppendLine(string.Format("UndoOutputFile: {0}", this.UndoOutputFile));
             ////builder.AppendLine(string.Format("UseTransactions: {0}", this.UseTransactions));
 
             string result = builder.ToString();
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult(result));
-            }
+            log.DebugIfEnabled(LogUtility.GetResult(result));
 
             return result;
         }
@@ -389,12 +404,9 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
         /// <summary>
         /// Sets up the container to have the appropriate mappings for the appropriate database types.
         /// </summary>
-        private void SetupDatabaseType()
+        public void SetupDatabaseType()
         {
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetContext());
-            }
+            log.DebugIfEnabled(LogUtility.GetContext());
 
             string rootPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), DefaultDatabasePath);
 
@@ -414,10 +426,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
                     break;
             }
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(LogUtility.GetResult());
-            }
+            log.DebugIfEnabled(LogUtility.GetResult());
         }
 
         #endregion

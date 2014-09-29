@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?><ItemProperties xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><Properties><Property><Name>svn:global-ignores</Name><Value>ApprovalTests.3.0.7
+ApprovalUtilities.3.0.7
+CommandLineParser.1.9.71
+log4net.2.0.0
+Moq.4.0.10827
+MSBuild.Extension.Pack.1.2.0
+NUnit.2.6.2
+Unity.3.0.1304.0
+</Value></Property></Properties></ItemProperties>

@@ -2,8 +2,9 @@
 	change_number,
 	complete_dt,
 	applied_by,
-	description
+	description,
+	script_hash
 FROM
-	changelog
+	CHANGELOG
 ORDER BY
-	change_number;
+	change_number

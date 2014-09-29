@@ -83,6 +83,12 @@ namespace Veracity.Utilities.DatabaseDeploy.Console
         public string SearchPattern { get; set; }
 
         /// <summary>
+        ///   Gets or sets the search pattern to use for file parsing
+        /// </summary>
+        [Option('p', "FileNamePattern", HelpText = "The pattern that should be used to parse the script file names.", Required = false)]
+        public string FileNamePattern { get; set; }
+
+        /// <summary>
         ///   Gets or sets the directory and file name that will be used for writing out the undo change script
         /// </summary>
         [Option('u', "UndoOutputFile", HelpText = "The file that will contain undo scripts.", Required = false)]

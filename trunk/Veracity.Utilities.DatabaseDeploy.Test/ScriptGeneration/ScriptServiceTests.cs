@@ -14,6 +14,8 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
     using System.Globalization;
     using System.IO;
 
+    using ApprovalTests;
+
     using Moq;
 
     using NUnit.Framework;
@@ -22,6 +24,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
     using Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances;
     using Veracity.Utilities.DatabaseDeploy.FileManagement;
     using Veracity.Utilities.DatabaseDeploy.ScriptGeneration;
+    using Veracity.Utilities.DatabaseDeploy.Test.Utilities;
     using Veracity.Utilities.DatabaseDeploy.Utilities;
 
     /// <summary>
@@ -36,7 +39,8 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
         [Test]
         public void ThatBuildChangeScriptWorks()
         {
-            string expectedResult = string.Format("Change Script Header -- CurrentVersion = 0;Current DateTime = {1};Current User = {0}\r\nScript Header -- Script Name = 1 1.sql;Script Id = 1;Script Description = 1.sql\r\n1.sql\r\nScript Footer -- String Name = 1 1.sql;Script Id = 1\r\nScript Header -- Script Name = 2 2.sql;Script Id = 2;Script Description = 2.sql\r\n2.sql\r\nScript Footer -- String Name = 2 2.sql;Script Id = 2\r\nScript Header -- Script Name = 3 3.sql;Script Id = 3;Script Description = 3.sql\r\n3.sql\r\nScript Footer -- String Name = 3 3.sql;Script Id = 3\r\nChange Script Footer -- Current DateTime = {1}\r\n", Environment.UserName, DateTime.Now.ToString("g"));
+            var dateTime = new DateTime(2014, 09, 17, 17, 42, 55);
+            TimeProvider.Current = new MockTimeProvider(dateTime);
             string changeScriptHeader = "Change Script Header -- CurrentVersion = $(CurrentVersion);Current DateTime = $(CurrentDateTime);Current User = $(CurrentUser)";
             string scriptHeader = "Script Header -- Script Name = $(ScriptName);Script Id = $(ScriptId);Script Description = $(ScriptDescription)";
             string scriptFooter = "Script Footer -- String Name = $(ScriptName);Script Id = $(ScriptId)";
@@ -60,7 +64,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
                 (string s, bool b) =>
                     {
                         ScriptFile file = new ScriptFile();
-                        file.Parse(s);
+                        file.Parse(fileServiceMock.Object, s);
                         if (file.Id % 2 == 0)
                         {
                             return file.Description + undoToken + "Undo text.";
@@ -77,7 +81,8 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
 
             string result = scriptService.BuildChangeScript(changes);
 
-            Assert.That(result, Is.EqualTo(expectedResult));
+            TimeProvider.ResetToDefault();
+            Approvals.Verify(result);
         }
 
         /// <summary>
@@ -86,6 +91,9 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
         [Test]
         public void ThatBuildUndoScriptWorks()
         {
+            var dateTime = new DateTime(2014, 09, 17, 17, 42, 55);
+            TimeProvider.Current = new MockTimeProvider(dateTime);
+
             string expectedResult = string.Format("Undo Script Header -- CurrentVersion = 3;Current DateTime = {1};Current User = {0}\r\nScript Header -- Script Name = 2 2.sql;Script Id = 2;Script Description = 2.sql\r\nUndo text.\r\nScript Footer -- String Name = 2 2.sql;Script Id = 2\r\nUndo Script Footer -- Current DateTime = {1}\r\n", Environment.UserName, DateTime.Now.ToString("g"));
             string undoScriptHeader = "Undo Script Header -- CurrentVersion = $(CurrentVersion);Current DateTime = $(CurrentDateTime);Current User = $(CurrentUser)";
             string undoHeader = "Script Header -- Script Name = $(ScriptName);Script Id = $(ScriptId);Script Description = $(ScriptDescription)";
@@ -110,7 +118,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
                 (string s, bool b) =>
                 {
                     ScriptFile file = new ScriptFile();
-                    file.Parse(s);
+                    file.Parse(fileServiceMock.Object, s);
                     if (file.Id % 2 == 0)
                     {
                         return file.Description + undoToken + "Undo text.";
@@ -120,6 +128,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
                         return file.Description;
                     }
                 });
+            fileServiceMock.Setup(f => f.GetLinesFromFile(It.IsAny<string>())).Returns(new string[0]);
 
             IDictionary<int, IScriptFile> changes = this.GetChanges();
 
@@ -127,7 +136,8 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
 
             string result = scriptService.BuildUndoScript(changes);
 
-            Assert.That(result, Is.EqualTo(expectedResult));
+            TimeProvider.ResetToDefault();
+            Approvals.Verify(result);
         }
 
         /// <summary>
@@ -151,8 +161,10 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
         /// <param name="change">The change number ot add.</param>
         private void AddChange(IDictionary<int, IScriptFile> dictionary, int change)
         {
+            var fileServiceMock = new Mock<IFileService>();
+            fileServiceMock.Setup(f => f.GetLinesFromFile(It.IsAny<string>())).Returns(new string[0]);
             ScriptFile script = new ScriptFile();
-            script.Parse(string.Format("{0} {0}.sql", change));
+            script.Parse(fileServiceMock.Object, string.Format("{0} {0}.sql", change));
             dictionary.Add(change, script);
         }
     }

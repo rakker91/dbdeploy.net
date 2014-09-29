@@ -57,5 +57,15 @@ namespace Veracity.Utilities.DatabaseDeploy.FileManagement
         {
             return File.Exists(fileName);
         }
+
+        /// <summary>
+        /// Read all lines from the file
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public string[] ReadAllLines(string fileName)
+        {
+            return File.ReadAllLines(fileName);
+        }
     }
 }

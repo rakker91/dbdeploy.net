@@ -1,0 +1,11 @@
+﻿ConnectionString: Connection String
+DatabaseManagementSystem: SqlServer
+LastChangeToApply: 500
+OutputFile: Output File
+Recursive: True
+RootDirectory: C:\GitHub\DbDeployNet2\Veracity.Utilities.DatabaseDeploy.Test\bin\Debug\Root Directory
+ScriptListFile: C:\GitHub\DbDeployNet2\Veracity.Utilities.DatabaseDeploy.Test\bin\Debug\Root Directory\ScriptList.txt
+SearchPattern: *.sql
+FileNamePattern: (\d+)(\s+)?(.+)?
+UndoOutputFile: Undo File
+UseTransactions: False

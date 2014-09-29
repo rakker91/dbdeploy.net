@@ -66,9 +66,14 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
         string ScriptListFile { get; set; }
 
         /// <summary>
-        ///   Gets or sets the search pattern to use for file parsing
+        ///   Gets or sets the search pattern to use for finding script files
         /// </summary>
         string SearchPattern { get; set; }
+
+        /// <summary>
+        ///   Gets or sets the pattern to use for parsing the name of the script file
+        /// </summary>
+        string FileNamePattern { get; set; }
 
         /// <summary>
         ///   Gets or sets the directory and file name that will be used for writing out the undo change script
