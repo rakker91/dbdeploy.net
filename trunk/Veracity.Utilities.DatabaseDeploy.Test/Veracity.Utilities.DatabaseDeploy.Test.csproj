@@ -85,6 +85,7 @@
     <Compile Include="ScriptGeneration\ScriptFileTests.cs" />
     <Compile Include="ScriptGeneration\ScriptServiceTests.cs" />
     <Compile Include="TestFixtureBase.cs" />
+    <Compile Include="Utilities\MockEnvironmentProvider.cs" />
     <Compile Include="Utilities\MockTimeProvider.cs" />
     <Compile Include="Utilities\ScriptMessageFormatterTests.cs" />
     <Compile Include="Utilities\StringExtensionTests.cs" />

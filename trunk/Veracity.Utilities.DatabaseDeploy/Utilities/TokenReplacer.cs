@@ -96,7 +96,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
             string result = stringToParse;
 
             result = result.ReplaceEx(TokenEnum.CurrentDateTimeToken, TimeProvider.Current.Now.ToString("g"));
-            result = result.ReplaceEx(TokenEnum.CurrentUserToken, Environment.UserName);
+            result = result.ReplaceEx(TokenEnum.CurrentUserToken, EnvironmentProvider.Current.UserName);
             result = result.ReplaceEx(TokenEnum.CurrentVersionToken, this.CurrentVersion.ToString(CultureInfo.InvariantCulture));
             result = result.ReplaceEx(TokenEnum.ScriptIdToken, this.Script.Id.ToString(CultureInfo.InvariantCulture));
             result = result.ReplaceEx(TokenEnum.ScriptNameToken, this.Script.FileName);

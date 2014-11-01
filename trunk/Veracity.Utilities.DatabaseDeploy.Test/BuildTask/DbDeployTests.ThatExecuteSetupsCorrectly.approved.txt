@@ -3,8 +3,8 @@ DatabaseManagementSystem: SqlServer
 LastChangeToApply: 500
 OutputFile: Output File
 Recursive: True
-RootDirectory: C:\GitHub\dbdeploynet2\trunk\Veracity.Utilities.DatabaseDeploy.Test\bin\Debug\Root Directory
-ScriptListFile: C:\GitHub\dbdeploynet2\trunk\Veracity.Utilities.DatabaseDeploy.Test\bin\Debug\Root Directory\ScriptList.txt
+RootDirectory: c:\DbDeploy\Root Directory
+ScriptListFile: c:\DbDeploy\Root Directory\ScriptList.txt
 SearchPattern: *.sql
 FileNamePattern: (\d+)(\s+)?(.+)?
 UndoOutputFile: Undo File

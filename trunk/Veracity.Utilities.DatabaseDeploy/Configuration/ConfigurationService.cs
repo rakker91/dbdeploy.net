@@ -253,7 +253,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
             {
                 if (string.IsNullOrEmpty(this.rootDirectory) || this.rootDirectory.Trim() == string.Empty)
                 {
-                    this.rootDirectory = Environment.CurrentDirectory;
+                    this.rootDirectory = EnvironmentProvider.Current.CurrentDirectory;
                 }
 
                 string result;
@@ -264,7 +264,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
                 }
                 else
                 {
-                    result = Path.Combine(Environment.CurrentDirectory, this.rootDirectory);
+                    result = Path.Combine(EnvironmentProvider.Current.CurrentDirectory, this.rootDirectory);
                 }
 
                 return result;
@@ -408,7 +408,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
         {
             log.DebugIfEnabled(LogUtility.GetContext());
 
-            string rootPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), DefaultDatabasePath);
+            string rootPath = Path.Combine(EnvironmentProvider.Current.ExecutingAssemblyDirectory, DefaultDatabasePath);
 
             switch (this.DatabaseManagementSystem)
             {

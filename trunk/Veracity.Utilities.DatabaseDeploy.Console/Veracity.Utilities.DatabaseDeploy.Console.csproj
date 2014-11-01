@@ -67,9 +67,6 @@
     <Reference Include="CommandLine">
       <HintPath>..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
     </Reference>
-    <Reference Include="Ionic.Zip">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\Ionic.Zip.dll</HintPath>
-    </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
     </Reference>
@@ -78,54 +75,6 @@
     </Reference>
     <Reference Include="Microsoft.Practices.Unity.Configuration">
       <HintPath>..\packages\Unity.3.0.1304.0\lib\Net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.BizTalk">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.BizTalk.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.Git">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.Git.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.Iis7">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.Iis7.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.Loggers">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.Loggers.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.Sql2005">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.Sql2005.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.Sql2008">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.Sql2008.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.Sql2012">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.Sql2012.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.StyleCop">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.StyleCop.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.Sync">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.Sync.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.TaskFactory.Dlr">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.TaskFactory.Dlr.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.TaskFactory.PowerShell">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.TaskFactory.PowerShell.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.Tfs">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.Tfs.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.Tfs2010">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.Tfs2010.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.Tfs2012">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.Tfs2012.dll</HintPath>
-    </Reference>
-    <Reference Include="MSBuild.ExtensionPack.WindowsVirtualPC">
-      <HintPath>..\packages\MSBuild.Extension.Pack.1.2.0\lib\net40\MSBuild.ExtensionPack.WindowsVirtualPC.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />

@@ -7,6 +7,8 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using Veracity.Utilities.DatabaseDeploy.Utilities;
+
 namespace Veracity.Utilities.DatabaseDeploy.Test.Configuration
 {
     #region Usings
@@ -150,7 +152,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Configuration
             IConfigurationService config = new ConfigurationService();
             config.RootDirectory = "TestDirectory";
 
-            Assert.That(config.RootDirectory, Is.EqualTo(Path.Combine(Environment.CurrentDirectory, "TestDirectory")));
+            Assert.That(config.RootDirectory, Is.EqualTo(Path.Combine(EnvironmentProvider.Current.CurrentDirectory, "TestDirectory")));
         }
 
         /// <summary>

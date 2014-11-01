@@ -1,4 +1,4 @@
-﻿Undo Script Header -- CurrentVersion = 3;Current DateTime = 9/17/2014 5:42 PM;Current User = sreed
+﻿Undo Script Header -- CurrentVersion = 3;Current DateTime = 9/17/2014 5:42 PM;Current User = userName
 Script Header -- Script Name = 2 2.sql;Script Id = 2;Script Description = 2
 Undo text.
 Script Footer -- String Name = 2 2.sql;Script Id = 2
