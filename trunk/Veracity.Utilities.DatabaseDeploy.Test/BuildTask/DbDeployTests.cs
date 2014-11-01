@@ -7,6 +7,9 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using Veracity.Utilities.DatabaseDeploy.Test.Utilities;
+using Veracity.Utilities.DatabaseDeploy.Utilities;
+
 namespace Veracity.Utilities.DatabaseDeploy.Test.BuildTask
 {
     using System;
@@ -37,41 +40,52 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.BuildTask
         [Test]
         public void ThatExecuteSetupsCorrectly()
         {
-            IConfigurationService configurationService = new ConfigurationService();
-            Container.RegisterInstance(configurationService);
+            var mockEnvironmentProvider = new MockEnvironmentProvider();
+            mockEnvironmentProvider.SetCurrentDirectory(@"c:\DbDeploy");
+            EnvironmentProvider.Current = mockEnvironmentProvider;
 
-            var deploymentServiceMock = new Mock<IDeploymentService>(MockBehavior.Strict);
-            deploymentServiceMock.Setup(d => d.BuildDeploymentScript()).Verifiable();
-            Container.RegisterInstance(deploymentServiceMock.Object);
+            try
+            {
+                IConfigurationService configurationService = new ConfigurationService();
+                Container.RegisterInstance(configurationService);
 
-            var deploy = new DbDeploy();
-            deploy.ConnectionString = "Connection String";
-            deploy.DatabaseType = "mssql";
-            deploy.LastChangeToApply = 500;
-            deploy.OutputFile = "Output File";
-            deploy.Recursive = true;
-            deploy.RootDirectory = "Root Directory";
-            deploy.SearchPattern = "*.sql";
-            deploy.UndoFile = "Undo File";
+                var deploymentServiceMock = new Mock<IDeploymentService>(MockBehavior.Strict);
+                deploymentServiceMock.Setup(d => d.BuildDeploymentScript()).Verifiable();
+                Container.RegisterInstance(deploymentServiceMock.Object);
 
-            deploy.Execute();
+                var deploy = new DbDeploy();
+                deploy.ConnectionString = "Connection String";
+                deploy.DatabaseType = "mssql";
+                deploy.LastChangeToApply = 500;
+                deploy.OutputFile = "Output File";
+                deploy.Recursive = true;
+                deploy.RootDirectory = "Root Directory";
+                deploy.SearchPattern = "*.sql";
+                deploy.UndoFile = "Undo File";
 
-            Approvals.Verify(configurationService);
+                deploy.Execute();
 
-            deploy.DatabaseType = "ora";
-            deploy.Execute();
+                Approvals.Verify(configurationService);
 
-            Assert.That(configurationService.DatabaseManagementSystem, Is.EqualTo(DatabaseTypesEnum.Oracle));
+                deploy.DatabaseType = "ora";
+                deploy.Execute();
 
-            deploy.DatabaseType = "mysql";
-            deploy.Execute();
+                Assert.That(configurationService.DatabaseManagementSystem, Is.EqualTo(DatabaseTypesEnum.Oracle));
 
-            Assert.That(configurationService.DatabaseManagementSystem, Is.EqualTo(DatabaseTypesEnum.MySql));
+                deploy.DatabaseType = "mysql";
+                deploy.Execute();
 
-            deploy.DatabaseType = "BadDBType";
-            Assert.Throws<ArgumentException>(() => deploy.Execute());
+                Assert.That(configurationService.DatabaseManagementSystem, Is.EqualTo(DatabaseTypesEnum.MySql));
 
-            deploymentServiceMock.Verify(d => d.BuildDeploymentScript(), Times.Exactly(3));
+                deploy.DatabaseType = "BadDBType";
+                Assert.Throws<ArgumentException>(() => deploy.Execute());
+
+                deploymentServiceMock.Verify(d => d.BuildDeploymentScript(), Times.Exactly(3));
+            }
+            finally
+            {
+                EnvironmentProvider.ResetToDefault();
+            }
         }
     }
 }

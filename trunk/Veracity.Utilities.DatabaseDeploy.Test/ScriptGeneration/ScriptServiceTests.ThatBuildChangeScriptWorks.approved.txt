@@ -1,4 +1,4 @@
-﻿Change Script Header -- CurrentVersion = 0;Current DateTime = 9/17/2014 5:42 PM;Current User = sreed
+﻿Change Script Header -- CurrentVersion = 0;Current DateTime = 9/17/2014 5:42 PM;Current User = userName
 Script Header -- Script Name = 1 1.sql;Script Id = 1;Script Description = 1
 
 Script Footer -- String Name = 1 1.sql;Script Id = 1

@@ -133,7 +133,7 @@ namespace Veracity.Utilities.DatabaseDeploy.BuildTasks
         /// </returns>
         public override bool Execute()
         {
-            FileInfo log4netConfig = new FileInfo(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "log4net.config"));
+            FileInfo log4netConfig = new FileInfo(Path.Combine(EnvironmentProvider.Current.ExecutingAssemblyDirectory, "log4net.config"));
             log4net.Config.XmlConfigurator.ConfigureAndWatch(log4netConfig);
 
             log.DebugIfEnabled(LogUtility.GetContext());

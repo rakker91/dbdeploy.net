@@ -41,6 +41,9 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
         {
             var dateTime = new DateTime(2014, 09, 17, 17, 42, 55);
             TimeProvider.Current = new MockTimeProvider(dateTime);
+            var mockEnvironmentProvider = new MockEnvironmentProvider();
+            mockEnvironmentProvider.SetUserName("userName");
+            EnvironmentProvider.Current = mockEnvironmentProvider;
             string changeScriptHeader = "Change Script Header -- CurrentVersion = $(CurrentVersion);Current DateTime = $(CurrentDateTime);Current User = $(CurrentUser)";
             string scriptHeader = "Script Header -- Script Name = $(ScriptName);Script Id = $(ScriptId);Script Description = $(ScriptDescription)";
             string scriptFooter = "Script Footer -- String Name = $(ScriptName);Script Id = $(ScriptId)";
@@ -82,6 +85,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
             string result = scriptService.BuildChangeScript(changes);
 
             TimeProvider.ResetToDefault();
+            EnvironmentProvider.ResetToDefault();
             Approvals.Verify(result);
         }
 
@@ -93,8 +97,11 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
         {
             var dateTime = new DateTime(2014, 09, 17, 17, 42, 55);
             TimeProvider.Current = new MockTimeProvider(dateTime);
+            var mockEnvironmentProvider = new MockEnvironmentProvider();
+            mockEnvironmentProvider.SetUserName("userName");
+            EnvironmentProvider.Current = mockEnvironmentProvider;
 
-            string expectedResult = string.Format("Undo Script Header -- CurrentVersion = 3;Current DateTime = {1};Current User = {0}\r\nScript Header -- Script Name = 2 2.sql;Script Id = 2;Script Description = 2.sql\r\nUndo text.\r\nScript Footer -- String Name = 2 2.sql;Script Id = 2\r\nUndo Script Footer -- Current DateTime = {1}\r\n", Environment.UserName, DateTime.Now.ToString("g"));
+            //string expectedResult = string.Format("Undo Script Header -- CurrentVersion = 3;Current DateTime = {1};Current User = {0}\r\nScript Header -- Script Name = 2 2.sql;Script Id = 2;Script Description = 2.sql\r\nUndo text.\r\nScript Footer -- String Name = 2 2.sql;Script Id = 2\r\nUndo Script Footer -- Current DateTime = {1}\r\n", Environment.UserName, DateTime.Now.ToString("g"));
             string undoScriptHeader = "Undo Script Header -- CurrentVersion = $(CurrentVersion);Current DateTime = $(CurrentDateTime);Current User = $(CurrentUser)";
             string undoHeader = "Script Header -- Script Name = $(ScriptName);Script Id = $(ScriptId);Script Description = $(ScriptDescription)";
             string undoFooter = "Script Footer -- String Name = $(ScriptName);Script Id = $(ScriptId)";
@@ -137,6 +144,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
             string result = scriptService.BuildUndoScript(changes);
 
             TimeProvider.ResetToDefault();
+            EnvironmentProvider.ResetToDefault();
             Approvals.Verify(result);
         }
 

@@ -92,7 +92,9 @@
     <Compile Include="IoC\AutoResolverUnityExtension.cs" />
     <Compile Include="IoC\ContainerFactory.cs" />
     <Compile Include="IoC\IoCMappingAttribute.cs" />
+    <Compile Include="Utilities\DefaultEnvironmentProvider.cs" />
     <Compile Include="Utilities\DefaultTimeProvider.cs" />
+    <Compile Include="Utilities\EnvironmentProvider.cs" />
     <Compile Include="Utilities\IScriptMessageFormatter.cs" />
     <Compile Include="Utilities\ITokenReplacer.cs" />
     <Compile Include="Utilities\LogExtensions.cs" />

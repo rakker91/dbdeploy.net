@@ -51,7 +51,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
 
             string result = tp.Replace(token);
 
-            Assert.That(result, Is.EqualTo(Environment.UserName));
+            Assert.That(result, Is.EqualTo(EnvironmentProvider.Current.UserName));
         }
 
         /// <summary>
