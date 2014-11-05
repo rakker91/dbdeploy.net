@@ -65,7 +65,7 @@ namespace Veracity.Utilities.DatabaseDeploy.BuildTasks
         public string ConnectionString { get; set; }
 
         /// <summary>
-        ///   Gets or sets the database type to be used. Currently, only mssql is supported. mysql and ora will be recognized but will fail because they aren't implemented. The default is mssql
+        ///   Gets or sets the database type to be used. mssql, mysql, and ora
         /// </summary>
         public string DatabaseType { get; set; }
 
@@ -159,7 +159,7 @@ namespace Veracity.Utilities.DatabaseDeploy.BuildTasks
                         this.ConfigurationService.DatabaseManagementSystem = DatabaseTypesEnum.MySql;
                         break;
                     default:
-                        string message = string.Format("An invalid database type of {0} was specified.  Only \"mssql\", \"ora\", and \"mysql\" are supported (and only mssql will work at this time).", this.DatabaseType);
+                        string message = string.Format("An invalid database type of {0} was specified.  Only \"mssql\", \"ora\", and \"mysql\" are supported.", this.DatabaseType);
                         log.Fatal(message);
                         throw new ArgumentException(message);
                 }

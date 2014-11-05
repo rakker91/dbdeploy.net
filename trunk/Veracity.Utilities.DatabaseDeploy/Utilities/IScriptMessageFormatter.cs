@@ -33,6 +33,12 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
         /// </returns>
         string FormatCollection(ICollection<int> values);
 
+        /// <summary>
+        /// Concatenates values with commas
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        string FormatCollection(ICollection<decimal> values);
         #endregion
     }
 }

@@ -19,7 +19,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
         /// <summary>
         /// Gets or sets the current version.
         /// </summary>
-        int CurrentVersion { get; set; }
+        decimal CurrentVersion { get; set; }
 
         /// <summary>
         /// Gets or sets the current script being worked on.

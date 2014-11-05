@@ -72,7 +72,7 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
         /// <summary>
         ///   Gets or sets the script Id. These must be unique
         /// </summary>
-        public int Id { get; set; }
+        public decimal Id { get; set; }
 
         #endregion
 
@@ -99,8 +99,8 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
 
         private void ReadContents(IFileService fileService, string filePath)
         {
-            var lines = fileService.GetLinesFromFile(filePath);
-            Contents = lines.Combine();
+            string fileContents = fileService.GetFileContents(filePath, false);
+            Contents = fileContents.Replace("\r\n", "\n").Replace("\n", Environment.NewLine);
         }
 
         #endregion
@@ -116,10 +116,10 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
 
             Match m = regexFileName.Match(Path.GetFileNameWithoutExtension(FileInfo.Name));
             var success = m.Success && m.Groups.Count > 1;
-            int id = 0;
+            decimal id = 0;
             if (success)
             {
-                success = int.TryParse(m.Groups[1].Value, out id);
+                success = decimal.TryParse(m.Groups[1].Value, out id);
             }
             if (!success)
             {

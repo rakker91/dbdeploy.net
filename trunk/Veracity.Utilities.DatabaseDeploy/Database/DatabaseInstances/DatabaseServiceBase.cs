@@ -114,11 +114,11 @@ namespace Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances
         /// <returns>
         /// A dictionary containing the change logs and the ids for those change logs 
         /// </returns>
-        public IDictionary<int, IChangeLog> GetAppliedChanges()
+        public IDictionary<decimal, IChangeLog> GetAppliedChanges()
         {
             log.DebugIfEnabled(LogUtility.GetContext());
 
-            IDictionary<int, IChangeLog> result = new ConcurrentDictionary<int, IChangeLog>();
+            IDictionary<decimal, IChangeLog> result = new ConcurrentDictionary<decimal, IChangeLog>();
 
             this.EnsureChangelogExists();
 

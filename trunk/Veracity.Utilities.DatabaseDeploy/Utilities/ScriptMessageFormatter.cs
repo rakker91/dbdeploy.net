@@ -52,7 +52,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
 
             if (values != null && values.Any())
             {
-                StringBuilder textString = new StringBuilder();
+                var textString = new StringBuilder();
                 int lastNumber = -1;
                 int rangeStart = -1;
 
@@ -88,6 +88,20 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
             log.DebugIfEnabled(LogUtility.GetResult(result));
 
             return result;
+        }
+
+        /// <summary>
+        /// Returns the list of decimal numbers as a string
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public string FormatCollection(ICollection<decimal> values)
+        {
+            if (values == null || !values.Any())
+            {
+                return "No scripts found.";
+            }
+            return string.Join(",", values.Select(v => v.ToString()));
         }
 
         #endregion

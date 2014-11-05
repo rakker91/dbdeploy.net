@@ -111,7 +111,7 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
         /// <returns>
         /// A string containing the contents of the provided change files 
         /// </returns>
-        public string BuildChangeScript(IDictionary<int, IScriptFile> changes)
+        public string BuildChangeScript(IDictionary<decimal, IScriptFile> changes)
         {
             log.DebugIfEnabled(LogUtility.GetContext(changes));
 
@@ -123,9 +123,9 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
 
             this.AppendScript(DatabaseScriptEnum.ChangeScriptHeader, changeScript);
 
-            int[] sortedKeys = changes.Keys.OrderBy(k => k).ToArray();
+            decimal[] sortedKeys = changes.Keys.OrderBy(k => k).ToArray();
 
-            foreach (int key in sortedKeys)
+            foreach (decimal key in sortedKeys)
             {
                 var scriptFile = changes[key];
                 this.tokenReplacer.Script = scriptFile;
@@ -150,7 +150,7 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
         /// <returns>
         /// A string containing the contents of the undo portion of the scripts. 
         /// </returns>
-        public string BuildUndoScript(IDictionary<int, IScriptFile> changes)
+        public string BuildUndoScript(IDictionary<decimal, IScriptFile> changes)
         {
             log.DebugIfEnabled(LogUtility.GetContext(changes));
 
@@ -162,9 +162,9 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
 
             this.AppendScript(DatabaseScriptEnum.UndoScriptHeader, undoScript);
 
-            int[] sortedKeys = changes.Keys.OrderByDescending(k => k).ToArray();
+            decimal[] sortedKeys = changes.Keys.OrderByDescending(k => k).ToArray();
 
-            foreach (int key in sortedKeys)
+            foreach (decimal key in sortedKeys)
             {
                 string scriptContents = this.fileService.GetFileContents(changes[key].FileName, false);
 

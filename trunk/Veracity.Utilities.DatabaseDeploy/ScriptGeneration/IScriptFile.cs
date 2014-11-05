@@ -47,7 +47,7 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
         /// <summary>
         ///   Gets or sets the script Id. These must be unique
         /// </summary>
-        int Id { get; set; }
+        decimal Id { get; set; }
 
         #endregion
 

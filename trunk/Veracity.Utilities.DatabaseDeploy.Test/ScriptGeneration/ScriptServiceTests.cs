@@ -78,7 +78,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
                         }
                     });
 
-            IDictionary<int, IScriptFile> changes = this.GetChanges();
+            IDictionary<decimal, IScriptFile> changes = this.GetChanges();
 
             IScriptService scriptService = new ScriptService(databaseServiceMock.Object, fileServiceMock.Object, new TokenReplacer(new ConfigurationService()), new ConfigurationService());
 
@@ -120,12 +120,15 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
             databaseServiceMock.Setup(d => d.GetScriptFromFile(DatabaseScriptEnum.UndoScriptFooter)).Returns(undoScriptFooter);
             databaseServiceMock.Setup(d => d.GetScriptFromFile(DatabaseScriptEnum.UndoToken)).Returns(undoToken);
 
+            var fsMock2 = new Mock<IFileService>(MockBehavior.Strict);
+            fsMock2.Setup(f => f.GetFileContents(It.IsAny<string>(), It.IsAny<bool>())).Returns("");
+
             // file Service mock setup
             fileServiceMock.Setup(f => f.GetFileContents(It.IsAny<string>(), It.IsAny<bool>())).Returns(
                 (string s, bool b) =>
                 {
                     ScriptFile file = new ScriptFile();
-                    file.Parse(fileServiceMock.Object, s);
+                    file.Parse(fsMock2.Object, s);
                     if (file.Id % 2 == 0)
                     {
                         return file.Description + undoToken + "Undo text.";
@@ -135,9 +138,9 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
                         return file.Description;
                     }
                 });
-            fileServiceMock.Setup(f => f.GetLinesFromFile(It.IsAny<string>())).Returns(new string[0]);
+            //fileServiceMock.Setup(f => f.GetLinesFromFile(It.IsAny<string>())).Returns(new string[0]);
 
-            IDictionary<int, IScriptFile> changes = this.GetChanges();
+            IDictionary<decimal, IScriptFile> changes = this.GetChanges();
 
             IScriptService scriptService = new ScriptService(databaseServiceMock.Object, fileServiceMock.Object, new TokenReplacer(new ConfigurationService()), new ConfigurationService());
 
@@ -152,9 +155,9 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
         /// Gets a set of changes for testing.
         /// </summary>
         /// <returns>A dictionary with the changes to test.</returns>
-        private IDictionary<int, IScriptFile> GetChanges()
+        private IDictionary<decimal, IScriptFile> GetChanges()
         {
-            IDictionary<int, IScriptFile> changes = new Dictionary<int, IScriptFile>();
+            var changes = new Dictionary<decimal, IScriptFile>();
             this.AddChange(changes, 1);
             this.AddChange(changes, 2);
             this.AddChange(changes, 3);
@@ -167,11 +170,11 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.ScriptGeneration
         /// </summary>
         /// <param name="dictionary">The dictionary to add changes to</param>
         /// <param name="change">The change number ot add.</param>
-        private void AddChange(IDictionary<int, IScriptFile> dictionary, int change)
+        private void AddChange(IDictionary<decimal, IScriptFile> dictionary, int change)
         {
             var fileServiceMock = new Mock<IFileService>();
-            fileServiceMock.Setup(f => f.GetLinesFromFile(It.IsAny<string>())).Returns(new string[0]);
-            ScriptFile script = new ScriptFile();
+            fileServiceMock.Setup(f => f.GetFileContents(It.IsAny<string>(), It.IsAny<bool>())).Returns("");
+            var script = new ScriptFile();
             script.Parse(fileServiceMock.Object, string.Format("{0} {0}.sql", change));
             dictionary.Add(change, script);
         }
