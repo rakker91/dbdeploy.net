@@ -34,7 +34,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Console
         /// <summary>
         ///   Gets or sets a value indicating the type of DBMS to use.
         /// </summary>
-        [Option('d', "DatabaseManagementSystem", HelpText = "The database to use. Currently, only mssql is supported.", Required = false)]
+        [Option('d', "DatabaseManagementSystem", HelpText = "The database to use. (mssql, mysql, ora)", Required = false)]
         public string DatabaseManagementSystem { get; set; }
 
         /// <summary>

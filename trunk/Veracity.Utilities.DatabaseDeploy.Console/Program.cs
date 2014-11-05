@@ -120,7 +120,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Console
                         ConfigurationService.DatabaseManagementSystem = DatabaseTypesEnum.MySql;
                         break;
                     default:
-                        string message = string.Format("An invalid database type of {0} was specified.  Only \"mssql\", \"ora\", and \"mysql\" are supported (and only mssql will work at this time).", GetSetting<string>("DatabaseType"));
+                        string message = string.Format("An invalid database type of {0} was specified.  Only \"mssql\", \"ora\", and \"mysql\" are supported.", GetSetting<string>("DatabaseType"));
                         log.Fatal(message);
                         throw new ArgumentException(message);
                 }
@@ -153,15 +153,13 @@ namespace Veracity.Utilities.DatabaseDeploy.Console
         {
             if (args.Length > 0)
             {
-                Options options = new Options();
+                var options = new Options();
 
-                if (CommandLine.Parser.Default.ParseArgumentsStrict(args, options))
+                if (Parser.Default.ParseArgumentsStrict(args, options))
                 {
-                    ParserSettings settings = new ParserSettings();
-                    
-                    ConfigurationService.ConnectionString = options.ConnectionString != string.Empty
-                                                                ? options.ConnectionString
-                                                                : ConfigurationService.ConnectionString;
+                    ConfigurationService.ConnectionString = string.IsNullOrEmpty(options.ConnectionString)
+                                                                ? ConfigurationService.ConnectionString
+                                                                : options.ConnectionString;
 
                     switch (options.DatabaseManagementSystem)
                     {
@@ -177,40 +175,40 @@ namespace Veracity.Utilities.DatabaseDeploy.Console
                     }
 
                     ConfigurationService.LastChangeToApply = options.LastChangeToApply != default(int)
-                                                                ? options.LastChangeToApply
-                                                                : ConfigurationService.LastChangeToApply;
+                        ? options.LastChangeToApply
+                        : ConfigurationService.LastChangeToApply;
 
-                    ConfigurationService.OutputFile = options.OutputFile != string.Empty
-                                                                ? options.OutputFile
-                                                                : ConfigurationService.OutputFile;
+                    ConfigurationService.OutputFile = string.IsNullOrEmpty(options.OutputFile)
+                        ? ConfigurationService.OutputFile
+                        : options.OutputFile;
 
                     ConfigurationService.Recursive = options.Recursive != default(bool)
-                                                                ? options.Recursive
-                                                                : ConfigurationService.Recursive;
+                        ? options.Recursive
+                        : ConfigurationService.Recursive;
 
-                    ConfigurationService.RootDirectory = options.RootDirectory != string.Empty
-                                                                ? options.RootDirectory
-                                                                : ConfigurationService.RootDirectory;
+                    ConfigurationService.RootDirectory = string.IsNullOrEmpty(options.RootDirectory)
+                        ? ConfigurationService.RootDirectory
+                        : options.RootDirectory;
 
-                    ConfigurationService.SearchPattern = options.SearchPattern != string.Empty
-                                                                ? options.SearchPattern
-                                                                : ConfigurationService.SearchPattern;
+                    ConfigurationService.SearchPattern = string.IsNullOrEmpty(options.SearchPattern)
+                        ? ConfigurationService.SearchPattern
+                        : options.SearchPattern;
 
-                    ConfigurationService.FileNamePattern = options.FileNamePattern != string.Empty
-                                                                ? options.FileNamePattern
-                                                                : ConfigurationService.FileNamePattern;
+                    ConfigurationService.FileNamePattern = string.IsNullOrEmpty(options.FileNamePattern)
+                        ? ConfigurationService.FileNamePattern
+                        : options.FileNamePattern;
 
-                    ConfigurationService.UndoOutputFile = options.UndoOutputFile != string.Empty
-                                                                ? options.UndoOutputFile
-                                                                : ConfigurationService.UndoOutputFile;
+                    ConfigurationService.UndoOutputFile = string.IsNullOrEmpty(options.UndoOutputFile)
+                        ? ConfigurationService.UndoOutputFile
+                        : options.UndoOutputFile;
 
-                    ConfigurationService.Schema = options.Schema != string.Empty
-                                                                ? options.Schema
-                                                                : ConfigurationService.Schema;
+                    ConfigurationService.Schema = string.IsNullOrEmpty(options.Schema)
+                        ? ConfigurationService.Schema
+                        : options.Schema;
 
-                    ConfigurationService.ChangeLog = options.ChangeLog != string.Empty
-                                                         ? options.ChangeLog
-                                                         : ConfigurationService.ChangeLog;
+                    ConfigurationService.ChangeLog = string.IsNullOrEmpty(options.ChangeLog)
+                        ? ConfigurationService.ChangeLog
+                        : options.ChangeLog;
                 }
             }
         }
