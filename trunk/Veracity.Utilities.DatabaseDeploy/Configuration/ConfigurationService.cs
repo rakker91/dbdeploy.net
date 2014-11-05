@@ -95,7 +95,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
         /// <summary>
         ///   The pattern to use for parsing the name of the script file
         /// </summary>
-        private string fileNamePattern = @"(\d+)(\s+)?(.+)?";
+        private string fileNamePattern = @"((\d*\.)?\d+)(\s+)?(.+)?";
 
         /// <summary>
         ///   The undo output file.

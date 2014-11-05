@@ -57,7 +57,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances
         /// <returns>
         /// A dictionary containing the change logs and the ids for those change logs 
         /// </returns>
-        IDictionary<int, IChangeLog> GetAppliedChanges();
+        IDictionary<decimal, IChangeLog> GetAppliedChanges();
 
         /// <summary>
         /// Gets the database script from a file.

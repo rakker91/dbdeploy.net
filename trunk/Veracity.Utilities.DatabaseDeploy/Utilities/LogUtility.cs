@@ -127,7 +127,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
             log.DebugIfEnabled("GetResult(object) called.");
 
             MethodBase currentMethod = GetCurrentMethod();
-            StringBuilder logResult = new StringBuilder();
+            var logResult = new StringBuilder();
 
             GetMethodDeclaration(logResult, currentMethod, currentMethod.GetParameters());
             logResult.Append(" Completed.");

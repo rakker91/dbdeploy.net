@@ -107,7 +107,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.FileManagement
 
             IFileService fileService = new FileService(config, new IoProxy());
 
-            using (StreamWriter writer = new StreamWriter(config.OutputFile))
+            using (var writer = new StreamWriter(config.OutputFile))
             {
                 Assert.Throws<IOException>(() => fileService.GetFileContents(config.OutputFile, false));
             }
@@ -142,11 +142,11 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.FileManagement
 
             mock.Setup(i => i.GetFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>())).Returns(this.GetFiles());
             mock.Setup(i => i.Exists(It.IsAny<string>())).Returns(true);
-            mock.Setup(i => i.ReadAllLines(It.IsAny<string>())).Returns(new string[0]);
+            mock.Setup(i => i.ReadAllText(It.IsAny<string>())).Returns("");
 
             IFileService fileService = new FileService(config, mock.Object);
 
-            IDictionary<int, IScriptFile> scripts = fileService.GetScriptFiles();
+            IDictionary<decimal, IScriptFile> scripts = fileService.GetScriptFiles();
 
             Assert.That(scripts.Count, Is.EqualTo(10));
             Assert.That(scripts[8].Id, Is.EqualTo(8));
@@ -164,11 +164,11 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.FileManagement
 
             mock.Setup(i => i.Exists(It.IsAny<string>())).Returns(true);
             mock.Setup(i => i.GetFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>())).Returns(this.GetFilesWithDuplicate());
-            mock.Setup(i => i.ReadAllLines(It.IsAny<string>())).Returns(new string[0]);
+            mock.Setup(i => i.ReadAllText(It.IsAny<string>())).Returns("");
 
             IFileService fileService = new FileService(config, mock.Object);
 
-            Assert.Throws<System.Exception>(() => fileService.GetScriptFiles());
+            Assert.Throws<Exception>(() => fileService.GetScriptFiles());
         }
 
         /// <summary>
@@ -184,9 +184,9 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.FileManagement
             this.SetupConfiguration(config);
             IFileService fileService = new FileService(config, mock.Object);
 
-            using (MemoryStream stream = new MemoryStream())
+            using (var stream = new MemoryStream())
             {
-                using (StreamWriter writer = new StreamWriter(stream))
+                using (var writer = new StreamWriter(stream))
                 {
                     mock.Setup(i => i.GetStreamWriter(It.IsAny<string>())).Callback<string>(name => { passedFileName = name; }).Returns(writer);
                     fileService.WriteChangeScript(expectedContents);
@@ -211,9 +211,9 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.FileManagement
             this.SetupConfiguration(config);
             IFileService fileService = new FileService(config, mock.Object);
 
-            using (MemoryStream stream = new MemoryStream())
+            using (var stream = new MemoryStream())
             {
-                using (StreamWriter writer = new StreamWriter(stream))
+                using (var writer = new StreamWriter(stream))
                 {
                     mock.Setup(i => i.GetStreamWriter(It.IsAny<string>())).Callback<string>(name => { passedFileName = name; }).Returns(writer);
                     fileService.WriteUndoScript(expectedContents);
@@ -239,12 +239,12 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.FileManagement
 
             mock.Setup(i => i.GetFiles(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SearchOption>())).Returns(this.GetFiles());
             mock.Setup(i => i.Exists(It.IsAny<string>())).Returns(true);
-            mock.Setup(i => i.ReadAllLines(It.IsAny<string>())).Returns(new string[0]);
-            IDictionary<int, IScriptFile> scripts = fileService.GetScriptFiles();
+            mock.Setup(i => i.ReadAllText(It.IsAny<string>())).Returns("");
+            IDictionary<decimal, IScriptFile> scripts = fileService.GetScriptFiles();
 
-            using (MemoryStream stream = new MemoryStream())
+            using (var stream = new MemoryStream())
             {
-                using (StreamWriter writer = new StreamWriter(stream))
+                using (var writer = new StreamWriter(stream))
                 {
                     mock.Setup(i => i.GetStreamWriter(It.IsAny<string>())).Callback<string>(name => { passedFileName = name; }).Returns(writer);
                     fileService.WriteScriptList(scripts);
@@ -288,7 +288,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.FileManagement
         /// <returns>A list of files to be parsed.</returns>
         private string[] GetFiles()
         {
-            List<string> filesList = new List<string>();
+            var filesList = new List<string>();
             this.AddFile(filesList, 1);
             this.AddFile(filesList, 2);
             this.AddFile(filesList, 3);
@@ -308,7 +308,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.FileManagement
         /// <returns>A string array with a duplicate file in the file list.</returns>
         private string[] GetFilesWithDuplicate()
         {
-            List<string> filesList = new List<string>();
+            var filesList = new List<string>();
             this.AddFile(filesList, 1);
             this.AddFile(filesList, 2);
             this.AddFile(filesList, 3);

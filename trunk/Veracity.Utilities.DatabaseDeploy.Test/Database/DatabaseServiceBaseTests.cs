@@ -82,7 +82,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Database
 
             databaseService.DataSetToReturn = this.GetDataset();
 
-            IDictionary<int, IChangeLog> result = databaseService.GetAppliedChanges();
+            IDictionary<decimal, IChangeLog> result = databaseService.GetAppliedChanges();
 
             fileServiceMock.Verify(f => f.GetFileContents(It.IsAny<string>(), It.IsAny<bool>()), Times.Exactly(2));
 

@@ -7,6 +7,8 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Collections.ObjectModel;
+
 namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
 {
     using System.Collections.Generic;
@@ -65,12 +67,26 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
         /// Ensures that a null collection doesn't fail but returns the expected string.
         /// </summary>
         [Test]
-        public void ThatNullCollectionReturnsCorrectString()
+        public void ThatNullIntCollectionReturnsCorrectString()
         {
             string expectedResult = "No scripts found.";
             IScriptMessageFormatter formatter = new ScriptMessageFormatter();
 
-            string result = formatter.FormatCollection(null);
+            string result = formatter.FormatCollection(new Collection<int>());
+
+            Assert.That(result, Is.EqualTo(expectedResult));
+        }
+
+        /// <summary>
+        /// Ensures that a null collection doesn't fail but returns the expected string.
+        /// </summary>
+        [Test]
+        public void ThatNullDecimalCollectionReturnsCorrectString()
+        {
+            string expectedResult = "No scripts found.";
+            IScriptMessageFormatter formatter = new ScriptMessageFormatter();
+
+            string result = formatter.FormatCollection(new Collection<decimal>());
 
             Assert.That(result, Is.EqualTo(expectedResult));
         }

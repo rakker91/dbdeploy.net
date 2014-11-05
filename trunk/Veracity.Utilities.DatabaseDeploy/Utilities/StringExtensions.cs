@@ -7,6 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -75,7 +76,10 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
         /// <returns></returns>
         public static string Combine(this IEnumerable<string> lines)
         {
-            return lines.Aggregate("", (subTotal, next) => subTotal + next);
+            return lines
+                .Select(l => l.Replace("\r\n", "\n").Replace("\n", Environment.NewLine))
+                .Aggregate(new StringBuilder(),
+                    (subtotal, next) => subtotal.Append(next), subtotal => subtotal.ToString());
         }
 
         /// <summary>

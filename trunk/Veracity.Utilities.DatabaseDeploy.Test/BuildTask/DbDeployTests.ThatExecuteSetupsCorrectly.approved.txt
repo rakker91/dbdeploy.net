@@ -6,5 +6,5 @@ Recursive: True
 RootDirectory: c:\DbDeploy\Root Directory
 ScriptListFile: c:\DbDeploy\Root Directory\ScriptList.txt
 SearchPattern: *.sql
-FileNamePattern: (\d+)(\s+)?(.+)?
+FileNamePattern: ((\d*\.)?\d+)(\s+)?(.+)?
 UndoOutputFile: Undo File

@@ -42,8 +42,8 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
             var fileServiceMock = new Mock<IFileService>(MockBehavior.Strict);
             var scriptMessageFormatterMock = new Mock<IScriptMessageFormatter>(MockBehavior.Strict);
 
-            IDictionary<int, IScriptFile> availableScripts = this.GetScripts();
-            IDictionary<int, IChangeLog> changeLogs = this.GetChangeLogs();
+            IDictionary<decimal, IScriptFile> availableScripts = this.GetScripts();
+            IDictionary<decimal, IChangeLog> changeLogs = this.GetChangeLogs();
 
             string changeScript = "Change Script";
 
@@ -52,7 +52,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
             fileServiceMock.Setup(file => file.GetScriptFiles()).Returns(availableScripts).Verifiable();
             fileServiceMock.Setup(file => file.WriteChangeScript(It.Is<string>(s => s == changeScript))).Verifiable();
             fileServiceMock.Setup(file => file.WriteUndoScript(It.Is<string>(s => s == changeScript))).Verifiable();
-            fileServiceMock.Setup(file => file.WriteScriptList(It.IsAny<Dictionary<int, IScriptFile>>())).Verifiable();
+            fileServiceMock.Setup(file => file.WriteScriptList(It.IsAny<Dictionary<decimal, IScriptFile>>())).Verifiable();
 
             // Database Service Setup
             databaseServiceMock.Setup(db => db.GetAppliedChanges()).Returns(changeLogs).Verifiable();
@@ -64,11 +64,11 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
             configurationServiceMock.Setup(config => config.ScriptListFile).Returns("ScriptListFileLocation").Verifiable();
 
             // Script Formatter setup
-            scriptMessageFormatterMock.Setup(fm => fm.FormatCollection(It.IsAny<ICollection<int>>())).Returns("String Formatted.").Verifiable();
+            scriptMessageFormatterMock.Setup(fm => fm.FormatCollection(It.IsAny<ICollection<decimal>>())).Returns("String Formatted.").Verifiable();
 
             // Script Service Setup
-            scriptServiceMock.Setup(script => script.BuildChangeScript(It.IsAny<IDictionary<int, IScriptFile>>())).Returns(changeScript).Verifiable();
-            scriptServiceMock.Setup(script => script.BuildUndoScript(It.IsAny<IDictionary<int, IScriptFile>>())).Returns(changeScript).Verifiable();
+            scriptServiceMock.Setup(script => script.BuildChangeScript(It.IsAny<IDictionary<decimal, IScriptFile>>())).Returns(changeScript).Verifiable();
+            scriptServiceMock.Setup(script => script.BuildUndoScript(It.IsAny<IDictionary<decimal, IScriptFile>>())).Returns(changeScript).Verifiable();
 
             DeploymentService deploymentService = new DeploymentService(databaseServiceMock.Object, configurationServiceMock.Object, scriptServiceMock.Object, fileServiceMock.Object, scriptMessageFormatterMock.Object);
 
@@ -79,7 +79,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
             fileServiceMock.Verify(file => file.GetScriptFiles(), Times.Exactly(1));
             fileServiceMock.Verify(file => file.WriteChangeScript(It.Is<string>(s => s == changeScript)), Times.Exactly(1));
             fileServiceMock.Verify(file => file.WriteUndoScript(It.Is<string>(s => s == changeScript)), Times.Exactly(1));
-            fileServiceMock.Verify(file => file.WriteScriptList(It.IsAny<Dictionary<int, IScriptFile>>()), Times.Exactly(1));
+            fileServiceMock.Verify(file => file.WriteScriptList(It.IsAny<Dictionary<decimal, IScriptFile>>()), Times.Exactly(1));
 
             // Database Verifies
             databaseServiceMock.Verify(db => db.GetAppliedChanges(), Times.Exactly(1));
@@ -91,11 +91,11 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
             configurationServiceMock.Verify(config => config.ScriptListFile, Times.AtLeastOnce());
 
             // Script Formamter Verifies.
-            scriptMessageFormatterMock.Verify(fm => fm.FormatCollection(It.IsAny<ICollection<int>>()), Times.AtLeastOnce());
+            scriptMessageFormatterMock.Verify(fm => fm.FormatCollection(It.IsAny<ICollection<decimal>>()), Times.AtLeastOnce());
 
             // Script Service Verifies
-            scriptServiceMock.Verify(script => script.BuildChangeScript(It.IsAny<IDictionary<int, IScriptFile>>()), Times.Exactly(1));
-            scriptServiceMock.Verify(script => script.BuildUndoScript(It.IsAny<IDictionary<int, IScriptFile>>()), Times.Exactly(1));
+            scriptServiceMock.Verify(script => script.BuildChangeScript(It.IsAny<IDictionary<decimal, IScriptFile>>()), Times.Exactly(1));
+            scriptServiceMock.Verify(script => script.BuildUndoScript(It.IsAny<IDictionary<decimal, IScriptFile>>()), Times.Exactly(1));
         }
 
         /// <summary>
@@ -110,8 +110,8 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
             var fileServiceMock = new Mock<IFileService>(MockBehavior.Strict);
             var scriptMessageFormatterMock = new Mock<IScriptMessageFormatter>(MockBehavior.Strict);
 
-            IDictionary<int, IScriptFile> availableScripts = this.GetScripts();
-            IDictionary<int, IChangeLog> changeLogs = this.GetChangeLogsAll();
+            IDictionary<decimal, IScriptFile> availableScripts = this.GetScripts();
+            IDictionary<decimal, IChangeLog> changeLogs = this.GetChangeLogsAll();
 
             string changeScript = "Change Script";
 
@@ -119,7 +119,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
             fileServiceMock.Setup(file => file.CleanupPastRuns()).Verifiable();
             fileServiceMock.Setup(file => file.GetScriptFiles()).Returns(availableScripts).Verifiable();
             fileServiceMock.Setup(file => file.WriteChangeScript(It.Is<string>(s => s == changeScript))).Verifiable();
-            fileServiceMock.Setup(file => file.WriteScriptList(It.IsAny<Dictionary<int, IScriptFile>>())).Verifiable();
+            fileServiceMock.Setup(file => file.WriteScriptList(It.IsAny<Dictionary<decimal, IScriptFile>>())).Verifiable();
 
             // Database Service Setup
             databaseServiceMock.Setup(db => db.GetAppliedChanges()).Returns(changeLogs).Verifiable();
@@ -131,11 +131,11 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
             configurationServiceMock.Setup(config => config.ScriptListFile).Returns("ScriptListFileLocation").Verifiable();
 
             // Script Formatter setup
-            scriptMessageFormatterMock.Setup(fm => fm.FormatCollection(It.IsAny<ICollection<int>>())).Returns("String Formatted.").Verifiable();
+            scriptMessageFormatterMock.Setup(fm => fm.FormatCollection(It.IsAny<ICollection<decimal>>())).Returns("String Formatted.").Verifiable();
 
             // Script Service Setup
-            scriptServiceMock.Setup(script => script.BuildChangeScript(It.IsAny<IDictionary<int, IScriptFile>>())).Returns(changeScript).Verifiable();
-            scriptServiceMock.Setup(script => script.BuildUndoScript(It.IsAny<IDictionary<int, IScriptFile>>())).Returns(changeScript).Verifiable();
+            scriptServiceMock.Setup(script => script.BuildChangeScript(It.IsAny<IDictionary<decimal, IScriptFile>>())).Returns(changeScript).Verifiable();
+            scriptServiceMock.Setup(script => script.BuildUndoScript(It.IsAny<IDictionary<decimal, IScriptFile>>())).Returns(changeScript).Verifiable();
 
             DeploymentService deploymentService = new DeploymentService(databaseServiceMock.Object, configurationServiceMock.Object, scriptServiceMock.Object, fileServiceMock.Object, scriptMessageFormatterMock.Object);
 
@@ -145,7 +145,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
             fileServiceMock.Verify(file => file.CleanupPastRuns(), Times.Exactly(1));
             fileServiceMock.Verify(file => file.GetScriptFiles(), Times.Exactly(1));
             fileServiceMock.Verify(file => file.WriteChangeScript(It.Is<string>(s => s == changeScript)), Times.Exactly(0));
-            fileServiceMock.Verify(file => file.WriteScriptList(It.IsAny<Dictionary<int, IScriptFile>>()), Times.Exactly(1));
+            fileServiceMock.Verify(file => file.WriteScriptList(It.IsAny<Dictionary<decimal, IScriptFile>>()), Times.Exactly(1));
 
             // Database Verifies
             databaseServiceMock.Verify(db => db.GetAppliedChanges(), Times.Exactly(1));
@@ -157,11 +157,11 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
             configurationServiceMock.Verify(config => config.ScriptListFile, Times.AtLeastOnce());
 
             // Script Formamter Verifies.
-            scriptMessageFormatterMock.Verify(fm => fm.FormatCollection(It.IsAny<ICollection<int>>()), Times.AtLeastOnce());
+            scriptMessageFormatterMock.Verify(fm => fm.FormatCollection(It.IsAny<ICollection<decimal>>()), Times.AtLeastOnce());
 
             // Script Service Verifies
-            scriptServiceMock.Verify(script => script.BuildChangeScript(It.IsAny<IDictionary<int, IScriptFile>>()), Times.Never());
-            scriptServiceMock.Verify(script => script.BuildUndoScript(It.IsAny<IDictionary<int, IScriptFile>>()), Times.Never());
+            scriptServiceMock.Verify(script => script.BuildChangeScript(It.IsAny<IDictionary<decimal, IScriptFile>>()), Times.Never());
+            scriptServiceMock.Verify(script => script.BuildUndoScript(It.IsAny<IDictionary<decimal, IScriptFile>>()), Times.Never());
         }
 
         /// <summary>
@@ -176,8 +176,8 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
             var fileServiceMock = new Mock<IFileService>(MockBehavior.Strict);
             var scriptMessageFormatterMock = new Mock<IScriptMessageFormatter>(MockBehavior.Strict);
 
-            IDictionary<int, IScriptFile> availableScripts = this.GetScripts();
-            IDictionary<int, IChangeLog> changeLogs = this.GetChangeLogs();
+            IDictionary<decimal, IScriptFile> availableScripts = this.GetScripts();
+            IDictionary<decimal, IChangeLog> changeLogs = this.GetChangeLogs();
 
             string changeScript = "Change Script";
 
@@ -186,7 +186,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
             fileServiceMock.Setup(file => file.GetScriptFiles()).Returns(availableScripts).Verifiable();
             fileServiceMock.Setup(file => file.WriteChangeScript(It.Is<string>(s => s == changeScript))).Verifiable();
             fileServiceMock.Setup(file => file.WriteUndoScript(It.Is<string>(s => s == changeScript))).Verifiable();
-            fileServiceMock.Setup(file => file.WriteScriptList(It.IsAny<Dictionary<int, IScriptFile>>())).Verifiable();
+            fileServiceMock.Setup(file => file.WriteScriptList(It.IsAny<Dictionary<decimal, IScriptFile>>())).Verifiable();
 
             // Database Service Setup
             databaseServiceMock.Setup(db => db.GetAppliedChanges()).Returns(changeLogs).Verifiable();
@@ -198,14 +198,14 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
             configurationServiceMock.Setup(config => config.ScriptListFile).Returns("ScriptListFileLocation").Verifiable();
 
             // Script Formatter setup
-            scriptMessageFormatterMock.Setup(fm => fm.FormatCollection(It.IsAny<ICollection<int>>())).Returns("String Formatted.").Verifiable();
+            scriptMessageFormatterMock.Setup(fm => fm.FormatCollection(It.IsAny<ICollection<decimal>>())).Returns("String Formatted.").Verifiable();
 
             // Script Service Setup
             int passedCount = 0;
-            scriptServiceMock.Setup(script => script.BuildChangeScript(It.IsAny<IDictionary<int, IScriptFile>>())).Callback<IDictionary<int, IScriptFile>>((files => passedCount = files.Count)).Returns(changeScript).Verifiable();
-            scriptServiceMock.Setup(script => script.BuildUndoScript(It.IsAny<IDictionary<int, IScriptFile>>())).Callback<IDictionary<int, IScriptFile>>((files => passedCount = files.Count)).Returns(changeScript).Verifiable();
+            scriptServiceMock.Setup(script => script.BuildChangeScript(It.IsAny<IDictionary<decimal, IScriptFile>>())).Callback<IDictionary<decimal, IScriptFile>>((files => passedCount = files.Count)).Returns(changeScript).Verifiable();
+            scriptServiceMock.Setup(script => script.BuildUndoScript(It.IsAny<IDictionary<decimal, IScriptFile>>())).Callback<IDictionary<decimal, IScriptFile>>((files => passedCount = files.Count)).Returns(changeScript).Verifiable();
 
-            DeploymentService deploymentService = new DeploymentService(databaseServiceMock.Object, configurationServiceMock.Object, scriptServiceMock.Object, fileServiceMock.Object, scriptMessageFormatterMock.Object);
+            var deploymentService = new DeploymentService(databaseServiceMock.Object, configurationServiceMock.Object, scriptServiceMock.Object, fileServiceMock.Object, scriptMessageFormatterMock.Object);
 
             deploymentService.BuildDeploymentScript();
 
@@ -213,7 +213,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
             fileServiceMock.Verify(file => file.CleanupPastRuns(), Times.Exactly(1));
             fileServiceMock.Verify(file => file.GetScriptFiles(), Times.Exactly(1));
             fileServiceMock.Verify(file => file.WriteChangeScript(It.Is<string>(s => s == changeScript)), Times.Exactly(1));
-            fileServiceMock.Verify(file => file.WriteScriptList(It.IsAny<Dictionary<int, IScriptFile>>()), Times.Exactly(1));
+            fileServiceMock.Verify(file => file.WriteScriptList(It.IsAny<Dictionary<decimal, IScriptFile>>()), Times.Exactly(1));
 
             // Database Verifies
             databaseServiceMock.Verify(db => db.GetAppliedChanges(), Times.Exactly(1));
@@ -225,11 +225,11 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
             configurationServiceMock.Verify(config => config.ScriptListFile, Times.AtLeastOnce());
 
             // Script Formamter Verifies.
-            scriptMessageFormatterMock.Verify(fm => fm.FormatCollection(It.IsAny<ICollection<int>>()), Times.AtLeastOnce());
+            scriptMessageFormatterMock.Verify(fm => fm.FormatCollection(It.IsAny<ICollection<decimal>>()), Times.AtLeastOnce());
 
             // Script Service Verifies
-            scriptServiceMock.Verify(script => script.BuildChangeScript(It.IsAny<IDictionary<int, IScriptFile>>()), Times.Exactly(1));
-            scriptServiceMock.Verify(script => script.BuildUndoScript(It.IsAny<IDictionary<int, IScriptFile>>()), Times.Exactly(1));
+            scriptServiceMock.Verify(script => script.BuildChangeScript(It.IsAny<IDictionary<decimal, IScriptFile>>()), Times.Exactly(1));
+            scriptServiceMock.Verify(script => script.BuildUndoScript(It.IsAny<IDictionary<decimal, IScriptFile>>()), Times.Exactly(1));
             Assert.That(passedCount, Is.EqualTo(2));
         }
 
@@ -245,8 +245,8 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
             var fileServiceMock = new Mock<IFileService>(MockBehavior.Strict);
             var scriptMessageFormatterMock = new Mock<IScriptMessageFormatter>(MockBehavior.Strict);
 
-            IDictionary<int, IScriptFile> availableScripts = new Dictionary<int, IScriptFile>();
-            IDictionary<int, IChangeLog> changeLogs = new Dictionary<int, IChangeLog>();
+            IDictionary<decimal, IScriptFile> availableScripts = new Dictionary<decimal, IScriptFile>();
+            IDictionary<decimal, IChangeLog> changeLogs = new Dictionary<decimal, IChangeLog>();
 
             string changeScript = "Change Script";
 
@@ -254,7 +254,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
             fileServiceMock.Setup(file => file.CleanupPastRuns()).Verifiable();
             fileServiceMock.Setup(file => file.GetScriptFiles()).Returns(availableScripts).Verifiable();
             fileServiceMock.Setup(file => file.WriteChangeScript(It.Is<string>(s => s == changeScript))).Verifiable();
-            fileServiceMock.Setup(file => file.WriteScriptList(It.IsAny<Dictionary<int, IScriptFile>>())).Verifiable();
+            fileServiceMock.Setup(file => file.WriteScriptList(It.IsAny<Dictionary<decimal, IScriptFile>>())).Verifiable();
 
             // Database Service Setup
             databaseServiceMock.Setup(db => db.GetAppliedChanges()).Returns(changeLogs).Verifiable();
@@ -266,10 +266,10 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
             configurationServiceMock.Setup(config => config.RootDirectory).Returns("Root Directory").Verifiable();
 
             // Script Formatter setup
-            scriptMessageFormatterMock.Setup(fm => fm.FormatCollection(It.IsAny<ICollection<int>>())).Returns("String Formatted.").Verifiable();
+            scriptMessageFormatterMock.Setup(fm => fm.FormatCollection(It.IsAny<ICollection<decimal>>())).Returns("String Formatted.").Verifiable();
 
             // Script Service Setup
-            scriptServiceMock.Setup(script => script.BuildChangeScript(It.IsAny<IDictionary<int, IScriptFile>>())).Returns(changeScript).Verifiable();
+            scriptServiceMock.Setup(script => script.BuildChangeScript(It.IsAny<IDictionary<decimal, IScriptFile>>())).Returns(changeScript).Verifiable();
 
             DeploymentService deploymentService = new DeploymentService(databaseServiceMock.Object, configurationServiceMock.Object, scriptServiceMock.Object, fileServiceMock.Object, scriptMessageFormatterMock.Object);
 
@@ -279,7 +279,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
             fileServiceMock.Verify(file => file.CleanupPastRuns(), Times.Exactly(1));
             fileServiceMock.Verify(file => file.GetScriptFiles(), Times.Exactly(1));
             fileServiceMock.Verify(file => file.WriteChangeScript(It.Is<string>(s => s == changeScript)), Times.Never());
-            fileServiceMock.Verify(file => file.WriteScriptList(It.IsAny<Dictionary<int, IScriptFile>>()), Times.Never());
+            fileServiceMock.Verify(file => file.WriteScriptList(It.IsAny<Dictionary<decimal, IScriptFile>>()), Times.Never());
 
             // Database Verifies
             databaseServiceMock.Verify(db => db.GetAppliedChanges(), Times.Exactly(0));
@@ -291,10 +291,10 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
             configurationServiceMock.Verify(config => config.RootDirectory, Times.AtLeastOnce());
 
             // Script Formamter Verifies.
-            scriptMessageFormatterMock.Verify(fm => fm.FormatCollection(It.IsAny<ICollection<int>>()), Times.Never());
+            scriptMessageFormatterMock.Verify(fm => fm.FormatCollection(It.IsAny<ICollection<decimal>>()), Times.Never());
 
             // Script Service Verifies
-            scriptServiceMock.Verify(script => script.BuildChangeScript(It.IsAny<IDictionary<int, IScriptFile>>()), Times.Never());
+            scriptServiceMock.Verify(script => script.BuildChangeScript(It.IsAny<IDictionary<decimal, IScriptFile>>()), Times.Never());
         }
 
         #endregion
@@ -307,9 +307,9 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
         /// <returns>
         /// A list of changelogs for testing. 
         /// </returns>
-        private IDictionary<int, IChangeLog> GetChangeLogs()
+        private IDictionary<decimal, IChangeLog> GetChangeLogs()
         {
-            IDictionary<int, IChangeLog> changeLogs = new Dictionary<int, IChangeLog>();
+            IDictionary<decimal, IChangeLog> changeLogs = new Dictionary<decimal, IChangeLog>();
 
             changeLogs.Add(1, new ChangeLog() { Description = "1", ChangeNumber = 1 });
             changeLogs.Add(2, new ChangeLog() { Description = "2", ChangeNumber = 2 });
@@ -326,9 +326,9 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
         /// <returns>
         /// A list of changelogs for testing. 
         /// </returns>
-        private IDictionary<int, IChangeLog> GetChangeLogsAll()
+        private IDictionary<decimal, IChangeLog> GetChangeLogsAll()
         {
-            IDictionary<int, IChangeLog> changeLogs = new Dictionary<int, IChangeLog>();
+            IDictionary<decimal, IChangeLog> changeLogs = new Dictionary<decimal, IChangeLog>();
 
             changeLogs.Add(1, new ChangeLog() { Description = "1", ChangeNumber = 1 });
             changeLogs.Add(2, new ChangeLog() { Description = "2", ChangeNumber = 2 });
@@ -350,9 +350,9 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
         /// <returns>
         /// A list of scripts. 
         /// </returns>
-        private IDictionary<int, IScriptFile> GetScripts()
+        private IDictionary<decimal, IScriptFile> GetScripts()
         {
-            IDictionary<int, IScriptFile> scripts = new Dictionary<int, IScriptFile>();
+            IDictionary<decimal, IScriptFile> scripts = new Dictionary<decimal, IScriptFile>();
             scripts.Add(1, new ScriptFile() { Description = "1", FileName = "FileName1.sql", Id = 1 });
             scripts.Add(2, new ScriptFile() { Description = "2", FileName = "FileName2.sql", Id = 2 });
             scripts.Add(3, new ScriptFile() { Description = "3", FileName = "FileName3.sql", Id = 3 });

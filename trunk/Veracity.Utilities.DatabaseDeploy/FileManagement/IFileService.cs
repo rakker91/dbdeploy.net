@@ -60,7 +60,7 @@ namespace Veracity.Utilities.DatabaseDeploy.FileManagement
         /// <returns>
         /// A dictionary of script files that are on disc. 
         /// </returns>
-        IDictionary<int, IScriptFile> GetScriptFiles();
+        IDictionary<decimal, IScriptFile> GetScriptFiles();
 
         /// <summary>
         /// Writes the change script file to disk
@@ -76,7 +76,7 @@ namespace Veracity.Utilities.DatabaseDeploy.FileManagement
         /// <param name="scripts">
         /// The scripts that were found. 
         /// </param>
-        void WriteScriptList(IDictionary<int, IScriptFile> scripts);
+        void WriteScriptList(IDictionary<decimal, IScriptFile> scripts);
 
         /// <summary>
         /// Writes the undo script file to disk

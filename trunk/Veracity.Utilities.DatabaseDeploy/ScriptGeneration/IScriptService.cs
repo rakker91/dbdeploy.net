@@ -31,7 +31,7 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
         /// <returns>
         /// A string containing the script to be run. 
         /// </returns>
-        string BuildChangeScript(IDictionary<int, IScriptFile> changes);
+        string BuildChangeScript(IDictionary<decimal, IScriptFile> changes);
 
         /// <summary>
         /// Builds an undo script from the changes given. This is not currently used.
@@ -42,7 +42,7 @@ namespace Veracity.Utilities.DatabaseDeploy.ScriptGeneration
         /// <returns>
         /// A string containing the undo script. 
         /// </returns>
-        string BuildUndoScript(IDictionary<int, IScriptFile> changes);
+        string BuildUndoScript(IDictionary<decimal, IScriptFile> changes);
 
         #endregion
     }

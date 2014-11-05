@@ -131,7 +131,7 @@ namespace Veracity.Utilities.DatabaseDeploy
 
             log.InfoIfEnabled("Getting available script files.");
 
-            IDictionary<int, IScriptFile> scripts = this.fileService.GetScriptFiles();
+            IDictionary<decimal, IScriptFile> scripts = this.fileService.GetScriptFiles();
 
             if (scripts.Any())
             {
@@ -140,11 +140,11 @@ namespace Veracity.Utilities.DatabaseDeploy
                 log.InfoIfEnabled("Found scripts {0}.", this.scriptMessageFormatter.FormatCollection(scripts.Keys));
 
                 log.InfoIfEnabled("Getting applied changes.");
-                IDictionary<int, IChangeLog> changes = this.databaseService.GetAppliedChanges();
+                IDictionary<decimal, IChangeLog> changes = this.databaseService.GetAppliedChanges();
                 log.InfoIfEnabled("Found scripts {0}.", this.scriptMessageFormatter.FormatCollection(changes.Keys));
 
                 log.InfoIfEnabled("Getting scripts to apply.");
-                IDictionary<int, IScriptFile> scriptsToApply = this.GetScriptsToApply(scripts, changes);
+                IDictionary<decimal, IScriptFile> scriptsToApply = this.GetScriptsToApply(scripts, changes);
 
                 if (scriptsToApply.Any())
                 {
@@ -197,14 +197,14 @@ namespace Veracity.Utilities.DatabaseDeploy
         /// <returns>
         /// A dictionary containing the scripts that need to be applied to the current database instance 
         /// </returns>
-        private IDictionary<int, IScriptFile> GetScriptsToApply(IDictionary<int, IScriptFile> availableScripts, IDictionary<int, IChangeLog> appliedChanges)
+        private IDictionary<decimal, IScriptFile> GetScriptsToApply(IDictionary<decimal, IScriptFile> availableScripts, IDictionary<decimal, IChangeLog> appliedChanges)
         {
             log.DebugIfEnabled(LogUtility.GetContext(availableScripts, appliedChanges));
 
-            IDictionary<int, IScriptFile> scriptsToApply = new Dictionary<int, IScriptFile>();
-            int[] sortedKeys = availableScripts.Keys.OrderBy(k => k).ToArray();
+            IDictionary<decimal, IScriptFile> scriptsToApply = new Dictionary<decimal, IScriptFile>();
+            decimal[] sortedKeys = availableScripts.Keys.OrderBy(k => k).ToArray();
 
-            foreach (int key in sortedKeys.Where(key => !appliedChanges.ContainsKey(key) && !scriptsToApply.ContainsKey(key)))
+            foreach (decimal key in sortedKeys.Where(key => !appliedChanges.ContainsKey(key) && !scriptsToApply.ContainsKey(key)))
             {
                 if (key > this.configurationService.LastChangeToApply)
                 {
