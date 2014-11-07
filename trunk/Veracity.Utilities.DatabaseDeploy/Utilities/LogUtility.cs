@@ -69,6 +69,10 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
         /// </returns>
         public static string GetContext(params object[] passedValues)
         {
+            if (!log.IsDebugEnabled)
+            {
+                return string.Empty;
+            }
             log.DebugIfEnabled("GetContext called.");
 
             string result = "Unable to build context.";
