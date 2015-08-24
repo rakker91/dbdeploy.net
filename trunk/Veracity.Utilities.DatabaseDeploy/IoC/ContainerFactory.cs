@@ -13,6 +13,10 @@ namespace DatabaseDeploy.Core.IoC
     using System.Collections.Generic;
     using System.Linq;
 
+    using DatabaseDeploy.Core.Configuration;
+    using DatabaseDeploy.Core.Database.DatabaseInstances;
+    using DatabaseDeploy.Core.Database.DatabaseInstances.SqlServer;
+
     using log4net;
 
     using Microsoft.Practices.Unity;
@@ -91,11 +95,14 @@ namespace DatabaseDeploy.Core.IoC
                 }
 
                 // We have our own auto mapper, but this is better.  The automapper may still be used in some cases.
-                IList<Type> types = AllClasses.FromLoadedAssemblies().Where(t => t.Namespace != null && t.Namespace.StartsWith("DatabaseDeploy")).ToList();
+                IList<Type> types = AllClasses.FromAssembliesInBasePath().Where(t => t.Namespace != null && t.Namespace.StartsWith("DatabaseDeploy")).ToList();
                 Container.RegisterTypes(types, WithMappings.FromMatchingInterface, WithName.Default);
             }
 
             //// Add any additional registrations here or in the configuration file.
+            // this is a temporary registration that is overridden at a later point.
+            // Container.RegisterType(typeof(IDatabaseService), typeof(SqlServerDatabaseService));
+            Container.RegisterType(typeof(IConfigurationService), typeof(ConfigurationService), new ContainerControlledLifetimeManager());
             return Container;
         }
     }

@@ -16,6 +16,8 @@
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -50,16 +52,6 @@
     <OutputPath>bin\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Veracity.Utilities.DatabaseDeploy.Console\DatabaseDeploy.Console.csproj">
-      <Project>{64737C72-30B7-45BD-A1EF-216A4C4F53FB}</Project>
-      <Name>DatabaseDeploy.Console</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Veracity.Utilities.DatabaseDeploy\DatabaseDeploy.Core.csproj">
-      <Project>{81281CF4-A227-4F5A-A3FF-FE89D32A9741}</Project>
-      <Name>DatabaseDeploy.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <Content Include="CommandLine.bat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -69,10 +61,28 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Readme.txt" />
-    <Content Include="Scripts\Deployed\1 Create MyUsers.sql" />
-    <Content Include="Scripts\Deployed\2 Add Admin User.sql" />
-    <Content Include="Scripts\Rebuild\0002 Create Admin User.sql" />
-    <Content Include="Scripts\TestData\1 Add Some Users.sql" />
+    <Content Include="Scripts\Deployed\1 Create MyUsers.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\Deployed\2 Add Admin User.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\Rebuild\0002 Create Admin User.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\TestData\1 Add Some Users.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Veracity.Utilities.DatabaseDeploy.Console\DatabaseDeploy.Console.csproj">
+      <Project>{64737c72-30b7-45bd-a1ef-216a4c4f53fb}</Project>
+      <Name>DatabaseDeploy.Console</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Veracity.Utilities.DatabaseDeploy\DatabaseDeploy.Core.csproj">
+      <Project>{81281cf4-a227-4f5a-a3ff-fe89d32a9741}</Project>
+      <Name>DatabaseDeploy.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

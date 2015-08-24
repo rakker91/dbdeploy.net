@@ -78,12 +78,13 @@ namespace DatabaseDeploy.Test.ScriptGeneration
                         });
 
             IDictionary<decimal, IScriptFile> changes = this.GetChanges();
+            Mock<IConfigurationService> configurationService = new Mock<IConfigurationService>();
+            configurationService.Setup(c => c.DatabaseService).Returns(databaseServiceMock.Object);
 
             IScriptService scriptService = new ScriptService(
-                databaseServiceMock.Object,
                 fileServiceMock.Object,
                 new TokenReplacer(new ConfigurationService()),
-                new ConfigurationService());
+                configurationService.Object);
 
             string result = scriptService.BuildChangeScript(changes);
 
@@ -144,12 +145,13 @@ namespace DatabaseDeploy.Test.ScriptGeneration
                         });
 
             IDictionary<decimal, IScriptFile> changes = this.GetChanges();
+            Mock<IConfigurationService> configurationService = new Mock<IConfigurationService>();
+            configurationService.Setup(c => c.DatabaseService).Returns(databaseServiceMock.Object);
 
             IScriptService scriptService = new ScriptService(
-                databaseServiceMock.Object,
                 fileServiceMock.Object,
                 new TokenReplacer(new ConfigurationService()),
-                new ConfigurationService());
+                configurationService.Object);
 
             string result = scriptService.BuildUndoScript(changes);
 

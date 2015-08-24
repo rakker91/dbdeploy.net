@@ -147,6 +147,18 @@ namespace DatabaseDeploy.Core.Configuration
         public string DatabaseScriptPath { get; set; }
 
         /// <summary>
+        /// Gets the database service that should be used for database operations.
+        /// </summary>
+        /// <value>The database service.</value>
+        public IDatabaseService DatabaseService
+        {
+            get
+            {
+                return (IDatabaseService)Container.UnityContainer.Resolve(typeof(IDatabaseService));
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the pattern to use for parsing the name of the script file
         /// </summary>
         /// <value>The file name pattern.</value>
@@ -219,7 +231,7 @@ namespace DatabaseDeploy.Core.Configuration
         public bool Recursive { get; set; }
 
         /// <summary>
-        /// Gets or sets the root directory for processong
+        /// Gets or sets the root directory for processing
         /// </summary>
         /// <value>The root directory.</value>
         public string RootDirectory
@@ -383,13 +395,13 @@ namespace DatabaseDeploy.Core.Configuration
             return result;
         }
 
-        ////public bool UseTransactions { get; set; }
-        /////// </remarks>
-        ///////   In my opinion, this option should not be used. Instead, put a transaction in the actual script file itself, as needed.
-        /////// <remarks>
-        /////// </summary>
-        ///////   Gets or sets a value indicating whether or not transactions should be used for each script
-
         /////// <summary>
+        ///////   Gets or sets a value indicating whether or not transactions should be used for each script
+        /////// </summary>
+        /////// <remarks>
+        ///////   In my opinion, this option should not be used. Instead, put a transaction in the actual script file itself, as needed.
+        /////// </remarks>
+
+        ////public bool UseTransactions { get; set; }
     }
 }

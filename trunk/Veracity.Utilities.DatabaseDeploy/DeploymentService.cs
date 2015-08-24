@@ -15,6 +15,7 @@ namespace DatabaseDeploy.Core
     using DatabaseDeploy.Core.Database;
     using DatabaseDeploy.Core.Database.DatabaseInstances;
     using DatabaseDeploy.Core.FileManagement;
+    using DatabaseDeploy.Core.IoC;
     using DatabaseDeploy.Core.ScriptGeneration;
     using DatabaseDeploy.Core.Utilities;
 
@@ -36,11 +37,6 @@ namespace DatabaseDeploy.Core
         private readonly IConfigurationService configurationService;
 
         /// <summary>
-        ///     The database service to use for building
-        /// </summary>
-        private readonly IDatabaseService databaseService;
-
-        /// <summary>
         ///     The file service to use for the build
         /// </summary>
         private readonly IFileService fileService;
@@ -58,19 +54,12 @@ namespace DatabaseDeploy.Core
         /// <summary>
         ///     Initializes a new instance of the <see cref="DeploymentService" /> class.
         /// </summary>
-        /// <param name="databaseService">The database service to use for database calls</param>
         /// <param name="configurationService">The configuration Service.</param>
         /// <param name="scriptService">The script Service.</param>
         /// <param name="fileService">The file Service.</param>
         /// <param name="scriptMessageFormatter">The script formatter for messages</param>
-        public DeploymentService(
-            IDatabaseService databaseService,
-            IConfigurationService configurationService,
-            IScriptService scriptService,
-            IFileService fileService,
-            IScriptMessageFormatter scriptMessageFormatter)
+        public DeploymentService(IConfigurationService configurationService, IScriptService scriptService, IFileService fileService, IScriptMessageFormatter scriptMessageFormatter)
         {
-            this.databaseService = databaseService;
             this.configurationService = configurationService;
             this.scriptService = scriptService;
             this.fileService = fileService;
@@ -111,7 +100,7 @@ namespace DatabaseDeploy.Core
                 Log.InfoIfEnabled("Found scripts {0}.", this.scriptMessageFormatter.FormatCollection(scripts.Keys));
 
                 Log.InfoIfEnabled("Getting applied changes.");
-                IDictionary<decimal, IChangeLog> changes = this.databaseService.GetAppliedChanges();
+                IDictionary<decimal, IChangeLog> changes = this.configurationService.DatabaseService.GetAppliedChanges();
                 Log.InfoIfEnabled("Found scripts {0}.", this.scriptMessageFormatter.FormatCollection(changes.Keys));
 
                 Log.InfoIfEnabled("Getting scripts to apply.");
@@ -119,16 +108,12 @@ namespace DatabaseDeploy.Core
 
                 if (scriptsToApply.Any())
                 {
-                    Log.InfoIfEnabled(
-                        "Scripts {0} need to be applied.",
-                        this.scriptMessageFormatter.FormatCollection(scriptsToApply.Keys));
+                    Log.InfoIfEnabled("Scripts {0} need to be applied.", this.scriptMessageFormatter.FormatCollection(scriptsToApply.Keys));
 
                     Log.InfoIfEnabled("Building change script.");
                     string changeScript = this.scriptService.BuildChangeScript(scriptsToApply);
 
-                    Log.InfoIfEnabled(
-                        "Building undo script for scripts {0}.",
-                        this.scriptMessageFormatter.FormatCollection(changes.Keys));
+                    Log.InfoIfEnabled("Building undo script for scripts {0}.", this.scriptMessageFormatter.FormatCollection(changes.Keys));
 
                     string undoScript = this.scriptService.BuildUndoScript(scriptsToApply);
                     Log.InfoIfEnabled("Writing change script to {0}", this.configurationService.OutputFile);
@@ -146,9 +131,7 @@ namespace DatabaseDeploy.Core
             }
             else
             {
-                Log.InfoIfEnabled(
-                    "No scripts found at {0}.  Skipping script generation.",
-                    this.configurationService.RootDirectory);
+                Log.InfoIfEnabled("No scripts found at {0}.  Skipping script generation.", this.configurationService.RootDirectory);
             }
 
             Log.InfoIfEnabled("Deployment generation complete.");
@@ -160,9 +143,7 @@ namespace DatabaseDeploy.Core
         /// <param name="availableScripts">The scripts that are available to be applied to the database.</param>
         /// <param name="appliedChanges">The scripts that have already been applied to the database</param>
         /// <returns>A dictionary containing the scripts that need to be applied to the current database instance</returns>
-        private IDictionary<decimal, IScriptFile> GetScriptsToApply(
-            IDictionary<decimal, IScriptFile> availableScripts,
-            IDictionary<decimal, IChangeLog> appliedChanges)
+        private IDictionary<decimal, IScriptFile> GetScriptsToApply(IDictionary<decimal, IScriptFile> availableScripts, IDictionary<decimal, IChangeLog> appliedChanges)
         {
             IDictionary<decimal, IScriptFile> scriptsToApply = new Dictionary<decimal, IScriptFile>();
             decimal[] sortedKeys = availableScripts.Keys.OrderBy(k => k).ToArray();
@@ -172,9 +153,7 @@ namespace DatabaseDeploy.Core
             {
                 if (key > this.configurationService.LastChangeToApply)
                 {
-                    Log.InfoIfEnabled(
-                        "LastChangeToApply == {0}.  Skipping remaining scripts.",
-                        this.configurationService.LastChangeToApply);
+                    Log.InfoIfEnabled("LastChangeToApply == {0}.  Skipping remaining scripts.", this.configurationService.LastChangeToApply);
 
                     break;
                 }

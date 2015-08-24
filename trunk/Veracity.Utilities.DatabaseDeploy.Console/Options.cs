@@ -47,7 +47,7 @@ namespace DatabaseDeploy.Console
         ///     Gets or sets the search pattern to use for file parsing
         /// </summary>
         /// <value>The file name pattern.</value>
-        [Option('p', "FileNamePattern", HelpText = "The pattern that should be used to parse the script file names.", Required = false)]
+        [Option('a', "FileNamePattern", HelpText = "The pattern that should be used to parse the script file names.", Required = false)]
         public string FileNamePattern { get; set; }
 
         /// <summary>
