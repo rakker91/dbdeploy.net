@@ -20,7 +20,7 @@
 	<UsingTask AssemblyFile="$(SqlTasks)\MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.SqlServer.SqlCmd"/>
 	<UsingTask AssemblyFile="$(SqlTasks)\MSBuild.ExtensionPack.Sql2012.dll" TaskName="MSBuild.ExtensionPack.Sql2012.Database"/>
 
-	<UsingTask TaskName="DbDeploy" AssemblyFile="$(DbDeploy)\Veracity.Utilities.DatabaseDeploy.dll"/>
+	<UsingTask TaskName="DbDeploy" AssemblyFile="$(DbDeploy)\DatabaseDeploy.dll"/>
 
 	<ItemGroup>
 		<Variable Include="DatabaseName">

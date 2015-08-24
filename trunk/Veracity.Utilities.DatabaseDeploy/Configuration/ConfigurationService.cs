@@ -1,106 +1,80 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ConfigurationService.cs" company="Veracity Solutions, Inc.">
-//   Copyright (c) Veracity Solutions, Inc. 2012.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
-// </copyright>
-//  <summary>
-//   Created By: Robert J. May
-// </summary>
+//  <copyright file="ConfigurationService.cs" company="Database Deploy 2">
+//    Copyright (c) 2015 Database Deploy 2.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
+//  </copyright>
+//   <summary>
+//  </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Veracity.Utilities.DatabaseDeploy.Configuration
+namespace DatabaseDeploy.Core.Configuration
 {
-    #region Usings
-
-    using System;
     using System.IO;
-    using System.Reflection;
     using System.Text;
 
-    using log4net;
+    using DatabaseDeploy.Core.Database;
+    using DatabaseDeploy.Core.Database.DatabaseInstances;
+    using DatabaseDeploy.Core.Database.DatabaseInstances.MySql;
+    using DatabaseDeploy.Core.Database.DatabaseInstances.Oracle;
+    using DatabaseDeploy.Core.Database.DatabaseInstances.SqlServer;
+    using DatabaseDeploy.Core.IoC;
+    using DatabaseDeploy.Core.Utilities;
 
     using Microsoft.Practices.Unity;
-
-    using Veracity.Utilities.DatabaseDeploy.Database;
-    using Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances;
-    using Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances.MySql;
-    using Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances.Oracle;
-    using Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances.SqlServer;
-    using Veracity.Utilities.DatabaseDeploy.IoC;
-    using Veracity.Utilities.DatabaseDeploy.Utilities;
-
-    #endregion
 
     /// <summary>
     /// Provides a service for managing configuration values.
     /// </summary>
     public class ConfigurationService : IConfigurationService
     {
-        #region Constants and Fields
-
         /// <summary>
-        ///   The default database path
+        /// The default database path
         /// </summary>
         private const string DefaultDatabasePath = @"Database\Scripts";
 
         /// <summary>
-        ///   The default output filename
+        /// The default output filename
         /// </summary>
         private const string DefaultOutputFile = "DbDeploy.sql";
 
         /// <summary>
-        ///   The default file to contain the list of scripts.
+        /// The default file to contain the list of scripts.
         /// </summary>
         private const string DefaultScriptListFile = "ScriptList.txt";
 
         /// <summary>
-        ///   The default undo filename
+        /// The default undo filename
         /// </summary>
         private const string DefaultUndoFile = "DbDeployUndo.sql";
 
         /// <summary>
-        ///   Creates the default logger
+        /// The changelog table.
         /// </summary>
-        private static readonly ILog log = LogManager.GetLogger(typeof(ConfigurationService));
+        private string changeLog = "changelog";
 
         /// <summary>
-        ///   The database management type
+        /// The database management type
         /// </summary>
         private DatabaseTypesEnum databaseManagementSystem = DatabaseTypesEnum.SqlServer;
 
         /// <summary>
-        ///   The last change to apply in the database.
-        /// </summary>
-        private int lastChangeToApply = int.MaxValue;
-
-        /// <summary>
-        ///   The output file to use for this run.
-        /// </summary>
-        private string outputFile = DefaultOutputFile;
-
-        /// <summary>
-        ///   The root directory to use for this run.
-        /// </summary>
-        private string rootDirectory;
-
-        /// <summary>
-        ///   Contains the name of the script file where scripts should be written.
-        /// </summary>
-        private string scriptListFile = DefaultScriptListFile;
-
-        /// <summary>
-        ///   The search pattern to use for finding script files
-        /// </summary>
-        private string searchPattern = "*.sql";
-
-        /// <summary>
-        ///   The pattern to use for parsing the name of the script file
+        /// The pattern to use for parsing the name of the script file
         /// </summary>
         private string fileNamePattern = @"((\d*\.)?\d+)(\s+)?(.+)?";
 
         /// <summary>
-        ///   The undo output file.
+        /// The last change to apply in the database.
         /// </summary>
-        private string undoOutputFile = DefaultUndoFile;
+        private int lastChangeToApply = int.MaxValue;
+
+        /// <summary>
+        /// The output file to use for this run.
+        /// </summary>
+        private string outputFile = DefaultOutputFile;
+
+        /// <summary>
+        /// The root directory to use for this run.
+        /// </summary>
+        private string rootDirectory;
 
         /// <summary>
         /// The schema
@@ -108,35 +82,50 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
         private string schema = "dbo";
 
         /// <summary>
-        /// The changelog table.
+        /// Contains the name of the script file where scripts should be written.
         /// </summary>
-        private string changeLog = "changelog";
-
-        #endregion
-
-        #region Constructors and Destructors
+        private string scriptListFile = DefaultScriptListFile;
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="ConfigurationService" /> class.
+        /// The search pattern to use for finding script files
         /// </summary>
-        public ConfigurationService()
+        private string searchPattern = "*.sql";
+
+        /// <summary>
+        /// The undo output file.
+        /// </summary>
+        private string undoOutputFile = DefaultUndoFile;
+
+        /// <summary>
+        /// Gets or sets the name of the change log table.
+        /// </summary>
+        /// <value>The change log.</value>
+        public string ChangeLog
         {
-            log.DebugIfEnabled(LogUtility.GetContext());
-            //NOTE: Can't call SetupDatabaseType until the correct type has been registered
+            get
+            {
+                return this.changeLog;
+            }
+
+            set
+            {
+                if (value != null && value.Trim() != string.Empty)
+                {
+                    this.changeLog = value;
+                }
+            }
         }
 
-        #endregion
-
-        #region Public Properties
-
         /// <summary>
-        ///   Gets or sets a connection string to be used by the system
+        /// Gets or sets a connection string to be used by the system
         /// </summary>
+        /// <value>The connection string.</value>
         public string ConnectionString { get; set; }
 
         /// <summary>
-        ///   Gets or sets a value indicating the type of DBMS to use.
+        /// Gets or sets a value indicating the type of DBMS to use.
         /// </summary>
+        /// <value>The database management system.</value>
         public DatabaseTypesEnum DatabaseManagementSystem
         {
             get
@@ -152,16 +141,37 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
         }
 
         /// <summary>
-        ///   Gets or sets the database script path
+        /// Gets or sets the database script path
         /// </summary>
+        /// <value>The database script path.</value>
         public string DatabaseScriptPath { get; set; }
 
         /// <summary>
-        ///   Gets or sets a value indicating the last change that should be applied to the database.
+        /// Gets or sets the pattern to use for parsing the name of the script file
         /// </summary>
-        /// <remarks>
-        ///   Set to 0 or int.maxvalue (the default) to apply all changes. Any other positive number will stop applying changes at that level.
-        /// </remarks>
+        /// <value>The file name pattern.</value>
+        public string FileNamePattern
+        {
+            get
+            {
+                return this.fileNamePattern;
+            }
+
+            set
+            {
+                if (value != null && value.Trim() != string.Empty)
+                {
+                    this.fileNamePattern = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating the last change that should be applied to the database.
+        /// </summary>
+        /// <value>The last change to apply.</value>
+        /// <remarks>Set to 0 or max value (the default) to apply all changes. Any other positive number will stop applying changes at
+        /// that level.</remarks>
         public int LastChangeToApply
         {
             get
@@ -183,8 +193,9 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
         }
 
         /// <summary>
-        ///   Gets or sets the directory and file name that will be used for writing out the change script
+        /// Gets or sets the directory and file name that will be used for writing out the change script
         /// </summary>
+        /// <value>The output file.</value>
         public string OutputFile
         {
             get
@@ -202,51 +213,15 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
         }
 
         /// <summary>
-        /// Gets or sets the schema to use as a prefix for the change log table.
+        /// Gets or sets a value indicating whether or not the script search should be recursive
         /// </summary>
-        public string Schema
-        {
-            get
-            {
-                return this.schema;
-            }
-
-            set
-            {
-                if (value != null && value.Trim() != string.Empty)
-                {
-                    this.schema = value;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the name of the change log table.
-        /// </summary>
-        public string ChangeLog
-        {
-            get
-            {
-                return this.changeLog;
-            }
-
-            set
-            {
-                if (value != null && value.Trim() != string.Empty)
-                {
-                    this.changeLog = value;
-                }
-            }
-        }
-
-        /// <summary>
-        ///   Gets or sets a value indicating whether or not the script search should be recursive
-        /// </summary>
+        /// <value><c>true</c> if recursive; otherwise, <c>false</c>.</value>
         public bool Recursive { get; set; }
 
         /// <summary>
-        ///   Gets or sets the root directory for processong
+        /// Gets or sets the root directory for processong
         /// </summary>
+        /// <value>The root directory.</value>
         public string RootDirectory
         {
             get
@@ -280,8 +255,30 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
         }
 
         /// <summary>
-        ///   Gets or sets the name of the file where the list of found scripts should be written.  If no path is provided, a relative path is assumed and the file will be in the RootDirectory directory.
+        /// Gets or sets the schema to use as a prefix for the change log table.
         /// </summary>
+        /// <value>The schema.</value>
+        public string Schema
+        {
+            get
+            {
+                return this.schema;
+            }
+
+            set
+            {
+                if (value != null && value.Trim() != string.Empty)
+                {
+                    this.schema = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the name of the file where the list of found scripts should be written.  If no path is provided, a
+        /// relative path is assumed and the file will be in the RootDirectory directory.
+        /// </summary>
+        /// <value>The script list file.</value>
         public string ScriptListFile
         {
             get
@@ -299,8 +296,9 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
         }
 
         /// <summary>
-        ///   Gets or sets the search pattern to use for finding script files
+        /// Gets or sets the search pattern to use for finding script files
         /// </summary>
+        /// <value>The search pattern.</value>
         public string SearchPattern
         {
             get
@@ -318,27 +316,9 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
         }
 
         /// <summary>
-        ///   Gets or sets the pattern to use for parsing the name of the script file
+        /// Gets or sets the directory and file name that will be used for writing out the undo change script
         /// </summary>
-        public string FileNamePattern
-        {
-            get
-            {
-                return this.fileNamePattern;
-            }
-
-            set
-            {
-                if (value != null && value.Trim() != string.Empty)
-                {
-                    this.fileNamePattern = value;
-                }
-            }
-        }
-
-        /// <summary>
-        ///   Gets or sets the directory and file name that will be used for writing out the undo change script
-        /// </summary>
+        /// <value>The undo output file.</value>
         public string UndoOutputFile
         {
             get
@@ -355,59 +335,11 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
             }
         }
 
-        /////// <summary>
-        ///////   Gets or sets a value indicating whether or not transactions should be used for each script
-        /////// </summary>
-        /////// <remarks>
-        ///////   In my opinion, this option should not be used. Instead, put a transaction in the actual script file itself, as needed.
-        /////// </remarks>
-        ////public bool UseTransactions { get; set; }
-
-        #endregion
-
-        #region Public Methods
-
-        /// <summary>
-        /// Overrides tostring to get a descriptive list of all settings.
-        /// </summary>
-        /// <returns>
-        /// A string containing a list of all settings. 
-        /// </returns>
-        public override string ToString()
-        {
-            log.DebugIfEnabled(LogUtility.GetContext());
-
-            StringBuilder builder = new StringBuilder();
-            builder.AppendLine(string.Format("ConnectionString: {0}", this.ConnectionString));
-            builder.AppendLine(string.Format("DatabaseManagementSystem: {0}", this.DatabaseManagementSystem));
-            builder.AppendLine(string.Format("LastChangeToApply: {0}", this.LastChangeToApply));
-            builder.AppendLine(string.Format("OutputFile: {0}", this.OutputFile));
-            builder.AppendLine(string.Format("Recursive: {0}", this.Recursive));
-            builder.AppendLine(string.Format("RootDirectory: {0}", this.RootDirectory));
-            builder.AppendLine(string.Format("ScriptListFile: {0}", this.ScriptListFile));
-            builder.AppendLine(string.Format("SearchPattern: {0}", this.SearchPattern));
-            builder.AppendLine(string.Format("FileNamePattern: {0}", this.FileNamePattern));
-            builder.AppendLine(string.Format("UndoOutputFile: {0}", this.UndoOutputFile));
-            ////builder.AppendLine(string.Format("UseTransactions: {0}", this.UseTransactions));
-
-            string result = builder.ToString();
-
-            log.DebugIfEnabled(LogUtility.GetResult(result));
-
-            return result;
-        }
-
-        #endregion
-
-        #region Methods
-
         /// <summary>
         /// Sets up the container to have the appropriate mappings for the appropriate database types.
         /// </summary>
         public void SetupDatabaseType()
         {
-            log.DebugIfEnabled(LogUtility.GetContext());
-
             string rootPath = Path.Combine(EnvironmentProvider.Current.ExecutingAssemblyDirectory, DefaultDatabasePath);
 
             switch (this.DatabaseManagementSystem)
@@ -425,10 +357,39 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
                     this.DatabaseScriptPath = Path.Combine(rootPath, "mssql");
                     break;
             }
-
-            log.DebugIfEnabled(LogUtility.GetResult());
         }
 
-        #endregion
+        /// <summary>
+        /// Overrides tostring to get a descriptive list of all settings.
+        /// </summary>
+        /// <returns>A string containing a list of all settings.</returns>
+        public override string ToString()
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.AppendLine(string.Format("ConnectionString: {0}", this.ConnectionString));
+            builder.AppendLine(string.Format("DatabaseManagementSystem: {0}", this.DatabaseManagementSystem));
+            builder.AppendLine(string.Format("LastChangeToApply: {0}", this.LastChangeToApply));
+            builder.AppendLine(string.Format("OutputFile: {0}", this.OutputFile));
+            builder.AppendLine(string.Format("Recursive: {0}", this.Recursive));
+            builder.AppendLine(string.Format("RootDirectory: {0}", this.RootDirectory));
+            builder.AppendLine(string.Format("ScriptListFile: {0}", this.ScriptListFile));
+            builder.AppendLine(string.Format("SearchPattern: {0}", this.SearchPattern));
+            builder.AppendLine(string.Format("FileNamePattern: {0}", this.FileNamePattern));
+            builder.AppendLine(string.Format("UndoOutputFile: {0}", this.UndoOutputFile));
+            ////builder.AppendLine(string.Format("UseTransactions: {0}", this.UseTransactions));
+
+            string result = builder.ToString();
+
+            return result;
+        }
+
+        ////public bool UseTransactions { get; set; }
+        /////// </remarks>
+        ///////   In my opinion, this option should not be used. Instead, put a transaction in the actual script file itself, as needed.
+        /////// <remarks>
+        /////// </summary>
+        ///////   Gets or sets a value indicating whether or not transactions should be used for each script
+
+        /////// <summary>
     }
 }

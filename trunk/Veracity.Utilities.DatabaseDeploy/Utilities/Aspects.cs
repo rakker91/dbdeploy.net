@@ -1,17 +1,14 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-//  <copyright file="IOracleDatabaseService.cs" company="Database Deploy 2">
+//  <copyright file="Aspects.cs" company="Database Deploy 2">
 //    Copyright (c) 2015 Database Deploy 2.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
 //  </copyright>
 //   <summary>
 //  </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace DatabaseDeploy.Core.Database.DatabaseInstances.Oracle
-{
-    /// <summary>
-    /// Represents an oracle database instance
-    /// </summary>
-    public interface IOracleDatabaseService : IDatabaseService
-    {
-    }
-}
+using DatabaseDeploy.Core.Utilities;
+
+using log4net.Config;
+
+[assembly: XmlConfigurator(ConfigFile = "log4net.config", Watch = true)]
+[assembly: LogAspect]

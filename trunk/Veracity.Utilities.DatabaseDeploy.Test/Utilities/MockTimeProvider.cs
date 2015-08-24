@@ -1,48 +1,70 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Veracity.Utilities.DatabaseDeploy.Utilities;
+﻿// --------------------------------------------------------------------------------------------------------------------
+//  <copyright file="MockTimeProvider.cs" company="Database Deploy 2">
+//    Copyright (c) 2015 Database Deploy 2.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
+//  </copyright>
+//   <summary>
+//  </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
-namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
+namespace DatabaseDeploy.Test.Utilities
 {
+    using System;
+
+    using DatabaseDeploy.Core.Utilities;
+
     /// <summary>
-    /// Time provider which provides a fixed date and time
+    ///     Time provider which provides a fixed date and time
     /// </summary>
     public class MockTimeProvider : TimeProvider
     {
-        private readonly DateTime _now;
+        /// <summary>
+        ///     The now
+        /// </summary>
+        private readonly DateTime now;
 
         /// <summary>
-        /// Constructor which sets the time to a specific date and time
+        ///     Initializes a new instance of the <see cref="MockTimeProvider" /> class.
         /// </summary>
-        /// <param name="now"></param>
+        /// <param name="now">The now.</param>
         public MockTimeProvider(DateTime now)
         {
-            _now = now;
+            this.now = now;
         }
 
         /// <summary>
-        /// The current time in UTC
+        ///     The current time in local time
         /// </summary>
-        public override DateTime UtcNow
-        {
-            get { return _now.ToUniversalTime(); }
-        }
-        /// <summary>
-        /// The current time in local time
-        /// </summary>
+        /// <value>The now.</value>
         public override DateTime Now
         {
-            get { return _now; }
+            get
+            {
+                return this.now;
+            }
         }
+
         /// <summary>
-        /// The current date in local time
+        ///     The current date in local time
         /// </summary>
+        /// <value>The today.</value>
         public override DateTime Today
         {
-            get { return _now.Date; }
+            get
+            {
+                return this.now.Date;
+            }
+        }
+
+        /// <summary>
+        ///     The current time in UTC
+        /// </summary>
+        /// <value>The UTC now.</value>
+        public override DateTime UtcNow
+        {
+            get
+            {
+                return this.now.ToUniversalTime();
+            }
         }
     }
 }

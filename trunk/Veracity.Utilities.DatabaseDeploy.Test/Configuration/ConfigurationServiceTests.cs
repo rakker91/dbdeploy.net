@@ -1,45 +1,71 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ConfigurationServiceTests.cs" company="Veracity Solutions, Inc.">
-//   Copyright (c) Veracity Solutions, Inc. 2012.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
-// </copyright>
-//  <summary>
-//   Created By: Robert J. May
-// </summary>
+//  <copyright file="ConfigurationServiceTests.cs" company="Database Deploy 2">
+//    Copyright (c) 2015 Database Deploy 2.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
+//  </copyright>
+//   <summary>
+//  </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-using Veracity.Utilities.DatabaseDeploy.Utilities;
-
-namespace Veracity.Utilities.DatabaseDeploy.Test.Configuration
+namespace DatabaseDeploy.Test.Configuration
 {
-    #region Usings
-
-    using System;
     using System.IO;
 
+    using DatabaseDeploy.Core.Configuration;
+    using DatabaseDeploy.Core.Database;
+    using DatabaseDeploy.Core.Database.DatabaseInstances;
+    using DatabaseDeploy.Core.Database.DatabaseInstances.MySql;
+    using DatabaseDeploy.Core.Database.DatabaseInstances.Oracle;
+    using DatabaseDeploy.Core.Database.DatabaseInstances.SqlServer;
+    using DatabaseDeploy.Core.IoC;
+    using DatabaseDeploy.Core.Utilities;
+
     using Microsoft.Practices.Unity;
-
-    using NUnit.Framework;
-
-    using Veracity.Utilities.DatabaseDeploy.Configuration;
-    using Veracity.Utilities.DatabaseDeploy.Database;
-    using Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances;
-    using Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances.MySql;
-    using Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances.Oracle;
-    using Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances.SqlServer;
-    using Veracity.Utilities.DatabaseDeploy.IoC;
-
-    #endregion
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     /// <summary>
-    /// Tests the configuration service
+    ///     Tests the configuration service
     /// </summary>
-    [TestFixture]
+    [TestClass]
     public class ConfigurationServiceTests : TestFixtureBase
     {
         /// <summary>
-        /// Tests that database management setup updates the config for databases
+        ///     Ensures that a value of 0 will apply all changes.
         /// </summary>
-        [Test]
+        [TestMethod]
+        public void That0EqualsIntMaxValueForLastChangeToApply()
+        {
+            IConfigurationService config = new ConfigurationService();
+            config.LastChangeToApply = 0;
+
+            Assert.AreEqual(config.LastChangeToApply, int.MaxValue);
+
+            config.LastChangeToApply = -155;
+            Assert.AreEqual(config.LastChangeToApply, int.MaxValue);
+
+            config.LastChangeToApply = 500;
+            Assert.AreEqual(config.LastChangeToApply, 500);
+        }
+
+        /// <summary>
+        ///     Ensures that a basic config object has the appropriate defaults.
+        /// </summary>
+        [TestMethod]
+        public void ThatConfigHasDefaults()
+        {
+            IConfigurationService config = new ConfigurationService();
+
+            Assert.AreEqual(config.LastChangeToApply, int.MaxValue);
+            Assert.IsTrue(!string.IsNullOrWhiteSpace(config.OutputFile.Trim()));
+            Assert.IsTrue(!string.IsNullOrWhiteSpace(config.RootDirectory.Trim()));
+            Assert.IsTrue(!string.IsNullOrWhiteSpace(config.ScriptListFile.Trim()));
+            Assert.AreEqual(config.SearchPattern, "*.sql");
+            Assert.IsTrue(!string.IsNullOrWhiteSpace(config.UndoOutputFile.Trim()));
+        }
+
+        /// <summary>
+        ///     Tests that database management setup updates the config for databases
+        /// </summary>
+        [TestMethod]
         public void ThatDatabaseManagementSetUpdatesConfig()
         {
             IConfigurationService config = new ConfigurationService();
@@ -47,147 +73,112 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Configuration
             config.DatabaseManagementSystem = DatabaseTypesEnum.MySql;
             IDatabaseService db = Container.UnityContainer.Resolve<IDatabaseService>();
 
-            Assert.That(db, Is.TypeOf<MySqlDatabaseService>());
-            Assert.That(config.DatabaseScriptPath.Contains("mysql"));
+            Assert.IsTrue(db is MySqlDatabaseService);
+            Assert.IsTrue(config.DatabaseScriptPath.Contains("mysql"));
 
             config.DatabaseManagementSystem = DatabaseTypesEnum.SqlServer;
             db = Container.UnityContainer.Resolve<IDatabaseService>();
 
-            Assert.That(db, Is.TypeOf<SqlServerDatabaseService>());
-            Assert.That(config.DatabaseScriptPath.Contains("mssql"));
+            Assert.IsTrue(db is SqlServerDatabaseService);
+            Assert.IsTrue(config.DatabaseScriptPath.Contains("mssql"));
 
             config.DatabaseManagementSystem = DatabaseTypesEnum.Oracle;
             db = Container.UnityContainer.Resolve<IDatabaseService>();
 
-            Assert.That(db, Is.TypeOf<OracleDatabaseService>());
-            Assert.That(config.DatabaseScriptPath.Contains("ora"));
+            Assert.IsTrue(db is OracleDatabaseService);
+            Assert.IsTrue(config.DatabaseScriptPath.Contains("ora"));
         }
 
         /// <summary>
-        /// Tests to ensure a default database setup is in place.
+        ///     Tests to ensure a default database setup is in place.
         /// </summary>
-        [Test]
+        [TestMethod]
         public void ThatDefaultDatabaseSetupExists()
         {
-            var config = new ConfigurationService();
+            ConfigurationService config = new ConfigurationService();
             config.SetupDatabaseType();
             IDatabaseService db = Container.UnityContainer.Resolve<IDatabaseService>();
 
-            Assert.That(db, Is.TypeOf<SqlServerDatabaseService>());
-            Assert.That(config.DatabaseScriptPath.Contains("mssql"));
+            Assert.IsTrue(db is SqlServerDatabaseService);
+            Assert.IsTrue(config.DatabaseScriptPath.Contains("mssql"));
         }
 
         /// <summary>
-        /// Ensures that a basic config object has the appropriate defaults.
+        ///     Ensures that if the defaults of values are passed or null is passed, the settings aren't altered.
         /// </summary>
-        [Test]
-        public void ThatConfigHasDefaults()
-        {
-            IConfigurationService config = new ConfigurationService();
-
-            Assert.That(config.LastChangeToApply, Is.EqualTo(int.MaxValue));
-            Assert.That(config.OutputFile, Is.Not.Null);
-            Assert.That(config.OutputFile.Trim(), Is.Not.Empty);
-            Assert.That(config.RootDirectory, Is.Not.Null);
-            Assert.That(config.RootDirectory.Trim(), Is.Not.Empty);
-            Assert.That(config.ScriptListFile, Is.Not.Null);
-            Assert.That(config.ScriptListFile.Trim(), Is.Not.Empty);
-            Assert.That(config.SearchPattern, Is.EqualTo("*.sql"));
-            Assert.That(config.UndoOutputFile, Is.Not.Null);
-            Assert.That(config.UndoOutputFile.Trim(), Is.Not.Empty);
-        }
-
-        /// <summary>
-        /// Ensures that if the defaults of values are passed or null is passed, the settings aren't altered.
-        /// </summary>
-        [Test]
+        [TestMethod]
         public void ThatEmptyValuesDontChangeSettings()
         {
             IConfigurationService config = new ConfigurationService();
             config.OutputFile = "My Value";
             config.OutputFile = string.Empty;
-            Assert.That(config.OutputFile, Is.Not.Empty);
+            Assert.IsTrue(!string.IsNullOrWhiteSpace(config.OutputFile));
 
             config.RootDirectory = "My Value";
             config.RootDirectory = string.Empty;
-            Assert.That(config.RootDirectory, Is.Not.Empty);
+            Assert.IsTrue(!string.IsNullOrWhiteSpace(config.RootDirectory));
 
             config.ScriptListFile = "My Value";
             config.ScriptListFile = string.Empty;
-            Assert.That(config.ScriptListFile, Is.Not.Empty);
+            Assert.IsTrue(!string.IsNullOrWhiteSpace(config.ScriptListFile));
 
             config.SearchPattern = "My Value";
             config.SearchPattern = string.Empty;
-            Assert.That(config.SearchPattern, Is.Not.Empty);
+            Assert.IsTrue(!string.IsNullOrWhiteSpace(config.SearchPattern));
 
             config.UndoOutputFile = "My Value";
             config.UndoOutputFile = string.Empty;
-            Assert.That(config.UndoOutputFile, Is.Not.Empty);
+            Assert.IsTrue(!string.IsNullOrWhiteSpace(config.UndoOutputFile));
         }
 
         /// <summary>
-        /// Ensures that a value of 0 will apply all changes.
+        ///     Tests that a relative path for a root directory resolves to the correct physical path.
         /// </summary>
-        [Test]
-        public void That0EqualsIntMaxValueForLastChangeToApply()
-        {
-            IConfigurationService config = new ConfigurationService();
-            config.LastChangeToApply = 0;
-
-            Assert.That(config.LastChangeToApply, Is.EqualTo(int.MaxValue));
-
-            config.LastChangeToApply = -155;
-            Assert.That(config.LastChangeToApply, Is.EqualTo(int.MaxValue));
-
-            config.LastChangeToApply = 500;
-            Assert.That(config.LastChangeToApply, Is.EqualTo(500));
-        }
-
-        /// <summary>
-        /// Tests that a relative path for a root directory resolves to the correct physical path.
-        /// </summary>
-        [Test]
+        [TestMethod]
         public void ThatRelativeRootDirectoryResolves()
         {
             IConfigurationService config = new ConfigurationService();
             config.RootDirectory = "TestDirectory";
 
-            Assert.That(config.RootDirectory, Is.EqualTo(Path.Combine(EnvironmentProvider.Current.CurrentDirectory, "TestDirectory")));
+            Assert.AreEqual(
+                config.RootDirectory,
+                Path.Combine(EnvironmentProvider.Current.CurrentDirectory, "TestDirectory"));
         }
 
         /// <summary>
-        /// Ensures that a rooted root directory doesn't get changed into a relative root directory.
+        ///     Ensures that a rooted root directory doesn't get changed into a relative root directory.
         /// </summary>
-        [Test]
+        [TestMethod]
         public void ThatRootedRootDirectoryIsntRelocated()
         {
             IConfigurationService config = new ConfigurationService();
             config.RootDirectory = @"c:\MyDirectory";
 
-            Assert.That(config.RootDirectory, Is.EqualTo(@"c:\MyDirectory"));
+            Assert.AreEqual(config.RootDirectory, @"c:\MyDirectory");
         }
 
         /// <summary>
-        /// Ensures that the location of the script list file will be in the root directory.
+        ///     Ensures that the location of the script list file will be in the root directory.
         /// </summary>
-        [Test]
+        [TestMethod]
         public void ThatScriptListFileIsInRootDirectory()
         {
             IConfigurationService config = new ConfigurationService();
             string directory = Path.GetDirectoryName(config.ScriptListFile);
-            Assert.That(directory, Is.EqualTo(config.RootDirectory));
+            Assert.AreEqual(directory, config.RootDirectory);
         }
 
         /// <summary>
-        /// Ensures that tostring actually returns the details fo rthe config.  Note that we're not doing a deep test here since the value is low.
+        ///     Ensures that tostring actually returns the details fo rthe config.  Note that we're not doing a deep test here
+        ///     since the value is low.
         /// </summary>
-        [Test]
+        [TestMethod]
         public void ThatToStringReturnsSettings()
         {
             IConfigurationService config = new ConfigurationService();
             string result = config.ToString();
-            Assert.That(result, Is.Not.EqualTo(typeof(ConfigurationService).FullName));
-            Assert.That(result, Is.Not.EqualTo(typeof(IConfigurationService).FullName));
+            Assert.AreNotEqual(result, typeof(ConfigurationService).FullName);
+            Assert.AreNotEqual(result, typeof(IConfigurationService).FullName);
         }
     }
 }

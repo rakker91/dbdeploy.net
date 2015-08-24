@@ -1,79 +1,86 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="LogUtility.cs" company="Veracity Solutions, Inc.">
-//   Copyright (c) Veracity Solutions, Inc. 2012.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
-// </copyright>
-//  <summary>
-//   Created By: Robert J. May
-// </summary>
+﻿// --------------------------------------------------------------------------------------------------------------------
+//  <copyright file="LogUtility.cs" company="Database Deploy 2">
+//    Copyright (c) 2015 Database Deploy 2.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
+//  </copyright>
+//   <summary>
+//  </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Veracity.Utilities.DatabaseDeploy.Utilities
+namespace DatabaseDeploy.Core.Utilities
 {
-    #region Usings
-
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
     using System.Text;
 
     using log4net;
 
-    #endregion
-
     /// <summary>
-    /// Represents a class for assisting with logging statements.
+    ///     Represents a class for assisting with logging statements.
     /// </summary>
     /// <remarks>
-    /// Througout this class, logging is NOT done as recommended in other classes to avoid potential recursion from calling this static class over and over.
+    ///     Throughout this class, logging is NOT done as recommended in other classes to avoid potential recursion from
+    ///     calling
+    ///     this static class over and over.
     /// </remarks>
+    [LogAspect(AttributeExclude = true)]
+    [ExcludeFromCodeCoverage]
     public static class LogUtility
     {
-        #region Constants and Fields
-
         /// <summary>
-        ///   Limits the maximum logging depth. Basically, if you're deeper than this, you're probably recursing, so don't go any deeper
+        ///     Limits the maximum logging depth.  Basically, if you're deeper than this, you're probably recursing, so don't go
+        ///     any deeper
         /// </summary>
         private const int MaxDepth = 50;
 
         /// <summary>
-        ///   Creates the default logger
+        ///     Creates the default logger
         /// </summary>
-        private static readonly ILog log = LogManager.GetLogger(typeof(LogUtility));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(LogUtility));
 
         /// <summary>
-        ///   A counter for preventing recursive depths in logging.
+        ///     A counter for preventing recursive depths in logging.
         /// </summary>
         private static int currentDepth;
 
-        #endregion
+        /// <summary>
+        ///     Gets the context using a method base and the args passed to it.  Ideal for PostSharp
+        /// </summary>
+        /// <param name="currentMethod">The current method.</param>
+        /// <param name="passedValues">The values passed.</param>
+        /// <returns>a string containing the formatted text for the method</returns>
+        public static string GetContext(MethodBase currentMethod, object[] passedValues)
+        {
+            ParameterInfo[] methodParameters = currentMethod.GetParameters();
 
-        #region Public Methods
+            string result = BuildLoggingStatement(currentMethod, methodParameters, passedValues);
+
+            return result;
+        }
 
         /// <summary>
-        /// Gets the context for the current method call and translates it into a debug logging statement.
+        ///     Gets the context for the current method call and translates it into a debug logging statement.
         /// </summary>
-        /// <param name="passedValues">
-        /// The parameters of the call. 
-        /// </param>
-        /// <remarks>
-        /// The parameters of the call are not available to reflection, so they must be passed in. If the number of parameters passed to GetContext doesn't match the number expected, and exception is thrown.
-        /// </remarks>
+        /// <param name="passedValues">The parameters of the call.</param>
+        /// <returns>A string containing the context string.</returns>
         /// <exception cref="ArgumentException">
-        /// Thrown when the number of parameters passed does not match the number of parameters defined on the method.
+        ///     Thrown when the number of parameters passed does not match the number of parameters
+        ///     defined on the method.
         /// </exception>
-        /// <returns>
-        /// A string containing the context string. 
-        /// </returns>
+        /// <remarks>
+        ///     The parameters of the call are not available to reflection, so they must be passed in.  If the number of
+        ///     parameters passed to GetContext doesn't match the number expected, and exception is thrown.
+        /// </remarks>
         public static string GetContext(params object[] passedValues)
         {
-            if (!log.IsDebugEnabled)
+            if (Log.IsDebugEnabled)
             {
-                return string.Empty;
+                Log.Debug("GetContext called.");
             }
-            log.DebugIfEnabled("GetContext called.");
 
             string result = "Unable to build context.";
 
@@ -85,146 +92,223 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
             }
             else
             {
-                MethodBase currentMethod = GetCurrentMethod();
-
-                if (currentMethod != null)
+                try
                 {
-                    ParameterInfo[] methodParameters = currentMethod.GetParameters();
+                    MethodBase currentMethod = GetCurrentMethod();
 
-                    ValidateParameters(currentMethod, methodParameters, passedValues);
+                    if (currentMethod != null)
+                    {
+                        ParameterInfo[] methodParameters = currentMethod.GetParameters();
 
-                    result = BuildLoggingStatement(currentMethod, methodParameters, passedValues);
+                        ValidateParameters(currentMethod, methodParameters, passedValues);
+
+                        result = BuildLoggingStatement(currentMethod, methodParameters, passedValues);
+                    }
+                }
+                catch (ArgumentException argumentException)
+                {
+                    Log.Error(argumentException);
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("Failed to build logging statements.", ex);
+                    result = string.Format("Unable to build logging statements.  Error = {0}", ex.Message);
                 }
             }
 
             currentDepth--;
 
-            log.DebugIfEnabled("GetContext finished.  Result={0}", result);
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug(string.Format("GetContext finished.  Result={0}", result));
+            }
 
             return result;
         }
 
         /// <summary>
-        /// Gets the result string message for result calls.
+        ///     Gets the value for an object.
         /// </summary>
-        /// <returns>
-        /// A string containing the method get result string and the result value. 
-        /// </returns>
+        /// <param name="value">The value to get a string for.</param>
+        /// <returns>A string representation of the object.</returns>
+        public static string GetObjectValue(object value)
+        {
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug("GetObjectValue(object) called.");
+            }
+
+            return GetObjectValue(value, new Dictionary<object, string>(), new List<object>());
+        }
+
+        /// <summary>
+        ///     Gets the result string message for result calls.
+        /// </summary>
+        /// <returns>A string containing the method get result string and the result value.</returns>
         public static string GetResult()
         {
-            log.DebugIfEnabled("GetResult called.");
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug("GetResult called.");
+            }
 
             return GetResult(null);
         }
 
         /// <summary>
-        /// Gets the result string message for result calls.
+        ///     Gets the result string message for result calls.
         /// </summary>
-        /// <param name="result">
-        /// The result value to be added to the string. 
-        /// </param>
-        /// <returns>
-        /// A string containing the method get result string and the result value. 
-        /// </returns>
+        /// <param name="result">The result value to be added to the string.</param>
+        /// <returns>A string containing the method get result string and the result value.</returns>
         public static string GetResult(object result)
         {
-            log.DebugIfEnabled("GetResult(object) called.");
-
             MethodBase currentMethod = GetCurrentMethod();
-            var logResult = new StringBuilder();
 
-            GetMethodDeclaration(logResult, currentMethod, currentMethod.GetParameters());
-            logResult.Append(" Completed.");
-            if (result != null)
+            return GetResult(currentMethod, result);
+        }
+
+        /// <summary>
+        ///     Gets the result string message for result calls.
+        /// </summary>
+        /// <param name="currentMethod">The current method to get a result for.</param>
+        /// <param name="result">The result value to be added to the string.</param>
+        /// <returns>A string containing the method get result string and the result value.</returns>
+        public static string GetResult(MethodBase currentMethod, object result)
+        {
+            if (Log.IsDebugEnabled)
             {
-                logResult.Append("  Result=~|");
-                logResult.Append(GetObjectValue(result));
-                logResult.Append("|~");
+                Log.Debug("GetResult(object) called.");
             }
 
-            log.DebugIfEnabled("GetResult Completed.  Result={0}", logResult);
+            StringBuilder logResult = new StringBuilder();
+
+            try
+            {
+                if (currentMethod != null)
+                {
+                    GetMethodDeclaration(logResult, currentMethod, currentMethod.GetParameters());
+                    logResult.Append(" Completed.");
+                    if (result != null)
+                    {
+                        logResult.Append("  Result=~|");
+                        logResult.Append(GetObjectValue(result));
+                        logResult.Append("|~");
+                    }
+                }
+                else
+                {
+                    logResult.Append(
+                        "Unable to get the method.  Check for LogUtility ERROR level messages to find out why.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Unable to build logging results.", ex);
+                logResult.AppendFormat("Unable to build logging results.  Error = {0}", ex.Message);
+            }
+
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug(string.Format("GetResult Completed.  Result={0}", logResult));
+            }
 
             return logResult.ToString();
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
-        /// Builds a logging statement from the given parameters and passed values.
+        ///     Builds a logging statement from the given parameters and passed values.
         /// </summary>
-        /// <param name="currentMethod">
-        /// The current method that we're logging. 
-        /// </param>
-        /// <param name="methodParameters">
-        /// The parameters from the method 
-        /// </param>
-        /// <param name="passedValues">
-        /// The values that have been passed for logging. 
-        /// </param>
-        /// <returns>
-        /// A string containing the built up logging statement. 
-        /// </returns>
-        private static string BuildLoggingStatement(MethodBase currentMethod, ParameterInfo[] methodParameters, object[] passedValues)
+        /// <param name="currentMethod">The current method that we're logging.</param>
+        /// <param name="methodParameters">The parameters from the method</param>
+        /// <param name="passedValues">The values that have been passed for logging.</param>
+        /// <returns>A string containing the built up logging statement.</returns>
+        private static string BuildLoggingStatement(
+            MethodBase currentMethod,
+            ParameterInfo[] methodParameters,
+            object[] passedValues)
         {
-            log.DebugIfEnabled("BuildLoggingStatement Called.");
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug("BuildLoggingStatement Called.");
+            }
 
+            string result = string.Empty;
             StringBuilder loggingStatement = new StringBuilder();
 
             GetMethodDeclaration(loggingStatement, currentMethod, methodParameters);
 
-            if (methodParameters.Any())
+            if (methodParameters.Count() > 0)
             {
                 loggingStatement.Append(" --> ");
             }
 
             GetMethodParameterValues(loggingStatement, methodParameters, passedValues);
 
-            string result = loggingStatement.ToString();
+            result = loggingStatement.ToString();
 
-            log.DebugIfEnabled("BuildLoggingStatement Complete.  Result = {0}", result);
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug(string.Format("BuildLoggingStatement Complete.  Result = {0}", result));
+            }
 
             return result;
         }
 
         /// <summary>
-        /// Gets the current method for the calls to logutility.
+        ///     Gets the current method for the calls to logutility.
         /// </summary>
-        /// <returns>
-        /// A method base containing the current logging method. 
-        /// </returns>
+        /// <returns>A method base containing the current logging method.</returns>
         private static MethodBase GetCurrentMethod()
         {
-            log.DebugIfEnabled("GetCurrentMethod called.");
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug("GetCurrentMethod called.");
+            }
 
             MethodBase result = null;
 
-            StackTrace trace = new StackTrace();
-
-            StackFrame[] frames = trace.GetFrames();
-            if (frames != null)
+            try
             {
-                result = frames.Select(frame => frame.GetMethod()).FirstOrDefault(method => method.DeclaringType != typeof(LogUtility) && method.Name != "Wrap");
+                StackTrace trace = new StackTrace();
+
+                StackFrame[] frames = trace.GetFrames();
+                if (frames != null)
+                {
+                    result =
+                        frames.Select(frame => frame.GetMethod())
+                            .FirstOrDefault(
+                                method =>
+                                method.DeclaringType != typeof(LogUtility)
+                                && method.Module.Name.ToLower().StartsWith("vendrx"));
+                }
+            }
+            catch (Exception ex)
+            {
+                // we're swallowing this because we can get partial trust exceptions and I'm not sure exactly waht will be thrown.
+                // Need to test and figure out exactly what to catch
+                Log.Error("Error getting stack trace and frame.", ex);
             }
 
-            log.DebugIfEnabled("GetCurrentMethod Complete");
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug("GetCurrentMethod Complete");
+            }
 
             return result;
         }
 
         /// <summary>
-        /// Gets a list of the generic types for the method.
+        ///     Gets a list of the generic types for the method.
         /// </summary>
-        /// <param name="loggingStatement">
-        /// The logging statement being built 
-        /// </param>
-        /// <param name="genericTypes">
-        /// Type types ot put into the statement. 
-        /// </param>
+        /// <param name="loggingStatement">The logging statement being built</param>
+        /// <param name="genericTypes">Type types ot put into the statement.</param>
         private static void GetGenericTypes(StringBuilder loggingStatement, Type[] genericTypes)
         {
-            log.DebugIfEnabled("GetGenericTypes called.");
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug("GetGenericTypes called.");
+            }
 
             loggingStatement.Append("<");
             bool first = true;
@@ -244,24 +328,27 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
 
             loggingStatement.Append(">");
 
-            log.DebugIfEnabled("GetGenericTypes complete.");
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug("GetGenericTypes complete.");
+            }
         }
 
         /// <summary>
-        /// Gets a method declaration for the current method.
+        ///     Gets a method declaration for the current method.
         /// </summary>
-        /// <param name="loggingStatement">
-        /// The logging statement we're building. 
-        /// </param>
-        /// <param name="currentMethod">
-        /// The current method to log. 
-        /// </param>
-        /// <param name="methodParameters">
-        /// The method paramters for the current method. 
-        /// </param>
-        private static void GetMethodDeclaration(StringBuilder loggingStatement, MethodBase currentMethod, ParameterInfo[] methodParameters)
+        /// <param name="loggingStatement">The logging statement we're building.</param>
+        /// <param name="currentMethod">The current method to log.</param>
+        /// <param name="methodParameters">The method paramters for the current method.</param>
+        private static void GetMethodDeclaration(
+            StringBuilder loggingStatement,
+            MethodBase currentMethod,
+            ParameterInfo[] methodParameters)
         {
-            log.DebugIfEnabled("GetMethodDeclaration Called");
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug("GetMethodDeclaration Called");
+            }
 
             loggingStatement.Append(currentMethod.Name);
             if (currentMethod.IsGenericMethod)
@@ -284,7 +371,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
                     loggingStatement.Append(", ");
                 }
 
-                if (info.GetCustomAttributes(typeof(ParamArrayAttribute), true).Any())
+                if (info.GetCustomAttributes(typeof(ParamArrayAttribute), true).Count() > 0)
                 {
                     loggingStatement.Append("params ");
                 }
@@ -302,24 +389,27 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
 
             loggingStatement.Append(")");
 
-            log.DebugIfEnabled("GetMethodDeclaration Complete");
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug("GetMethodDeclaration Complete");
+            }
         }
 
         /// <summary>
-        /// Gets the values for all parameters.
+        ///     Gets the values for all parameters.
         /// </summary>
-        /// <param name="loggingStatement">
-        /// The logging statement we're building. 
-        /// </param>
-        /// <param name="methodParameters">
-        /// The method parameters for the current method. 
-        /// </param>
-        /// <param name="passedValues">
-        /// The values that have been passed for logging. 
-        /// </param>
-        private static void GetMethodParameterValues(StringBuilder loggingStatement, ParameterInfo[] methodParameters, object[] passedValues)
+        /// <param name="loggingStatement">The logging statement we're building.</param>
+        /// <param name="methodParameters">The method parameters for the current method.</param>
+        /// <param name="passedValues">The values that have been passed for logging.</param>
+        private static void GetMethodParameterValues(
+            StringBuilder loggingStatement,
+            ParameterInfo[] methodParameters,
+            object[] passedValues)
         {
-            log.DebugIfEnabled("GetMethodParameterValues called.");
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug("GetMethodParameterValues called.");
+            }
 
             int passedLocation = 0;
             bool first = true;
@@ -337,7 +427,8 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
                 loggingStatement.Append(info.Name);
                 loggingStatement.Append(" = |: ");
 
-                if (info.GetCustomAttributes(typeof(ParamArrayAttribute), true).Count() <= 0 || methodParameters.Count() != 1)
+                if (info.GetCustomAttributes(typeof(ParamArrayAttribute), true).Count() > 0
+                    && methodParameters.Count() == 1)
                 {
                     loggingStatement.Append(GetObjectValue(passedValues));
                 }
@@ -349,7 +440,12 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
                     }
                     else
                     {
-                        if (passedValues.Count() > passedLocation)
+                        if (passedValues == null)
+                        {
+                            loggingStatement.Append(GetObjectValue("null"));
+                            passedLocation++;
+                        }
+                        else if (passedValues.Count() > passedLocation)
                         {
                             loggingStatement.Append(GetObjectValue(passedValues[passedLocation]));
                             passedLocation++;
@@ -367,43 +463,28 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
                 loggingStatement.Append(" :|");
             }
 
-            log.DebugIfEnabled("GetMethodParameterValues complete.");
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug("GetMethodParameterValues complete.");
+            }
         }
 
         /// <summary>
-        /// Gets the value for an object.
+        ///     Gets the value for an object.
         /// </summary>
-        /// <param name="value">
-        /// The value to get a string for. 
-        /// </param>
-        /// <returns>
-        /// A string representation of the object. 
-        /// </returns>
-        private static string GetObjectValue(object value)
+        /// <param name="value">The value to get a string for.</param>
+        /// <param name="appendedObjects">The objects that have already been parsed.</param>
+        /// <param name="seenObjects">Objects that have been seen.  May or may not have string values created.</param>
+        /// <returns>A string representation of the object.</returns>
+        private static string GetObjectValue(
+            object value,
+            IDictionary<object, string> appendedObjects,
+            IList<object> seenObjects)
         {
-            log.DebugIfEnabled("GetObjectValue(object) called.");
-
-            return GetObjectValue(value, new Dictionary<object, string>(), new List<object>());
-        }
-
-        /// <summary>
-        /// Gets the value for an object.
-        /// </summary>
-        /// <param name="value">
-        /// The value to get a string for. 
-        /// </param>
-        /// <param name="appendedObjects">
-        /// The objects that have already been parsed. 
-        /// </param>
-        /// <param name="seenObjects">
-        /// Objects that have been seen. May or may not have string values created. 
-        /// </param>
-        /// <returns>
-        /// A string representation of the object. 
-        /// </returns>
-        private static string GetObjectValue(object value, IDictionary<object, string> appendedObjects, IList<object> seenObjects)
-        {
-            log.DebugIfEnabled("GetObjectValue called.");
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug("GetObjectValue called.");
+            }
 
             StringBuilder builder = new StringBuilder();
             string result;
@@ -468,23 +549,25 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
                 }
             }
 
-            log.DebugIfEnabled("GetObjectValue complete.  Result={0}", result);
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug(string.Format("GetObjectValue complete.  Result={0}", result));
+            }
 
             return result;
         }
 
         /// <summary>
-        /// Determines whether or not the value passed is an array.
+        ///     Determines whether or not the value passed is an array.
         /// </summary>
-        /// <param name="valueToCheck">
-        /// The value to verify. 
-        /// </param>
-        /// <returns>
-        /// True of the valueToCheck is or contains an array, false otherwise. 
-        /// </returns>
+        /// <param name="valueToCheck">The value to verify.</param>
+        /// <returns>True of the valueToCheck is or contains an array, false otherwise.</returns>
         private static bool IsArray(object valueToCheck)
         {
-            log.DebugIfEnabled("IsArray Called");
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug("IsArray Called");
+            }
 
             bool result = false;
 
@@ -496,26 +579,31 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
                 }
             }
 
-            log.DebugIfEnabled("IsArray Complete.  Result ={0}", result);
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug(string.Format("IsArray Complete.  Result ={0}", result));
+            }
 
             return result;
         }
 
         /// <summary>
-        /// Verifies taht the parameters passed match the method's properties
+        ///     Verifies taht the parameters passed match the method's properties
         /// </summary>
-        /// <param name="currentMethod">
-        /// The current method we're testing for. 
-        /// </param>
-        /// <param name="methodParameters">
-        /// The parameters for the method. 
-        /// </param>
-        /// <param name="passedValues">
-        /// The values that have been passed in. 
-        /// </param>
-        private static void ValidateParameters(MethodBase currentMethod, ParameterInfo[] methodParameters, object[] passedValues)
+        /// <param name="currentMethod">The current method we're testing for.</param>
+        /// <param name="methodParameters">The parameters for the method.</param>
+        /// <param name="passedValues">The values that have been passed in.</param>
+        /// <exception cref="System.ArgumentException">
+        /// </exception>
+        private static void ValidateParameters(
+            MethodBase currentMethod,
+            ParameterInfo[] methodParameters,
+            object[] passedValues)
         {
-            log.DebugIfEnabled("ValidateParameters called.");
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug("ValidateParameters called.");
+            }
 
             if (methodParameters == null)
             {
@@ -523,32 +611,53 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
             }
 
             int outParameterCount = methodParameters.Count(info => info.IsOut);
-            int paramsCount = methodParameters.Count(info => info.GetCustomAttributes(typeof(ParamArrayAttribute), true).Any());
+            int paramsCount =
+                methodParameters.Count(info => info.GetCustomAttributes(typeof(ParamArrayAttribute), true).Count() > 0);
             int optionalCount = methodParameters.Count(info => info.IsOptional);
             int requiredAmount = methodParameters.Count() - outParameterCount - optionalCount;
 
-            if ((paramsCount > 0 && methodParameters.Count() == 1) || (methodParameters.Count() == 1 && methodParameters[0].ParameterType.IsArray && paramsCount == 0))
+            if (paramsCount > 0 && methodParameters.Count() == 1)
             {
                 // do nothing--if a method only has the params array, the passed values may be null, they may be an array of values, etc.  In other words, we'll take whatever they send because we can't detect
                 // an invalid configuration.
+            }
+            else if (passedValues == null && methodParameters.Count() == 1 && methodParameters[0].ParameterType.IsArray)
+            {
+                // do nothing -- this is allowed if their is only one parameter and it's an object and it's an array.
+            }
+            else if (passedValues.Count() > methodParameters.Count() && methodParameters.Count() == 1
+                     && methodParameters[0].ParameterType.IsArray)
+            {
+                // Again, do nothing.  Probably an object array.
             }
             else
             {
                 // If they passed more than we can possibly have, that's bad.
                 if (passedValues.Count() > methodParameters.Count())
                 {
-                    throw new ArgumentException(string.Format("LogUtility: Method {0} has {1} parameters passed but only has {2} parameters.", currentMethod.Name, passedValues.Count(), methodParameters.Count()));
+                    throw new ArgumentException(
+                        string.Format(
+                            "LogUtility: Method {0} has {1} parameters passed but only has {2} parameters.",
+                            currentMethod.Name,
+                            passedValues.Count(),
+                            methodParameters.Count()));
                 }
 
                 if (passedValues.Count() < requiredAmount)
                 {
-                    throw new ArgumentException(string.Format("LogUtility: Method {0} has {1} parameters passed but requires at least {2} parameters.", currentMethod.Name, passedValues.Count(), methodParameters.Count()));
+                    throw new ArgumentException(
+                        string.Format(
+                            "LogUtility: Method {0} has {1} parameters passed but requires at least {2} parameters.",
+                            currentMethod.Name,
+                            passedValues.Count(),
+                            methodParameters.Count()));
                 }
             }
 
-            log.DebugIfEnabled("ValidateParameters complete.");
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug("ValidateParameters complete.");
+            }
         }
-
-        #endregion
     }
 }

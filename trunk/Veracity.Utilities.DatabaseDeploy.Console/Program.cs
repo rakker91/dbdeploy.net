@@ -1,110 +1,84 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Program.cs" company="Veracity Solutions, Inc.">
-//   Copyright (c) Veracity Solutions, Inc. 2012.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
-// </copyright>
-//  <summary>
-//   Created By: Robert J. May
-// </summary>
+//  <copyright file="Program.cs" company="Database Deploy 2">
+//    Copyright (c) 2015 Database Deploy 2.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
+//  </copyright>
+//   <summary>
+//  </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Veracity.Utilities.DatabaseDeploy.Console
+namespace DatabaseDeploy.Console
 {
-    #region Usings
-
     using System;
     using System.ComponentModel;
     using System.Configuration;
 
     using CommandLine;
-    using CommandLine.Text;
+
+    using DatabaseDeploy.Core;
+    using DatabaseDeploy.Core.Configuration;
+    using DatabaseDeploy.Core.Database;
 
     using log4net;
 
     using Microsoft.Practices.Unity;
 
-    using Veracity.Utilities.DatabaseDeploy.Configuration;
-    using Veracity.Utilities.DatabaseDeploy.Database;
-    using Veracity.Utilities.DatabaseDeploy.IoC;
-    using Veracity.Utilities.DatabaseDeploy.Utilities;
-
-    #endregion
+    using Container = DatabaseDeploy.Core.IoC.Container;
 
     /// <summary>
-    /// The program.
+    ///     The program.
     /// </summary>
     internal class Program
     {
-        #region Constants and Fields
+        /// <summary>
+        ///     Creates the default logger
+        /// </summary>
+        private static readonly ILog Log = LogManager.GetLogger(typeof(Program));
 
         /// <summary>
-        ///   Creates the default logger
+        ///     Gets or sets the deployment service to use. This is injected by unity and should not be set.
         /// </summary>
-        private static readonly ILog log = LogManager.GetLogger(typeof(Program));
-
-        #endregion
-
-        #region Public Properties
-
-        /// <summary>
-        ///   Gets or sets the deployment service to use. This is injected by unity and should not be set.
-        /// </summary>
+        /// <value>The configuration service.</value>
         [Dependency]
         public static IConfigurationService ConfigurationService { get; set; }
 
         /// <summary>
-        ///   Gets or sets the deployment service to use. This is injected by unity and should not be set.
+        ///     Gets or sets the deployment service to use. This is injected by unity and should not be set.
         /// </summary>
+        /// <value>The deployment service.</value>
         [Dependency]
         public static IDeploymentService DeploymentService { get; set; }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
-        /// Gets a setting from app settings.
+        ///     Gets a setting from app settings.
         /// </summary>
-        /// <typeparam name="T">
-        /// The type of setting we're retrieving 
-        /// </typeparam>
-        /// <param name="setting">
-        /// The setting to retrieve 
-        /// </param>
-        /// <returns>
-        /// A setting for the requested value or the default setting. 
-        /// </returns>
+        /// <typeparam name="T">The type of setting we're retrieving</typeparam>
+        /// <param name="setting">The setting to retrieve</param>
+        /// <returns>A setting for the requested value or the default setting.</returns>
         private static T GetSetting<T>(string setting)
         {
-            log.DebugIfEnabled(LogUtility.GetContext(setting));
-
-            var result = default(T);
-            var value = ConfigurationManager.AppSettings[setting];
+            T result = default(T);
+            string value = ConfigurationManager.AppSettings[setting];
             if (value != null)
             {
                 result = (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(value);
             }
 
-            log.DebugIfEnabled(LogUtility.GetResult(result));
-
             return result;
         }
 
         /// <summary>
-        /// The main entry point into the application.
+        ///     The main entry point into the application.
         /// </summary>
-        /// <param name="args">
-        /// The arguments for this run 
-        /// </param>
+        /// <param name="args">The arguments for this run</param>
+        /// <exception cref="System.ArgumentException"></exception>
         private static void Main(string[] args)
         {
-            log.DebugIfEnabled(LogUtility.GetContext(args));
-
             try
             {
-                IoC.Container.UnityContainer.RegisterType<IConfigurationService>(new PerThreadLifetimeManager());
+                Container.UnityContainer.RegisterType<IConfigurationService>(new PerThreadLifetimeManager());
 
-                ConfigurationService = IoC.Container.UnityContainer.Resolve<IConfigurationService>();
-                DeploymentService = IoC.Container.UnityContainer.Resolve<IDeploymentService>();
+                ConfigurationService = Container.UnityContainer.Resolve<IConfigurationService>();
+                DeploymentService = Container.UnityContainer.Resolve<IDeploymentService>();
 
                 ConfigurationService.ConnectionString = GetSetting<string>("ConnectionString");
 
@@ -120,8 +94,11 @@ namespace Veracity.Utilities.DatabaseDeploy.Console
                         ConfigurationService.DatabaseManagementSystem = DatabaseTypesEnum.MySql;
                         break;
                     default:
-                        string message = string.Format("An invalid database type of {0} was specified.  Only \"mssql\", \"ora\", and \"mysql\" are supported.", GetSetting<string>("DatabaseType"));
-                        log.Fatal(message);
+                        string message =
+                            string.Format(
+                                "An invalid database type of {0} was specified.  Only \"mssql\", \"ora\", and \"mysql\" are supported.",
+                                GetSetting<string>("DatabaseType"));
+                        Log.Fatal(message);
                         throw new ArgumentException(message);
                 }
 
@@ -141,21 +118,31 @@ namespace Veracity.Utilities.DatabaseDeploy.Console
             }
             catch (Exception ex)
             {
-                log.Error(ex);
+                Log.Error(ex);
             }
         }
 
         /// <summary>
-        /// Parses the command line parameters
+        ///     Parses the command line parameters
         /// </summary>
         /// <param name="args">The arguments passed on the command line.</param>
         private static void ParseCommandLine(string[] args)
         {
             if (args.Length > 0)
             {
-                var options = new Options();
+                ParserResult<Options> result = Parser.Default.ParseArguments<Options>(args);
 
-                if (Parser.Default.ParseArgumentsStrict(args, options))
+                Options options = null;
+
+                result.MapResult(
+                    options1 =>
+                        {
+                            options = options1;
+                            return options;
+                        },
+                    errors => { return null; });
+
+                if (options != null)
                 {
                     ConfigurationService.ConnectionString = string.IsNullOrEmpty(options.ConnectionString)
                                                                 ? ConfigurationService.ConnectionString
@@ -175,44 +162,42 @@ namespace Veracity.Utilities.DatabaseDeploy.Console
                     }
 
                     ConfigurationService.LastChangeToApply = options.LastChangeToApply != default(int)
-                        ? options.LastChangeToApply
-                        : ConfigurationService.LastChangeToApply;
+                                                                 ? options.LastChangeToApply
+                                                                 : ConfigurationService.LastChangeToApply;
 
                     ConfigurationService.OutputFile = string.IsNullOrEmpty(options.OutputFile)
-                        ? ConfigurationService.OutputFile
-                        : options.OutputFile;
+                                                          ? ConfigurationService.OutputFile
+                                                          : options.OutputFile;
 
                     ConfigurationService.Recursive = options.Recursive != default(bool)
-                        ? options.Recursive
-                        : ConfigurationService.Recursive;
+                                                         ? options.Recursive
+                                                         : ConfigurationService.Recursive;
 
                     ConfigurationService.RootDirectory = string.IsNullOrEmpty(options.RootDirectory)
-                        ? ConfigurationService.RootDirectory
-                        : options.RootDirectory;
+                                                             ? ConfigurationService.RootDirectory
+                                                             : options.RootDirectory;
 
                     ConfigurationService.SearchPattern = string.IsNullOrEmpty(options.SearchPattern)
-                        ? ConfigurationService.SearchPattern
-                        : options.SearchPattern;
+                                                             ? ConfigurationService.SearchPattern
+                                                             : options.SearchPattern;
 
                     ConfigurationService.FileNamePattern = string.IsNullOrEmpty(options.FileNamePattern)
-                        ? ConfigurationService.FileNamePattern
-                        : options.FileNamePattern;
+                                                               ? ConfigurationService.FileNamePattern
+                                                               : options.FileNamePattern;
 
                     ConfigurationService.UndoOutputFile = string.IsNullOrEmpty(options.UndoOutputFile)
-                        ? ConfigurationService.UndoOutputFile
-                        : options.UndoOutputFile;
+                                                              ? ConfigurationService.UndoOutputFile
+                                                              : options.UndoOutputFile;
 
                     ConfigurationService.Schema = string.IsNullOrEmpty(options.Schema)
-                        ? ConfigurationService.Schema
-                        : options.Schema;
+                                                      ? ConfigurationService.Schema
+                                                      : options.Schema;
 
                     ConfigurationService.ChangeLog = string.IsNullOrEmpty(options.ChangeLog)
-                        ? ConfigurationService.ChangeLog
-                        : options.ChangeLog;
+                                                         ? ConfigurationService.ChangeLog
+                                                         : options.ChangeLog;
                 }
             }
         }
-
-        #endregion
     }
 }

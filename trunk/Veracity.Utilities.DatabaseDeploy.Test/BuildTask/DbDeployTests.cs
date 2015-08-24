@@ -1,46 +1,42 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="DbDeployTests.cs" company="Veracity Solutions, Inc.">
-//   Copyright (c) Veracity Solutions, Inc. 2012.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
-// </copyright>
-//  <summary>
-//   Created By: Robert J. May
-// </summary>
+//  <copyright file="DbDeployTests.cs" company="Database Deploy 2">
+//    Copyright (c) 2015 Database Deploy 2.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
+//  </copyright>
+//   <summary>
+//  </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-using Veracity.Utilities.DatabaseDeploy.Test.Utilities;
-using Veracity.Utilities.DatabaseDeploy.Utilities;
-
-namespace Veracity.Utilities.DatabaseDeploy.Test.BuildTask
+namespace DatabaseDeploy.Test.BuildTask
 {
     using System;
-    using System.IO;
 
     using ApprovalTests;
 
-    using Microsoft.Practices.Unity;
+    using DatabaseDeploy.Core;
+    using DatabaseDeploy.Core.BuildTasks;
+    using DatabaseDeploy.Core.Configuration;
+    using DatabaseDeploy.Core.Database;
+    using DatabaseDeploy.Core.IoC;
+    using DatabaseDeploy.Core.Utilities;
+    using DatabaseDeploy.Test.Utilities;
+
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
-
-    using NUnit.Framework;
-
-    using Veracity.Utilities.DatabaseDeploy.BuildTasks;
-    using Veracity.Utilities.DatabaseDeploy.Configuration;
-    using Veracity.Utilities.DatabaseDeploy.Database;
-    using Veracity.Utilities.DatabaseDeploy.IoC;
 
     /// <summary>
     /// Tests of the DbDeploy Build Task.
     /// </summary>
-    [TestFixture]
+    [TestClass]
     public class DbDeployTests : TestFixtureBase
     {
         /// <summary>
         /// Tests that execute sets up a run correctly.
         /// </summary>
-        [Test]
+        [TestMethod]
         public void ThatExecuteSetupsCorrectly()
         {
-            var mockEnvironmentProvider = new MockEnvironmentProvider();
+            MockEnvironmentProvider mockEnvironmentProvider = new MockEnvironmentProvider();
             mockEnvironmentProvider.SetCurrentDirectory(@"c:\DbDeploy");
             EnvironmentProvider.Current = mockEnvironmentProvider;
 
@@ -49,11 +45,11 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.BuildTask
                 IConfigurationService configurationService = new ConfigurationService();
                 Container.RegisterInstance(configurationService);
 
-                var deploymentServiceMock = new Mock<IDeploymentService>(MockBehavior.Strict);
+                Mock<IDeploymentService> deploymentServiceMock = new Mock<IDeploymentService>(MockBehavior.Strict);
                 deploymentServiceMock.Setup(d => d.BuildDeploymentScript()).Verifiable();
                 Container.RegisterInstance(deploymentServiceMock.Object);
 
-                var deploy = new DbDeploy();
+                DbDeploy deploy = new DbDeploy();
                 deploy.ConnectionString = "Connection String";
                 deploy.DatabaseType = "mssql";
                 deploy.LastChangeToApply = 500;
@@ -70,15 +66,25 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.BuildTask
                 deploy.DatabaseType = "ora";
                 deploy.Execute();
 
-                Assert.That(configurationService.DatabaseManagementSystem, Is.EqualTo(DatabaseTypesEnum.Oracle));
+                Assert.AreEqual(configurationService.DatabaseManagementSystem, DatabaseTypesEnum.Oracle);
 
                 deploy.DatabaseType = "mysql";
                 deploy.Execute();
 
-                Assert.That(configurationService.DatabaseManagementSystem, Is.EqualTo(DatabaseTypesEnum.MySql));
+                Assert.AreEqual(configurationService.DatabaseManagementSystem, DatabaseTypesEnum.MySql);
 
                 deploy.DatabaseType = "BadDBType";
-                Assert.Throws<ArgumentException>(() => deploy.Execute());
+                bool expectedExceptionFound = false;
+                try
+                {
+                    deploy.Execute();
+                }
+                catch (ArgumentException)
+                {
+                    expectedExceptionFound = true;
+                }
+
+                Assert.IsTrue(expectedExceptionFound, "Expected to receive an argument exception for a bad db type, but did not.");
 
                 deploymentServiceMock.Verify(d => d.BuildDeploymentScript(), Times.Exactly(3));
             }

@@ -1,13 +1,12 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="DatabaseTypesEnum.cs" company="Veracity Solutions, Inc.">
-//   Copyright (c) Veracity Solutions, Inc. 2012.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
-// </copyright>
-//  <summary>
-//   Created By: Robert J. May
-// </summary>
+//  <copyright file="DatabaseTypesEnum.cs" company="Database Deploy 2">
+//    Copyright (c) 2015 Database Deploy 2.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
+//  </copyright>
+//   <summary>
+//  </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Veracity.Utilities.DatabaseDeploy.Database
+namespace DatabaseDeploy.Core.Database
 {
     /// <summary>
     /// An enum for the allowed database types in the system
@@ -15,17 +14,17 @@ namespace Veracity.Utilities.DatabaseDeploy.Database
     public enum DatabaseTypesEnum
     {
         /// <summary>
-        ///   Microsoft Sql Server
+        /// Microsoft Sql Server
         /// </summary>
-        SqlServer, 
+        SqlServer,
 
         /// <summary>
-        ///   Oracle Database
+        /// Oracle Database
         /// </summary>
-        Oracle, 
+        Oracle,
 
         /// <summary>
-        ///   MySQL database
+        /// MySQL database
         /// </summary>
         MySql
     }
