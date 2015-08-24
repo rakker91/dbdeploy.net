@@ -56,7 +56,6 @@
     <Content Include="CommandLine.bat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="database.targets" />
     <None Include="rebuild.bat" />
   </ItemGroup>
   <ItemGroup>
@@ -75,11 +74,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Veracity.Utilities.DatabaseDeploy.Console\DatabaseDeploy.Console.csproj">
+    <ProjectReference Include="..\DatabaseDeploy.Console\DatabaseDeploy.Console.csproj">
       <Project>{64737c72-30b7-45bd-a1ef-216a4c4f53fb}</Project>
       <Name>DatabaseDeploy.Console</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Veracity.Utilities.DatabaseDeploy\DatabaseDeploy.Core.csproj">
+    <ProjectReference Include="..\DatabaseDeploy.Core\DatabaseDeploy.Core.csproj">
       <Project>{81281cf4-a227-4f5a-a3ff-fe89d32a9741}</Project>
       <Name>DatabaseDeploy.Core</Name>
     </ProjectReference>

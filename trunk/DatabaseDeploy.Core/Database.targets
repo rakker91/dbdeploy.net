@@ -1,0 +1,110 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0" DefaultTargets="Update">
+
+  <PropertyGroup>
+    <DatabaseName>SampleDatabase</DatabaseName>
+    <Server>localhost</Server>
+    <ScriptDirectory>.\Scripts\Deployed Scripts</ScriptDirectory>
+    <RebuildDirectory>.\Scripts\Rebuild</RebuildDirectory>
+    <TestDataDirectory>.\Scripts\TestData</TestDataDirectory>
+    <DbDeploy>.\dbdeploy</DbDeploy>
+    <SqlTasks>.\dbdeploy</SqlTasks>
+    <User>SampleUser</User>
+    <Password>SamplePassword</Password>
+    <BCP>bcp</BCP>
+    <BCPOptions>-S$(Server) -U$(User) -P$(Password) -N -E -k</BCPOptions>
+    <OutputFileName>dbDeploy-output.sql</OutputFileName>
+    <UndoFileName>dbDeploy-output-undo.sql</UndoFileName>
+    <LastChangeToApply>999999</LastChangeToApply>
+    <ExtensionTasksPath>.\</ExtensionTasksPath>
+  </PropertyGroup>
+
+  <UsingTask AssemblyFile="$(SqlTasks)\MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.SqlServer.SqlCmd"/>
+  <UsingTask AssemblyFile="$(SqlTasks)\MSBuild.ExtensionPack.Sql2014.dll" TaskName="MSBuild.ExtensionPack.Sql2014.Database"/>
+
+  <UsingTask TaskName="DbDeploy" AssemblyFile="$(DbDeploy)\DatabaseDeploy.Core.dll"/>
+
+  <ItemGroup>
+    <Variable Include="DatabaseName">
+      <Value>$(DatabaseName)</Value>
+    </Variable>
+    <Variable Include="Server">
+      <Value>$(Server)</Value>
+    </Variable>
+    <Variable Include="User">
+      <Value>$(User)</Value>
+    </Variable>
+    <Variable Include="Password">
+      <Value>$(Password)</Value>
+    </Variable>
+  </ItemGroup>
+  
+  <Target Name ="Rebuild">
+    <!-- Verify that the database exists.  If it doesn't, we break. -->
+    <MSBuild.ExtensionPack.Sql2014.Database TaskAction="CheckExists" DatabaseItem="$(DatabaseName)">
+      <Output TaskParameter="Exists" PropertyName="DoesExist"/>
+    </MSBuild.ExtensionPack.Sql2014.Database>
+
+    <Message Condition="$(DoesExist)" Text="Taking $(DatabaseName) offline to disconnect all users. . ."/>
+
+    <!-- Take the database offline to disconnect any users. Requires that the current user is an admin of the sql server machine. -->
+    <MSBuild.ExtensionPack.SqlServer.SqlCmd Condition="$(DoesExist)" Variables="@(Variable)" Database="$(DatabaseName)" TaskAction="Execute" CommandLineQuery = "ALTER DATABASE $(DatabaseName) SET OFFLINE WITH ROLLBACK IMMEDIATE"/>
+
+    <!-- Bring it back online.  If you don't, the database files won't be deleted. -->
+    <MSBuild.ExtensionPack.Sql2014.Database Condition="$(DoesExist)" TaskAction="SetOnline" DatabaseItem="$(DatabaseName)"/>
+
+    <!-- Delete the database, removing the existing files. -->
+    <MSBuild.ExtensionPack.Sql2014.Database Condition="$(DoesExist)" TaskAction="Delete" DatabaseItem="$(DatabaseName)"/>
+
+    <!-- Create the new database in the default database path location. -->
+    <MSBuild.ExtensionPack.Sql2014.Database TaskAction="Create" DatabaseItem="$(DatabaseName)" Force="True"/>
+
+    <Message Text="Creating admin user for $(DatabaseName) . . ."/>
+
+    <!-- Create admin user -->
+    <MSBuild.ExtensionPack.SqlServer.SqlCmd TaskAction="Execute" Server="(local)" Database="$(DatabaseName)" InputFiles="$(RebuildDirectory)\0002 Create Admin User.sql" Variables="@(Variable)" />
+
+    <CallTarget Targets="Update;ImportTestData"/>
+  </Target>
+  
+  <Target Name="CreateUpdateScript">
+    <Message Text="Generating change script ($(OutputFileName)) for $(DatabaseName) . . ."/>
+
+    <DbDeploy  DatabaseType="mssql"
+                                       ConnectionString="User=$(User);Password=$(Password);Data Source=$(Server);Initial Catalog=$(DatabaseName);"
+                                       RootDirectory="$(ScriptDirectory)"
+                                       OutputFile="$(OutputFileName)"
+                                       Recursive = "true" />
+  </Target>
+  
+  <Target Name="Update" DependsOnTargets="CreateUpdateScript">
+
+    <Message Text="Executing change script ($(OutputFileName)) on $(DatabaseName) . . ."/>
+
+    <MSBuild.ExtensionPack.SqlServer.SqlCmd TaskAction="Execute" Server="(local)" Database="$(DatabaseName)" LogOn="$(User)" Password="$(Password)" InputFiles="$(OutputFileName)" Variables="@(Variable)" />
+  </Target>
+
+  <Target Name="Undo">
+    <!-- assumes that the output files have already been created. -->
+    <Exec Command="$(SqlCmd) &quot;$(UndoFileName)&quot;" ContinueOnError="false"/>
+
+  </Target>
+
+  <Target Name="ImportTestData">
+    <ItemGroup>
+      <TestDataDat Include="$(TestDataDirectory)\*.dat"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <TestDataSql Include="$(TestDataDirectory)\*.sql"/>
+    </ItemGroup>
+
+    <Message Condition ="'%(TestDataSql.Filename)' != ''" Text="Executing SQL Scripts in $(TestDataDirectory) on $(DatabaseName) . . ."/>
+
+    <MSBuild.ExtensionPack.SqlServer.SqlCmd  Condition ="'%(TestDataSql.Filename)' != ''" TaskAction="Execute" Server="(local)" Database="$(DatabaseName)" LogOn="$(User)" Password="$(Password)" InputFiles="%(TestDataSql.Identity)" Variables="@(Variable)" />
+
+    <Message Condition ="'%(TestDataDat.Filename)' != ''" Text="Importing core DAT data from $(TestDataDirectory) into $(DatabaseName) . . ."/>
+
+    <Exec Condition ="'%(TestDataDat.Filename)' != ''" Command="$(BCP) $(DatabaseName).dbo.%(TestDataDat.Filename) in &quot;%(TestDataDat.Identity)&quot; $(BCPOptions)"/>
+
+  </Target>
+</Project>

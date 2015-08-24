@@ -10,36 +10,54 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{BE39B6
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseDeploy.Core", "Veracity.Utilities.DatabaseDeploy\DatabaseDeploy.Core.csproj", "{81281CF4-A227-4F5A-A3FF-FE89D32A9741}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseDeploy.Test", "Veracity.Utilities.DatabaseDeploy.Test\DatabaseDeploy.Test.csproj", "{E34E9A63-1E8B-4F90-A85E-778729E24F2A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseDeploy.Console", "Veracity.Utilities.DatabaseDeploy.Console\DatabaseDeploy.Console.csproj", "{64737C72-30B7-45BD-A1EF-216A4C4F53FB}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples", "Examples\Examples.csproj", "{5535FF9C-3ABB-4133-B16F-73D68BE23930}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseDeploy.Console", "DatabaseDeploy.Console\DatabaseDeploy.Console.csproj", "{64737C72-30B7-45BD-A1EF-216A4C4F53FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseDeploy.Core", "DatabaseDeploy.Core\DatabaseDeploy.Core.csproj", "{81281CF4-A227-4F5A-A3FF-FE89D32A9741}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseDeploy.Test", "DatabaseDeploy.Test\DatabaseDeploy.Test.csproj", "{E34E9A63-1E8B-4F90-A85E-778729E24F2A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{81281CF4-A227-4F5A-A3FF-FE89D32A9741}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{81281CF4-A227-4F5A-A3FF-FE89D32A9741}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{81281CF4-A227-4F5A-A3FF-FE89D32A9741}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{81281CF4-A227-4F5A-A3FF-FE89D32A9741}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E34E9A63-1E8B-4F90-A85E-778729E24F2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E34E9A63-1E8B-4F90-A85E-778729E24F2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E34E9A63-1E8B-4F90-A85E-778729E24F2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E34E9A63-1E8B-4F90-A85E-778729E24F2A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{64737C72-30B7-45BD-A1EF-216A4C4F53FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{64737C72-30B7-45BD-A1EF-216A4C4F53FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{64737C72-30B7-45BD-A1EF-216A4C4F53FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{64737C72-30B7-45BD-A1EF-216A4C4F53FB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5535FF9C-3ABB-4133-B16F-73D68BE23930}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5535FF9C-3ABB-4133-B16F-73D68BE23930}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5535FF9C-3ABB-4133-B16F-73D68BE23930}.Debug|x86.ActiveCfg = Debug|x86
+		{5535FF9C-3ABB-4133-B16F-73D68BE23930}.Debug|x86.Build.0 = Debug|x86
 		{5535FF9C-3ABB-4133-B16F-73D68BE23930}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5535FF9C-3ABB-4133-B16F-73D68BE23930}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5535FF9C-3ABB-4133-B16F-73D68BE23930}.Release|x86.ActiveCfg = Release|x86
+		{5535FF9C-3ABB-4133-B16F-73D68BE23930}.Release|x86.Build.0 = Release|x86
+		{64737C72-30B7-45BD-A1EF-216A4C4F53FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64737C72-30B7-45BD-A1EF-216A4C4F53FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64737C72-30B7-45BD-A1EF-216A4C4F53FB}.Debug|x86.ActiveCfg = Debug|x86
+		{64737C72-30B7-45BD-A1EF-216A4C4F53FB}.Debug|x86.Build.0 = Debug|x86
+		{64737C72-30B7-45BD-A1EF-216A4C4F53FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64737C72-30B7-45BD-A1EF-216A4C4F53FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64737C72-30B7-45BD-A1EF-216A4C4F53FB}.Release|x86.ActiveCfg = Release|x86
+		{64737C72-30B7-45BD-A1EF-216A4C4F53FB}.Release|x86.Build.0 = Release|x86
+		{81281CF4-A227-4F5A-A3FF-FE89D32A9741}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81281CF4-A227-4F5A-A3FF-FE89D32A9741}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81281CF4-A227-4F5A-A3FF-FE89D32A9741}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{81281CF4-A227-4F5A-A3FF-FE89D32A9741}.Debug|x86.Build.0 = Debug|Any CPU
+		{81281CF4-A227-4F5A-A3FF-FE89D32A9741}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81281CF4-A227-4F5A-A3FF-FE89D32A9741}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81281CF4-A227-4F5A-A3FF-FE89D32A9741}.Release|x86.ActiveCfg = Release|Any CPU
+		{81281CF4-A227-4F5A-A3FF-FE89D32A9741}.Release|x86.Build.0 = Release|Any CPU
+		{E34E9A63-1E8B-4F90-A85E-778729E24F2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E34E9A63-1E8B-4F90-A85E-778729E24F2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E34E9A63-1E8B-4F90-A85E-778729E24F2A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E34E9A63-1E8B-4F90-A85E-778729E24F2A}.Debug|x86.Build.0 = Debug|Any CPU
+		{E34E9A63-1E8B-4F90-A85E-778729E24F2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E34E9A63-1E8B-4F90-A85E-778729E24F2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E34E9A63-1E8B-4F90-A85E-778729E24F2A}.Release|x86.ActiveCfg = Release|Any CPU
+		{E34E9A63-1E8B-4F90-A85E-778729E24F2A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,5 +67,6 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8;packages\EnterpriseLibrary.TransientFaultHandling.Data.6.0.1304.1\lib\NET45
 	EndGlobalSection
 EndGlobal

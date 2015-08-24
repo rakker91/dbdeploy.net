@@ -49,3 +49,4 @@
 \trunk\packages\PostSharp.4.1.23
 \trunk\packages\StyleCop.Analyzers.1.0.0-beta008
 \trunk\packages\Unity.3.5.1405-prerelease
+*.svnbridge
