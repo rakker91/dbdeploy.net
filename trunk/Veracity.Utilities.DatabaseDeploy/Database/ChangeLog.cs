@@ -1,76 +1,63 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ChangeLog.cs" company="Veracity Solutions, Inc.">
-//   Copyright (c) Veracity Solutions, Inc. 2012.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
-// </copyright>
-//  <summary>
-//   Created By: Robert J. May
-// </summary>
+//  <copyright file="ChangeLog.cs" company="Database Deploy 2">
+//    Copyright (c) 2015 Database Deploy 2.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
+//  </copyright>
+//   <summary>
+//  </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Veracity.Utilities.DatabaseDeploy.Database
+namespace DatabaseDeploy.Core.Database
 {
-    #region Usings
-
     using System;
     using System.Data;
 
+    using DatabaseDeploy.Core.Utilities;
+
     using log4net;
-
-    using Veracity.Utilities.DatabaseDeploy.Utilities;
-
-    #endregion
 
     /// <summary>
     /// A record of a changelog
     /// </summary>
     public class ChangeLog : IChangeLog
     {
-        #region Constants and Fields
+        /// <summary>
+        /// Creates the default logger
+        /// </summary>
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ChangeLog));
 
         /// <summary>
-        ///   Creates the default logger
+        /// Gets or sets the application end date
         /// </summary>
-        private static readonly ILog log = LogManager.GetLogger(typeof(ChangeLog));
-
-        #endregion
-
-        #region Public Properties
-
-        /// <summary>
-        ///   Gets or sets the application end date
-        /// </summary>
+        /// <value>The application end date.</value>
         public DateTime ApplicationEndDate { get; set; }
 
         /// <summary>
-        ///   Gets or sets the person who applied the change set
+        /// Gets or sets the person who applied the change set
         /// </summary>
+        /// <value>The applied by.</value>
         public string AppliedBy { get; set; }
 
         /// <summary>
-        ///   Gets or sets the change number Id
+        /// Gets or sets the change number Id
         /// </summary>
+        /// <value>The change number.</value>
         public int ChangeNumber { get; set; }
 
         /// <summary>
-        ///   Gets or sets the script description
+        /// Gets or sets the script description
         /// </summary>
+        /// <value>The description.</value>
         public string Description { get; set; }
-
-        #endregion
-
-        #region Public Methods
 
         /// <summary>
         /// Parses a data row to extract the information for this changelog record
         /// </summary>
-        /// <param name="row">
-        /// The row to parse 
-        /// </param>
+        /// <param name="row">The row to parse</param>
         public void Parse(DataRow row)
         {
-            if (log.IsDebugEnabled)
+            if (Log.IsDebugEnabled)
             {
-                log.Debug(LogUtility.GetContext(row));
+                Log.Debug(LogUtility.GetContext(row));
             }
 
             this.ApplicationEndDate = (DateTime)row["complete_dt"];
@@ -78,7 +65,5 @@ namespace Veracity.Utilities.DatabaseDeploy.Database
             this.ChangeNumber = (int)row["change_number"];
             this.Description = (string)row["description"];
         }
-
-        #endregion
     }
 }

@@ -1,58 +1,34 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ScriptMessageFormatter.cs" company="Veracity Solutions, Inc.">
-//   Copyright (c) Veracity Solutions, Inc. 2012.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
-// </copyright>
-//  <summary>
-//   Created By: Robert J. May
-// </summary>
+//  <copyright file="ScriptMessageFormatter.cs" company="Database Deploy 2">
+//    Copyright (c) 2015 Database Deploy 2.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
+//  </copyright>
+//   <summary>
+//  </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Veracity.Utilities.DatabaseDeploy.Utilities
+namespace DatabaseDeploy.Core.Utilities
 {
-    #region Usings
-
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
 
-    using log4net;
-
-    #endregion
-
     /// <summary>
-    /// Takes an IDictionary and makes a prety script message
+    ///     Takes an IDictionary and makes a pretty script message
     /// </summary>
     public class ScriptMessageFormatter : IScriptMessageFormatter
     {
-        #region Constants and Fields
-
         /// <summary>
-        ///   Creates the default logger
+        ///     Formats a collection of int values int a pretty string.
         /// </summary>
-        private static readonly ILog log = LogManager.GetLogger(typeof(ScriptMessageFormatter));
-
-        #endregion
-
-        #region Public Methods
-
-        /// <summary>
-        /// Formats a collection of int values int a pretty string.
-        /// </summary>
-        /// <param name="values">
-        /// The values to format 
-        /// </param>
-        /// <returns>
-        /// A string containing the pretty values (for example "1 to 5, 10 to 15, 20, 40, 60") 
-        /// </returns>
+        /// <param name="values">The values to format</param>
+        /// <returns>A string containing the pretty values (for example "1 to 5, 10 to 15, 20, 40, 60")</returns>
         public string FormatCollection(ICollection<int> values)
         {
-            log.DebugIfEnabled(LogUtility.GetContext(values));
-
             string result;
 
             if (values != null && values.Any())
             {
-                var textString = new StringBuilder();
+                StringBuilder textString = new StringBuilder();
                 int lastNumber = -1;
                 int rangeStart = -1;
 
@@ -85,45 +61,32 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
                 result = "No scripts found.";
             }
 
-            log.DebugIfEnabled(LogUtility.GetResult(result));
-
             return result;
         }
 
         /// <summary>
-        /// Returns the list of decimal numbers as a string
+        ///     Returns the list of decimal numbers as a string
         /// </summary>
-        /// <param name="values"></param>
-        /// <returns></returns>
+        /// <param name="values">The values.</param>
+        /// <returns>An object of type System.String.</returns>
         public string FormatCollection(ICollection<decimal> values)
         {
             if (values == null || !values.Any())
             {
                 return "No scripts found.";
             }
+
             return string.Join(",", values.Select(v => v.ToString()));
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
-        /// Appends a range of values to the stringbuilder
+        ///     Appends a range of values to the stringbuilder
         /// </summary>
-        /// <param name="textString">
-        /// The stringbuilder 
-        /// </param>
-        /// <param name="lastNumber">
-        /// The last number that was found. 
-        /// </param>
-        /// <param name="rangeStart">
-        /// The start of the range. 
-        /// </param>
+        /// <param name="textString">The stringbuilder</param>
+        /// <param name="lastNumber">The last number that was found.</param>
+        /// <param name="rangeStart">The start of the range.</param>
         private void AppendRange(StringBuilder textString, int lastNumber, int rangeStart)
         {
-            log.DebugIfEnabled(LogUtility.GetContext(textString, lastNumber, rangeStart));
-
             if (lastNumber == rangeStart)
             {
                 textString.Append(lastNumber);
@@ -143,10 +106,6 @@ namespace Veracity.Utilities.DatabaseDeploy.Utilities
                 textString.Append(lastNumber);
                 textString.Append(", ");
             }
-
-            log.DebugIfEnabled(LogUtility.GetResult());
         }
-
-        #endregion
     }
 }

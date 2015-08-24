@@ -1,81 +1,81 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="StringReplaceExtensionTests.cs" company="Veracity Solutions, Inc.">
-//   Copyright (c) Veracity Solutions, Inc. 2012.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
-// </copyright>
-//  <summary>
-//   Created By: Robert J. May
-// </summary>
+//  <copyright file="StringExtensionTests.cs" company="Database Deploy 2">
+//    Copyright (c) 2015 Database Deploy 2.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
+//  </copyright>
+//   <summary>
+//  </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-using ApprovalTests;
-
-namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
+namespace DatabaseDeploy.Test.Utilities
 {
     using System;
 
-    using NUnit.Framework;
+    using ApprovalTests;
 
-    using Veracity.Utilities.DatabaseDeploy.Utilities;
+    using DatabaseDeploy.Core.Utilities;
+
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     /// <summary>
-    /// Tests that the string replace extension works as expected.
+    ///     Tests that the string replace extension works as expected.
     /// </summary>
-    [TestFixture]
+    [TestClass]
     public class StringExtensionTests : TestFixtureBase
     {
         /// <summary>
-        /// Tests that the extension replaces bad characters.
+        ///     Make sure comments are stripped
         /// </summary>
-        [Test]
+        [TestMethod]
+        public void TestStripComments()
+        {
+            string[] lines =
+                {
+                    "line which has no comment", "--line which is nothing but comment",
+                    "a line which has stuff --at the front"
+                };
+
+            Approvals.VerifyAll(lines.StripSingleLineComments(), "nocomments");
+        }
+
+        /// <summary>
+        ///     Ensures that if an empty string is passed in for replacement, an exception is thrown.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ThatEmptyOldStringThrowsException()
+        {
+            string firstString = "This is the first string.";
+            firstString.ReplaceEx(string.Empty, "second");
+        }
+
+        /// <summary>
+        ///     Tests that the extension replaces bad characters.
+        /// </summary>
+        [TestMethod]
         public void ThatExtensionReplacesBadCharacters()
         {
             string badString = "This is my $(adjective) string.  ' and ; aren't allowed.";
             string goodString = "This is my g''o_od string.  ' and ; aren't allowed.";
             string result = badString.ReplaceEx("$(adjective)", "g'o;od");
 
-            Assert.That(result, Is.EqualTo(goodString));
+            Assert.AreEqual(result, goodString);
         }
 
         /// <summary>
-        /// Tests that replace does what is expected with no bad characters
+        ///     Ensures that if a null string is requested to have a replacement done, null is returned.
         /// </summary>
-        [Test]
-        public void ThatReplaceWithNoBadCharactersWorks()
+        [TestMethod]
+        [ExpectedException(typeof(NullReferenceException))]
+        public void ThatNullBaseStringThrowsException()
         {
-            string firstString = "This is the first string.";
-            string secondString = "This is the second string.";
-
-            string result = firstString.ReplaceEx("first", "second");
-
-            Assert.That(result, Is.EqualTo(secondString));
+            string firstString = null;
+            firstString.ReplaceEx("string 1", "second");
         }
 
         /// <summary>
-        /// Ensures that if a null value is passed in for replacement, an exception is thrown
+        ///     Ensures that if a null value is passed in as the replacement value, all instances of first value are removed.
         /// </summary>
-        [Test]
-        public void ThatNullOldStringThrowsException()
-        {
-            string firstString = "This is the first string.";
-
-            Assert.Throws<ArgumentNullException>(() => firstString.ReplaceEx(null, "second"));
-        }
-
-        /// <summary>
-        /// Ensures that if an empty string is passed in for replacement, an exception is thrown.
-        /// </summary>
-        [Test]
-        public void ThatEmptyOldStringThrowsException()
-        {
-            string firstString = "This is the first string.";
-
-            Assert.Throws<ArgumentException>(() => firstString.ReplaceEx(string.Empty, "second"));
-        }
-
-        /// <summary>
-        /// Ensures that if a null value is passed in as the replacement value, all instances of first value are removed.
-        /// </summary>
-        [Test]
+        [TestMethod]
         public void ThatNullNewStringDoesntFail()
         {
             string firstString = "This is the first string.";
@@ -83,34 +83,32 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
 
             string result = firstString.ReplaceEx("first", null);
 
-            Assert.That(result, Is.EqualTo(secondString));            
+            Assert.AreEqual(result, secondString);
         }
 
         /// <summary>
-        /// Ensures that if a null string is requested to have a replacement done, null is returned.
+        ///     Ensures that if a null value is passed in for replacement, an exception is thrown
         /// </summary>
-        [Test]
-        public void ThatNullBaseStringThrowsException()
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ThatNullOldStringThrowsException()
         {
-            string firstString = null;
-
-            Assert.Throws<NullReferenceException>(() => firstString.ReplaceEx("string 1", "second"));
+            string firstString = "This is the first string.";
+            firstString.ReplaceEx(null, "second");
         }
 
         /// <summary>
-        /// Make sure comments are stripped
+        ///     Tests that replace does what is expected with no bad characters
         /// </summary>
-        [Test]
-        public void TestStripComments()
+        [TestMethod]
+        public void ThatReplaceWithNoBadCharactersWorks()
         {
-            string[] lines =
-            {
-                "line which has no comment",
-                "--line which is nothing but comment",
-                "a line which has stuff --at the front",
-            };
+            string firstString = "This is the first string.";
+            string secondString = "This is the second string.";
 
-            Approvals.VerifyAll(lines.StripSingleLineComments(), "nocomments");
+            string result = firstString.ReplaceEx("first", "second");
+
+            Assert.AreEqual(result, secondString);
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Examples</RootNamespace>
     <AssemblyName>Examples</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -50,13 +50,13 @@
     <OutputPath>bin\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Veracity.Utilities.DatabaseDeploy.Console\Veracity.Utilities.DatabaseDeploy.Console.csproj">
+    <ProjectReference Include="..\Veracity.Utilities.DatabaseDeploy.Console\DatabaseDeploy.Console.csproj">
       <Project>{64737C72-30B7-45BD-A1EF-216A4C4F53FB}</Project>
-      <Name>Veracity.Utilities.DatabaseDeploy.Console</Name>
+      <Name>DatabaseDeploy.Console</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Veracity.Utilities.DatabaseDeploy\Veracity.Utilities.DatabaseDeploy.csproj">
+    <ProjectReference Include="..\Veracity.Utilities.DatabaseDeploy\DatabaseDeploy.Core.csproj">
       <Project>{81281CF4-A227-4F5A-A3FF-FE89D32A9741}</Project>
-      <Name>Veracity.Utilities.DatabaseDeploy</Name>
+      <Name>DatabaseDeploy.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -74,7 +74,6 @@
     <Content Include="Scripts\Rebuild\0002 Create Admin User.sql" />
     <Content Include="Scripts\TestData\1 Add Some Users.sql" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy Examples.dll.config databasedeploy.exe.config</PostBuildEvent>

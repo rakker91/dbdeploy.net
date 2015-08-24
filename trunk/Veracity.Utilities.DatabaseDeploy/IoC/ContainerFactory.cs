@@ -1,46 +1,102 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ContainerFactory.cs" company="Veracity Solutions, Inc.">
-//   Copyright (c) Veracity Solutions, Inc. 2012.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
-// </copyright>
-//  <summary>
-//   Created By: Robert J. May
-// </summary>
+//  <copyright file="ContainerFactory.cs" company="Database Deploy 2">
+//    Copyright (c) 2015 Database Deploy 2.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
+//  </copyright>
+//   <summary>
+//  </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Veracity.Utilities.DatabaseDeploy.IoC
+namespace DatabaseDeploy.Core.IoC
 {
-    #region Usings
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    using log4net;
 
     using Microsoft.Practices.Unity;
-
-    using Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances;
-    using Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances.Oracle;
-
-    #endregion
+    using Microsoft.Practices.Unity.Configuration;
 
     /// <summary>
-    /// Bootstraps the container.
+    ///     Class ContainerFactory.
     /// </summary>
     public class ContainerFactory
     {
-        #region Public Methods
+        /// <summary>
+        ///     Creates the default logger
+        /// </summary>
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ContainerFactory));
 
         /// <summary>
-        /// The build unity container.
+        ///     Gets or sets the unity container.
         /// </summary>
-        /// <returns>
-        /// An IUnityContainer that is the container for injection. 
-        /// </returns>
+        /// <value>The container.</value>
+        private static IUnityContainer Container { get; set; }
+
+        /// <summary>
+        ///     The build unity container.
+        /// </summary>
+        /// <returns>An IUnityContainer that is the container for injection.</returns>
         public IUnityContainer BuildUnityContainer()
         {
-            var container = new UnityContainer();
-            container.AddNewExtension<AutoResolverUnityExtension>();
+            IUnityContainer container = this.BuildUnityContainer(true);
 
-            //// Add any additional registrations here.
-            container.RegisterType(typeof(IDatabaseService), typeof(OracleDatabaseService));
             return container;
         }
 
-        #endregion
+        /// <summary>
+        ///     The build unity container.
+        /// </summary>
+        /// <param name="loadConfiguration">Whether or not the configuration from the app.config should be loaded.</param>
+        /// <returns>An IUnityContainer that is the container for injection.</returns>
+        public IUnityContainer BuildUnityContainer(bool loadConfiguration)
+        {
+            return this.BuildUnityContainer(loadConfiguration, null);
+        }
+
+        /// <summary>
+        ///     Builds the unity container optionally loading the configuration and with a callback for registering additional
+        ///     items.
+        /// </summary>
+        /// <param name="loadConfiguration">Whether or not the configuration should be loaded.</param>
+        /// <param name="registrationCallback">A callback for loading additional configuration</param>
+        /// <returns>A configured unity container.</returns>
+        public IUnityContainer BuildUnityContainer(bool loadConfiguration, Action<IUnityContainer> registrationCallback)
+        {
+            if (Container == null)
+            {
+                Container = new UnityContainer();
+
+                if (loadConfiguration)
+                {
+                    try
+                    {
+                        Container.LoadConfiguration();
+                    }
+                    catch (ArgumentNullException ex)
+                    {
+                        // do nothing--this is thrown if no configuration file or section was found.
+                        Log.Info(
+                            "Attempted to load the configuration but either no configuration file was found or the configuration section was empty.",
+                            ex);
+                    }
+                }
+
+                Container.RegisterInstance(typeof(IUnityContainer), Container, new ContainerControlledLifetimeManager());
+
+                if (registrationCallback != null)
+                {
+                    registrationCallback.Invoke(Container);
+                }
+
+                // We have our own auto mapper, but this is better.  The automapper may still be used in some cases.
+                IList<Type> types = AllClasses.FromLoadedAssemblies().Where(t => t.Namespace != null && t.Namespace.StartsWith("DatabaseDeploy")).ToList();
+                Container.RegisterTypes(types, WithMappings.FromMatchingInterface, WithName.Default);
+            }
+
+            //// Add any additional registrations here or in the configuration file.
+            return Container;
+        }
     }
 }

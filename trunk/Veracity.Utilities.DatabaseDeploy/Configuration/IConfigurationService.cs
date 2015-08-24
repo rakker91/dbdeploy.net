@@ -1,84 +1,75 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IConfigurationService.cs" company="Veracity Solutions, Inc.">
-//   Copyright (c) Veracity Solutions, Inc. 2012.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
-// </copyright>
-//  <summary>
-//   Created By: Robert J. May
-// </summary>
+﻿// --------------------------------------------------------------------------------------------------------------------
+//  <copyright file="IConfigurationService.cs" company="Database Deploy 2">
+//    Copyright (c) 2015 Database Deploy 2.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
+//  </copyright>
+//   <summary>
+//  </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Veracity.Utilities.DatabaseDeploy.Configuration
+namespace DatabaseDeploy.Core.Configuration
 {
-    #region Usings
-
-    using Veracity.Utilities.DatabaseDeploy.Database;
-
-    #endregion
+    using DatabaseDeploy.Core.Database;
 
     /// <summary>
     /// The Configuration service service.
     /// </summary>
     public interface IConfigurationService
     {
-        #region Public Properties
+        /// <summary>
+        /// Gets or sets the name of the change log table.
+        /// </summary>
+        /// <value>The change log.</value>
+        string ChangeLog { get; set; }
 
         /// <summary>
-        ///   Gets or sets a connection string to be used by the system
+        /// Gets or sets a connection string to be used by the system
         /// </summary>
+        /// <value>The connection string.</value>
         string ConnectionString { get; set; }
 
         /// <summary>
-        ///   Gets or sets a value indicating the type of DBMS to use.
+        /// Gets or sets a value indicating the type of DBMS to use.
         /// </summary>
+        /// <value>The database management system.</value>
         DatabaseTypesEnum DatabaseManagementSystem { get; set; }
 
         /// <summary>
-        ///   Gets or sets the database script path
+        /// Gets or sets the database script path
         /// </summary>
+        /// <value>The database script path.</value>
         string DatabaseScriptPath { get; set; }
 
         /// <summary>
-        ///   Gets or sets a value indicating the last change that should be applied to the database.
+        /// Gets or sets the pattern to use for parsing the name of the script file
         /// </summary>
-        /// <remarks>
-        ///   Set to 0 or max value (the default) to apply all changes. Any other positive number will stop applying changes at that level.
-        /// </remarks>
-        int LastChangeToApply { get; set; }
-
-        /// <summary>
-        ///   Gets or sets the directory and file name that will be used for writing out the change script
-        /// </summary>
-        string OutputFile { get; set; }
-
-        /// <summary>
-        ///   Gets or sets a value indicating whether or not the script search should be recursive
-        /// </summary>
-        bool Recursive { get; set; }
-
-        /// <summary>
-        ///   Gets or sets the root directory for processong
-        /// </summary>
-        string RootDirectory { get; set; }
-
-        /// <summary>
-        ///   Gets or sets the name of the file where the list of found scripts should be written.
-        /// </summary>
-        string ScriptListFile { get; set; }
-
-        /// <summary>
-        ///   Gets or sets the search pattern to use for finding script files
-        /// </summary>
-        string SearchPattern { get; set; }
-
-        /// <summary>
-        ///   Gets or sets the pattern to use for parsing the name of the script file
-        /// </summary>
+        /// <value>The file name pattern.</value>
         string FileNamePattern { get; set; }
 
         /// <summary>
-        ///   Gets or sets the directory and file name that will be used for writing out the undo change script
+        /// Gets or sets a value indicating the last change that should be applied to the database.
         /// </summary>
-        string UndoOutputFile { get; set; }
+        /// <value>The last change to apply.</value>
+        /// <remarks>Set to 0 or max value (the default) to apply all changes. Any other positive number will stop applying changes at
+        /// that level.</remarks>
+        int LastChangeToApply { get; set; }
+
+        /// <summary>
+        /// Gets or sets the directory and file name that will be used for writing out the change script
+        /// </summary>
+        /// <value>The output file.</value>
+        string OutputFile { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not the script search should be recursive
+        /// </summary>
+        /// <value><c>true</c> if recursive; otherwise, <c>false</c>.</value>
+        bool Recursive { get; set; }
+
+        /// <summary>
+        /// Gets or sets the root directory for processong
+        /// </summary>
+        /// <value>The root directory.</value>
+        string RootDirectory { get; set; }
 
         /////// <summary>
         ///////   Gets or sets a value indicating whether or not transactions should be used for each script
@@ -91,13 +82,25 @@ namespace Veracity.Utilities.DatabaseDeploy.Configuration
         /// <summary>
         /// Gets or sets the schema to use as a prefix for the change log table.
         /// </summary>
+        /// <value>The schema.</value>
         string Schema { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the change log table.
+        /// Gets or sets the name of the file where the list of found scripts should be written.
         /// </summary>
-        string ChangeLog { get; set; }
+        /// <value>The script list file.</value>
+        string ScriptListFile { get; set; }
 
-        #endregion
+        /// <summary>
+        /// Gets or sets the search pattern to use for finding script files
+        /// </summary>
+        /// <value>The search pattern.</value>
+        string SearchPattern { get; set; }
+
+        /// <summary>
+        /// Gets or sets the directory and file name that will be used for writing out the undo change script
+        /// </summary>
+        /// <value>The undo output file.</value>
+        string UndoOutputFile { get; set; }
     }
 }

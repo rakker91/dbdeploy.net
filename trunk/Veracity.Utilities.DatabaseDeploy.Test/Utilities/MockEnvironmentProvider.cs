@@ -1,53 +1,110 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Veracity.Utilities.DatabaseDeploy.Utilities;
+﻿// --------------------------------------------------------------------------------------------------------------------
+//  <copyright file="MockEnvironmentProvider.cs" company="Database Deploy 2">
+//    Copyright (c) 2015 Database Deploy 2.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
+//  </copyright>
+//   <summary>
+//  </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
-namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
+namespace DatabaseDeploy.Test.Utilities
 {
-    class MockEnvironmentProvider : EnvironmentProvider
+    using System;
+    using System.IO;
+    using System.Reflection;
+
+    using DatabaseDeploy.Core.Utilities;
+
+    /// <summary>
+    ///     Class MockEnvironmentProvider.
+    /// </summary>
+    internal class MockEnvironmentProvider : EnvironmentProvider
     {
-        private string userName;
+        /// <summary>
+        ///     The current directory
+        /// </summary>
         private string currentDirectory;
+
+        /// <summary>
+        ///     The current executing assembly directory
+        /// </summary>
         private string currentExecutingAssemblyDirectory;
 
+        /// <summary>
+        ///     The user name
+        /// </summary>
+        private string userName;
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="MockEnvironmentProvider" /> class.
+        /// </summary>
         public MockEnvironmentProvider()
         {
-            userName = Environment.UserName;
-            currentDirectory = Environment.CurrentDirectory;
-            currentExecutingAssemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            this.userName = Environment.UserName;
+            this.currentDirectory = Environment.CurrentDirectory;
+            this.currentExecutingAssemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         }
 
+        /// <summary>
+        ///     Gets the current directory.
+        /// </summary>
+        /// <value>The current directory.</value>
         public override string CurrentDirectory
         {
-            get { return currentDirectory; }
+            get
+            {
+                return this.currentDirectory;
+            }
         }
 
-        public override string UserName
-        {
-            get { return userName; }
-        }
-
+        /// <summary>
+        ///     Gets the executing assembly directory.
+        /// </summary>
+        /// <value>The executing assembly directory.</value>
         public override string ExecutingAssemblyDirectory
         {
-            get { return currentExecutingAssemblyDirectory; }
+            get
+            {
+                return this.currentExecutingAssemblyDirectory;
+            }
         }
 
-        public void SetUserName(string username)
+        /// <summary>
+        ///     Gets the name of the user.
+        /// </summary>
+        /// <value>The name of the user.</value>
+        public override string UserName
         {
-            userName = username;
+            get
+            {
+                return this.userName;
+            }
         }
+
+        /// <summary>
+        ///     Sets the current directory.
+        /// </summary>
+        /// <param name="currentDir">The current dir.</param>
         public void SetCurrentDirectory(string currentDir)
         {
-            currentDirectory = currentDir;
+            this.currentDirectory = currentDir;
         }
+
+        /// <summary>
+        ///     Sets the current executing assembly directory.
+        /// </summary>
+        /// <param name="dir">The dir.</param>
         public void SetCurrentExecutingAssemblyDirectory(string dir)
         {
-            currentExecutingAssemblyDirectory = dir;
+            this.currentExecutingAssemblyDirectory = dir;
+        }
+
+        /// <summary>
+        ///     Sets the name of the user.
+        /// </summary>
+        /// <param name="username">The username.</param>
+        public void SetUserName(string username)
+        {
+            this.userName = username;
         }
     }
 }

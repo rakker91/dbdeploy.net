@@ -1,61 +1,56 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TokenEnum.cs" company="Veracity Solutions, Inc.">
-//   Copyright (c) Veracity Solutions, Inc. 2012.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
-// </copyright>
-//  <summary>
-//   Created By: Robert J. May
-// </summary>
+//  <copyright file="TokenEnum.cs" company="Database Deploy 2">
+//    Copyright (c) 2015 Database Deploy 2.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
+//  </copyright>
+//   <summary>
+//  </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Veracity.Utilities.DatabaseDeploy.Utilities
+namespace DatabaseDeploy.Core.Utilities
 {
     /// <summary>
-    /// Represents tokens that are available for replacement.
+    ///     Represents tokens that are available for replacement.
     /// </summary>
     public class TokenEnum
     {
-        #region Constants and Fields
-
         /// <summary>
-        ///   Used for CurrentDateTime replacement.
+        ///     Used for CurrentDateTime replacement.
         /// </summary>
         public const string CurrentDateTimeToken = "$(CurrentDateTime)";
 
         /// <summary>
-        ///   Used for CurrentUser replacement.
+        ///     Used for CurrentUser replacement.
         /// </summary>
         public const string CurrentUserToken = "$(CurrentUser)";
 
         /// <summary>
-        ///   Used for CurrentVersion replacement.
+        ///     Used for CurrentVersion replacement.
         /// </summary>
         public const string CurrentVersionToken = "$(CurrentVersion)";
 
         /// <summary>
-        ///   Used for ScriptDescription replacement.
+        ///     Used for ScriptDescription replacement.
         /// </summary>
         public const string ScriptDescriptionToken = "$(ScriptDescription)";
 
         /// <summary>
-        ///   Used for ScriptId replacement.
+        ///     Used for ScriptId replacement.
         /// </summary>
         public const string ScriptIdToken = "$(ScriptId)";
 
         /// <summary>
-        ///   Used for ScriptName replacement.
+        ///     Used for ScriptName replacement.
         /// </summary>
         public const string ScriptNameToken = "$(ScriptName)";
 
         /// <summary>
-        /// Used for schema token replacement
+        ///     Used for schema token replacement
         /// </summary>
         public const string SchemaToken = "$(Schema)";
 
         /// <summary>
-        /// Used for change log token replacement.
+        ///     Used for change log token replacement.
         /// </summary>
         public const string ChangeLogToken = "$(ChangeLog)";
-
-        #endregion
     }
 }

@@ -1,41 +1,29 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IDeploymentService.cs" company="Veracity Solutions, Inc.">
-//   Copyright (c) Veracity Solutions, Inc. 2012.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
-// </copyright>
-//  <summary>
-//   Created By: Robert J. May
-// </summary>
+﻿// --------------------------------------------------------------------------------------------------------------------
+//  <copyright file="IDeploymentService.cs" company="Database Deploy 2">
+//    Copyright (c) 2015 Database Deploy 2.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
+//  </copyright>
+//   <summary>
+//  </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Veracity.Utilities.DatabaseDeploy
+namespace DatabaseDeploy.Core
 {
-    #region Usings
-
-    using Veracity.Utilities.DatabaseDeploy.Configuration;
-
-    #endregion
+    using DatabaseDeploy.Core.Configuration;
 
     /// <summary>
-    /// The i deployment service.
+    ///     The i deployment service.
     /// </summary>
     public interface IDeploymentService
     {
-        #region Public Properties
-
         /// <summary>
-        ///   Gets the current configuration service that is being used.
+        ///     Gets the current configuration service that is being used.
         /// </summary>
+        /// <value>The configuration service.</value>
         IConfigurationService ConfigurationService { get; }
 
-        #endregion
-
-        #region Public Methods
-
         /// <summary>
-        /// Builds the deployment scripts based on the information that is known at the time.
+        ///     Builds the deployment scripts based on the information that is known at the time.
         /// </summary>
         void BuildDeploymentScript();
-
-        #endregion
     }
 }

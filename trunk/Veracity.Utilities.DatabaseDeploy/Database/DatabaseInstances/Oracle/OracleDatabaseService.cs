@@ -1,67 +1,42 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="OracleDatabaseService.cs" company="Veracity Solutions, Inc.">
-//   Copyright (c) Veracity Solutions, Inc. 2012.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
-// </copyright>
-//  <summary>
-//   Created By: Robert J. May
-// </summary>
+//  <copyright file="OracleDatabaseService.cs" company="Database Deploy 2">
+//    Copyright (c) 2015 Database Deploy 2.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
+//  </copyright>
+//   <summary>
+//  </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-using Oracle.ManagedDataAccess.Client;
-
-namespace Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances.Oracle
+namespace DatabaseDeploy.Core.Database.DatabaseInstances.Oracle
 {
-    #region Usings
-
     using System.Data;
     using System.Data.Common;
 
-    using log4net;
+    using DatabaseDeploy.Core.Configuration;
+    using DatabaseDeploy.Core.FileManagement;
+    using DatabaseDeploy.Core.Utilities;
 
-    using Veracity.Utilities.DatabaseDeploy.Configuration;
-    using Veracity.Utilities.DatabaseDeploy.FileManagement;
-    using Veracity.Utilities.DatabaseDeploy.Utilities;
-
-    #endregion
+    using global::Oracle.ManagedDataAccess.Client;
 
     /// <summary>
-    /// Represents an oracle database instance
+    ///     Represents an oracle database instance
     /// </summary>
     public class OracleDatabaseService : DatabaseServiceBase, IOracleDatabaseService
     {
-        #region Constants and Fields
-
         /// <summary>
-        ///   Creates the default logger
+        ///     Initializes a new instance of the <see cref="OracleDatabaseService" /> class.
         /// </summary>
-        private static readonly ILog log = LogManager.GetLogger(typeof(OracleDatabaseService));
-
-        #endregion
-
-        #region Constructors and Destructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OracleDatabaseService"/> class.
-        /// </summary>
-        /// <param name="configurationService">
-        /// The configuration service. 
-        /// </param>
-        /// <param name="fileService">
-        /// The file service to use 
-        /// </param>
+        /// <param name="configurationService">The configuration service.</param>
+        /// <param name="fileService">The file service to use</param>
         /// <param name="tokenReplacer">The token replacer to use</param>
         public OracleDatabaseService(IConfigurationService configurationService, IFileService fileService, ITokenReplacer tokenReplacer)
             : base(configurationService, fileService, tokenReplacer)
         {
         }
 
-        #endregion
-
-        #region Public Properties
-
         /// <summary>
-        ///   Gets the database type for the class.
+        ///     Gets the database type for the class.
         /// </summary>
+        /// <value>The type of the database.</value>
         public override string DatabaseType
         {
             get
@@ -70,30 +45,20 @@ namespace Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances.Oracle
             }
         }
 
-        #endregion
-
-        #region Public Methods
-
         /// <summary>
-        /// Runs a script without returning results. Use RunScript if a result is expected.
+        ///     Runs a script without returning results. Use RunScript if a result is expected.
         /// </summary>
-        /// <param name="scriptFileName">
-        /// The name of a script file that will be executed
-        /// </param>
-        /// <param name="parameters">
-        /// The parameters for the script run. 
-        /// </param>
+        /// <param name="scriptFileName">The name of a script file that will be executed</param>
+        /// <param name="parameters">The parameters for the script run.</param>
         public override void ExecuteScript(string scriptFileName, params DbParameter[] parameters)
         {
-            log.DebugIfEnabled(LogUtility.GetContext(scriptFileName, parameters));
+            string script = this.GetCommandText(scriptFileName);
 
-            string script = GetCommandText(scriptFileName);
-
-            using (var connection = new OracleConnection(ConfigurationService.ConnectionString))
+            using (OracleConnection connection = new OracleConnection(this.ConfigurationService.ConnectionString))
             {
                 connection.Open();
 
-                using (var command = new OracleCommand(script, connection))
+                using (OracleCommand command = new OracleCommand(script, connection))
                 {
                     command.Parameters.AddRange(parameters);
                     command.ExecuteNonQuery();
@@ -102,35 +67,23 @@ namespace Veracity.Utilities.DatabaseDeploy.Database.DatabaseInstances.Oracle
         }
 
         /// <summary>
-        /// Runs a script and returns a result.
+        ///     Runs a script and returns a result.
         /// </summary>
-        /// <param name="scriptFileName">
-        /// The name of a script file that will be executed.
-        /// </param>
-        /// <param name="parameters">
-        /// The parameters for the script 
-        /// </param>
-        /// <returns>
-        /// A dataset containing the results from the script run 
-        /// </returns>
+        /// <param name="scriptFileName">The name of a script file that will be executed.</param>
+        /// <param name="parameters">The parameters for the script</param>
+        /// <returns>A dataset containing the results from the script run</returns>
         public override DataSet RunScript(string scriptFileName, params DbParameter[] parameters)
         {
-            log.DebugIfEnabled(LogUtility.GetContext(scriptFileName, parameters));
+            string script = this.GetCommandText(scriptFileName);
+            DataSet result = new DataSet();
 
-            string script = GetCommandText(scriptFileName);
-            var result = new DataSet();
-
-            using (var adapter = new OracleDataAdapter(script, ConfigurationService.ConnectionString))
+            using (OracleDataAdapter adapter = new OracleDataAdapter(script, this.ConfigurationService.ConnectionString))
             {
                 adapter.SelectCommand.Parameters.AddRange(parameters);
                 adapter.Fill(result);
             }
 
-            log.DebugIfEnabled(LogUtility.GetResult(result));
-
             return result;
         }
-
-        #endregion
     }
 }

@@ -1,49 +1,48 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TokenReplacerTests.cs" company="Veracity Solutions, Inc.">
-//   Copyright (c) Veracity Solutions, Inc. 2012.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
-// </copyright>
-//  <summary>
-//   Created By: Robert J. May
-// </summary>
+//  <copyright file="TokenReplacerTests.cs" company="Database Deploy 2">
+//    Copyright (c) 2015 Database Deploy 2.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
+//  </copyright>
+//   <summary>
+//  </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
+namespace DatabaseDeploy.Test.Utilities
 {
     using System;
     using System.Globalization;
 
-    using NUnit.Framework;
+    using DatabaseDeploy.Core.Configuration;
+    using DatabaseDeploy.Core.ScriptGeneration;
+    using DatabaseDeploy.Core.Utilities;
 
-    using Veracity.Utilities.DatabaseDeploy.Configuration;
-    using Veracity.Utilities.DatabaseDeploy.ScriptGeneration;
-    using Veracity.Utilities.DatabaseDeploy.Utilities;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     /// <summary>
-    /// Tests the Token Replacer.
+    ///     Tests the Token Replacer.
     /// </summary>
-    [TestFixture]
+    [TestClass]
     public class TokenReplacerTests : TestFixtureBase
     {
         /// <summary>
-        /// Ensures that datetime replacement works
+        ///     Ensures that datetime replacement works
         /// </summary>
-        [Test]
+        [TestMethod]
         public void ThatCurrentDateTimeReplaces()
         {
-            var dateTime = new DateTime(2014, 09, 17, 17, 42, 55);
+            DateTime dateTime = new DateTime(2014, 09, 17, 17, 42, 55);
             TimeProvider.Current = new MockTimeProvider(dateTime);
             ITokenReplacer tp = new TokenReplacer(new ConfigurationService());
             string token = TokenEnum.CurrentDateTimeToken;
 
             string result = tp.Replace(token);
 
-            Assert.That(result, Is.EqualTo(dateTime.ToString("g")));
+            Assert.AreEqual(result, dateTime.ToString("g"));
         }
 
         /// <summary>
-        /// Ensures thatcurrent user replacement works
+        ///     Ensures thatcurrent user replacement works
         /// </summary>
-        [Test]
+        [TestMethod]
         public void ThatCurrentUserReplaces()
         {
             ITokenReplacer tp = new TokenReplacer(new ConfigurationService());
@@ -51,13 +50,27 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
 
             string result = tp.Replace(token);
 
-            Assert.That(result, Is.EqualTo(EnvironmentProvider.Current.UserName));
+            Assert.AreEqual(result, EnvironmentProvider.Current.UserName);
         }
 
         /// <summary>
-        /// Ensures that current version replacement works.
+        ///     Ensures that current version doesn't fail when no version is set
         /// </summary>
-        [Test]
+        [TestMethod]
+        public void ThatCurrentVersionDoesntFailWithoutVersion()
+        {
+            ITokenReplacer tp = new TokenReplacer(new ConfigurationService());
+            string token = TokenEnum.CurrentVersionToken;
+
+            string result = tp.Replace(token);
+
+            Assert.AreEqual(result, 0.ToString(CultureInfo.InvariantCulture));
+        }
+
+        /// <summary>
+        ///     Ensures that current version replacement works.
+        /// </summary>
+        [TestMethod]
         public void ThatCurrentVersionReplaces()
         {
             ITokenReplacer tp = new TokenReplacer(new ConfigurationService());
@@ -66,42 +79,58 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
 
             string result = tp.Replace(token);
 
-            Assert.That(result, Is.EqualTo(500.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(result, 500.ToString(CultureInfo.InvariantCulture));
         }
 
         /// <summary>
-        /// Ensures that current version doesn't fail when no version is set
+        ///     Ensures that script description replaces
         /// </summary>
-        [Test]
-        public void ThatCurrentVersionDoesntFailWithoutVersion()
+        [TestMethod]
+        public void ThatScriptDescriptionReplaces()
         {
             ITokenReplacer tp = new TokenReplacer(new ConfigurationService());
-            string token = TokenEnum.CurrentVersionToken;
+            tp.Script = new ScriptFile { Id = 1, Description = "1", FileName = "1.sql" };
+
+            string token = TokenEnum.ScriptDescriptionToken;
 
             string result = tp.Replace(token);
 
-            Assert.That(result, Is.EqualTo(0.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(result, "1");
         }
-        
+
         /// <summary>
-        /// Ensures that script ID replaces.
+        ///     Ensures that script description works as expected.
         /// </summary>
-        [Test]
+        [TestMethod]
+        public void ThatScriptDescriptionReplacesWithoutScript()
+        {
+            ITokenReplacer tp = new TokenReplacer(new ConfigurationService());
+            string token = TokenEnum.ScriptDescriptionToken;
+
+            string result = tp.Replace(token);
+
+            Assert.AreEqual(result, string.Empty);
+        }
+
+        /// <summary>
+        ///     Ensures that script ID replaces.
+        /// </summary>
+        [TestMethod]
         public void ThatScriptIdReplaces()
         {
             ITokenReplacer tp = new TokenReplacer(new ConfigurationService());
-            tp.Script = new ScriptFile() { Id = 1, Description = "1", FileName = "1.sql" };
+            tp.Script = new ScriptFile { Id = 1, Description = "1", FileName = "1.sql" };
             string token = TokenEnum.ScriptIdToken;
 
             string result = tp.Replace(token);
 
-            Assert.That(result, Is.EqualTo(1.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(result, 1.ToString(CultureInfo.InvariantCulture));
         }
 
         /// <summary>
-        /// Ensures that script id repalces without a script
+        ///     Ensures that script id repalces without a script
         /// </summary>
-        [Test]
+        [TestMethod]
         public void ThatScriptIdReplacesWithoutScript()
         {
             ITokenReplacer tp = new TokenReplacer(new ConfigurationService());
@@ -109,30 +138,30 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
 
             string result = tp.Replace(token);
 
-            Assert.That(result, Is.EqualTo(0.ToString(CultureInfo.InvariantCulture)));
+            Assert.AreEqual(result, 0.ToString(CultureInfo.InvariantCulture));
         }
 
         /// <summary>
-        /// Ensures that script naem replaces.
+        ///     Ensures that script naem replaces.
         /// </summary>
-        [Test]
+        [TestMethod]
         public void ThatScriptNameReplaces()
         {
             ITokenReplacer tp = new TokenReplacer(new ConfigurationService());
 
-            tp.Script = new ScriptFile() { Id = 1, Description = "1", FileName = "1.sql" };
-            
+            tp.Script = new ScriptFile { Id = 1, Description = "1", FileName = "1.sql" };
+
             string token = TokenEnum.ScriptNameToken;
 
             string result = tp.Replace(token);
 
-            Assert.That(result, Is.EqualTo("1.sql"));
+            Assert.AreEqual(result, "1.sql");
         }
 
         /// <summary>
-        /// Ensures that script name replaces without a script.
+        ///     Ensures that script name replaces without a script.
         /// </summary>
-        [Test]
+        [TestMethod]
         public void ThatScriptNameReplacesWithoutScript()
         {
             ITokenReplacer tp = new TokenReplacer(new ConfigurationService());
@@ -141,37 +170,7 @@ namespace Veracity.Utilities.DatabaseDeploy.Test.Utilities
 
             string result = tp.Replace(token);
 
-            Assert.That(result, Is.EqualTo(string.Empty));
-        }
-
-        /// <summary>
-        /// Ensures that script description replaces
-        /// </summary>
-        [Test]
-        public void ThatScriptDescriptionReplaces()
-        {
-            ITokenReplacer tp = new TokenReplacer(new ConfigurationService());
-            tp.Script = new ScriptFile() { Id = 1, Description = "1", FileName = "1.sql" };
-
-            string token = TokenEnum.ScriptDescriptionToken;
-
-            string result = tp.Replace(token);
-
-            Assert.That(result, Is.EqualTo("1"));
-        }
-
-        /// <summary>
-        /// Ensures that script description works as expected.
-        /// </summary>
-        [Test]
-        public void ThatScriptDescriptionReplacesWithoutScript()
-        {
-            ITokenReplacer tp = new TokenReplacer(new ConfigurationService());
-            string token = TokenEnum.ScriptDescriptionToken;
-
-            string result = tp.Replace(token);
-
-            Assert.That(result, Is.EqualTo(string.Empty));
+            Assert.AreEqual(result, string.Empty);
         }
     }
 }

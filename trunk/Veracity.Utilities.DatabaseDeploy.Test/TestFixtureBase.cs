@@ -1,25 +1,28 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TestFixtureBase.cs" company="Veracity Solutions, Inc.">
-//   Copyright (c) Veracity Solutions, Inc. 2012.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
-// </copyright>
-//  <summary>
-//   Created By: Robert J. May
-// </summary>
+//  <copyright file="TestFixtureBase.cs" company="Database Deploy 2">
+//    Copyright (c) 2015 Database Deploy 2.  This code is licensed under the Microsoft Public License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
+//  </copyright>
+//   <summary>
+//  </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Veracity.Utilities.DatabaseDeploy.Test
+namespace DatabaseDeploy.Test
 {
     using System.Collections.Generic;
 
+    using log4net;
     using log4net.Appender;
+    using log4net.Core;
+    using log4net.Repository;
+    using log4net.Repository.Hierarchy;
 
     /// <summary>
-    /// A base class for all test fixtures.
+    ///     A base class for all test fixtures.
     /// </summary>
     public class TestFixtureBase
     {
         /// <summary>
-        /// Initializes a new instance of the TestFixtureBase class
+        ///     Initializes a new instance of the <see cref="TestFixtureBase" /> class.
         /// </summary>
         public TestFixtureBase()
         {
@@ -27,27 +30,27 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
         }
 
         /// <summary>
-        /// Turns on all logging for the system.
+        ///     Turns on all logging for the system.
         /// </summary>
         private void TurnOnLogging()
         {
-            log4net.Repository.ILoggerRepository[] repositories = log4net.LogManager.GetAllRepositories();
+            ILoggerRepository[] repositories = LogManager.GetAllRepositories();
             IList<IAppender> toRemove;
 
             // Configure all loggers to be at the debug level.
-            foreach (log4net.Repository.ILoggerRepository repository in repositories)
+            foreach (ILoggerRepository repository in repositories)
             {
                 repository.Threshold = repository.LevelMap["DEBUG"];
-                log4net.Repository.Hierarchy.Hierarchy hier = (log4net.Repository.Hierarchy.Hierarchy)repository;
-                log4net.Core.ILogger[] loggers = hier.GetCurrentLoggers();
-                foreach (log4net.Core.ILogger logger in loggers)
+                Hierarchy hier = (Hierarchy)repository;
+                ILogger[] loggers = hier.GetCurrentLoggers();
+                foreach (ILogger logger in loggers)
                 {
-                    log4net.Repository.Hierarchy.Logger log = (log4net.Repository.Hierarchy.Logger)logger;
+                    Logger log = (Logger)logger;
                     log.Level = hier.LevelMap["DEBUG"];
                     log.AddAppender(new NullAppender());
 
                     toRemove = new List<IAppender>();
-                    foreach (var appender in log.Appenders)
+                    foreach (IAppender appender in log.Appenders)
                     {
                         if (appender.GetType() != typeof(NullAppender))
                         {
@@ -63,13 +66,13 @@ namespace Veracity.Utilities.DatabaseDeploy.Test
             }
 
             // Configure the root logger.
-            log4net.Repository.Hierarchy.Hierarchy h = (log4net.Repository.Hierarchy.Hierarchy)log4net.LogManager.GetRepository();
-            log4net.Repository.Hierarchy.Logger rootLogger = h.Root;
+            Hierarchy h = (Hierarchy)LogManager.GetRepository();
+            Logger rootLogger = h.Root;
             rootLogger.Level = h.LevelMap["DEBUG"];
             rootLogger.AddAppender(new NullAppender());
 
             toRemove = new List<IAppender>();
-            foreach (var appender in rootLogger.Appenders)
+            foreach (IAppender appender in rootLogger.Appenders)
             {
                 if (appender.GetType() != typeof(NullAppender))
                 {
