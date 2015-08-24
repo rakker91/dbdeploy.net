@@ -29,11 +29,6 @@ namespace DatabaseDeploy.Core.ScriptGeneration
         private readonly IConfigurationService configurationService;
 
         /// <summary>
-        ///     The database service to use for generating scripts
-        /// </summary>
-        private readonly IDatabaseService databaseService;
-
-        /// <summary>
         ///     The file service to use for file stuff.
         /// </summary>
         private readonly IFileService fileService;
@@ -44,7 +39,7 @@ namespace DatabaseDeploy.Core.ScriptGeneration
         private readonly ITokenReplacer tokenReplacer;
 
         /// <summary>
-        ///     Reprents the token to use for undo files.
+        ///     Represents the token to use for undo files.
         /// </summary>
         private string undoToken = string.Empty;
 
@@ -58,17 +53,14 @@ namespace DatabaseDeploy.Core.ScriptGeneration
         /// <summary>
         ///     Initializes a new instance of the <see cref="ScriptService" /> class.
         /// </summary>
-        /// <param name="databaseService">The database service.</param>
         /// <param name="fileService">the File service to use for file requests.</param>
         /// <param name="tokenReplacer">The token replacer to use for script processing.</param>
         /// <param name="configurationService">The configuration service to use for processing.</param>
         public ScriptService(
-            IDatabaseService databaseService,
             IFileService fileService,
             ITokenReplacer tokenReplacer,
             IConfigurationService configurationService)
         {
-            this.databaseService = databaseService;
             this.fileService = fileService;
             this.tokenReplacer = tokenReplacer;
             this.configurationService = configurationService;
@@ -83,7 +75,7 @@ namespace DatabaseDeploy.Core.ScriptGeneration
         {
             StringBuilder changeScript = new StringBuilder();
 
-            this.undoToken = this.databaseService.GetScriptFromFile(DatabaseScriptEnum.UndoToken);
+            this.undoToken = this.configurationService.DatabaseService.GetScriptFromFile(DatabaseScriptEnum.UndoToken);
 
             this.tokenReplacer.CurrentVersion = changes.Keys.Min() - 1;
 
@@ -114,7 +106,7 @@ namespace DatabaseDeploy.Core.ScriptGeneration
         {
             StringBuilder undoScript = new StringBuilder();
 
-            this.undoToken = this.databaseService.GetScriptFromFile(DatabaseScriptEnum.UndoToken);
+            this.undoToken = this.configurationService.DatabaseService.GetScriptFromFile(DatabaseScriptEnum.UndoToken);
 
             this.tokenReplacer.CurrentVersion = changes.Keys.Max();
 
@@ -147,7 +139,7 @@ namespace DatabaseDeploy.Core.ScriptGeneration
         /// <param name="changeScript">The overall change script</param>
         private void AppendScript(string scriptToUse, StringBuilder changeScript)
         {
-            string scriptContents = this.databaseService.GetScriptFromFile(scriptToUse);
+            string scriptContents = this.configurationService.DatabaseService.GetScriptFromFile(scriptToUse);
 
             scriptContents = this.tokenReplacer.Replace(scriptContents);
 

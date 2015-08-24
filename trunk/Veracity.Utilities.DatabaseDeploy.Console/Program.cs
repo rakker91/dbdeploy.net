@@ -75,8 +75,6 @@ namespace DatabaseDeploy.Console
         {
             try
             {
-                Container.UnityContainer.RegisterType<IConfigurationService>(new PerThreadLifetimeManager());
-
                 ConfigurationService = Container.UnityContainer.Resolve<IConfigurationService>();
                 DeploymentService = Container.UnityContainer.Resolve<IDeploymentService>();
 
@@ -142,11 +140,18 @@ namespace DatabaseDeploy.Console
                         },
                     errors => { return null; });
 
+                if (options == null)
+                {
+                    Log.Info("No command line options found.");
+                }
+
                 if (options != null)
                 {
-                    ConfigurationService.ConnectionString = string.IsNullOrEmpty(options.ConnectionString)
-                                                                ? ConfigurationService.ConnectionString
-                                                                : options.ConnectionString;
+                    if (options.ConnectionString != null)
+                    {
+                        ConfigurationService.ConnectionString = options.ConnectionString;
+                        Log.InfoFormat("Updated connection string to {0}", ConfigurationService.ConnectionString);
+                    }
 
                     switch (options.DatabaseManagementSystem)
                     {
@@ -173,9 +178,16 @@ namespace DatabaseDeploy.Console
                                                          ? options.Recursive
                                                          : ConfigurationService.Recursive;
 
-                    ConfigurationService.RootDirectory = string.IsNullOrEmpty(options.RootDirectory)
-                                                             ? ConfigurationService.RootDirectory
-                                                             : options.RootDirectory;
+                    if (options.RootDirectory != null)
+                    {
+                        ConfigurationService.RootDirectory = options.RootDirectory;
+                        Log.InfoFormat("Updated root directory to {0}", ConfigurationService.RootDirectory);
+
+                    }
+
+                    ConfigurationService.DatabaseScriptPath = string.IsNullOrEmpty(options.DatabaseScriptPath)
+                                         ? ConfigurationService.DatabaseScriptPath
+                                         : options.DatabaseScriptPath;
 
                     ConfigurationService.SearchPattern = string.IsNullOrEmpty(options.SearchPattern)
                                                              ? ConfigurationService.SearchPattern

@@ -15,6 +15,7 @@ namespace DatabaseDeploy.Test
     using DatabaseDeploy.Core.Database;
     using DatabaseDeploy.Core.Database.DatabaseInstances;
     using DatabaseDeploy.Core.FileManagement;
+    using DatabaseDeploy.Core.IoC;
     using DatabaseDeploy.Core.ScriptGeneration;
     using DatabaseDeploy.Core.Utilities;
 
@@ -78,8 +79,9 @@ namespace DatabaseDeploy.Test
                 .Returns(changeScript)
                 .Verifiable();
 
+            configurationServiceMock.Setup(c => c.DatabaseService).Returns(databaseServiceMock.Object);
+
             DeploymentService deploymentService = new DeploymentService(
-                databaseServiceMock.Object,
                 configurationServiceMock.Object,
                 scriptServiceMock.Object,
                 fileServiceMock.Object,
@@ -176,8 +178,9 @@ namespace DatabaseDeploy.Test
                 .Returns(changeScript)
                 .Verifiable();
 
+            configurationServiceMock.Setup(c => c.DatabaseService).Returns(databaseServiceMock.Object);
+
             DeploymentService deploymentService = new DeploymentService(
-                databaseServiceMock.Object,
                 configurationServiceMock.Object,
                 scriptServiceMock.Object,
                 fileServiceMock.Object,
@@ -268,8 +271,9 @@ namespace DatabaseDeploy.Test
                 .Returns(changeScript)
                 .Verifiable();
 
+            configurationServiceMock.Setup(c => c.DatabaseService).Returns(databaseServiceMock.Object);
+
             DeploymentService deploymentService = new DeploymentService(
-                databaseServiceMock.Object,
                 configurationServiceMock.Object,
                 scriptServiceMock.Object,
                 fileServiceMock.Object,
@@ -356,8 +360,9 @@ namespace DatabaseDeploy.Test
                 .Returns(changeScript)
                 .Verifiable();
 
+            configurationServiceMock.Setup(c => c.DatabaseService).Returns(databaseServiceMock.Object);
+
             DeploymentService deploymentService = new DeploymentService(
-                databaseServiceMock.Object,
                 configurationServiceMock.Object,
                 scriptServiceMock.Object,
                 fileServiceMock.Object,

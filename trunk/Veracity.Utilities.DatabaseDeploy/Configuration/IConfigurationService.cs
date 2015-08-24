@@ -9,6 +9,7 @@
 namespace DatabaseDeploy.Core.Configuration
 {
     using DatabaseDeploy.Core.Database;
+    using DatabaseDeploy.Core.Database.DatabaseInstances;
 
     /// <summary>
     /// The Configuration service service.
@@ -102,5 +103,11 @@ namespace DatabaseDeploy.Core.Configuration
         /// </summary>
         /// <value>The undo output file.</value>
         string UndoOutputFile { get; set; }
+
+        /// <summary>
+        /// Gets the database service that should be used for database operations.
+        /// </summary>
+        /// <value>The database service.</value>
+        IDatabaseService DatabaseService { get; }
     }
 }
