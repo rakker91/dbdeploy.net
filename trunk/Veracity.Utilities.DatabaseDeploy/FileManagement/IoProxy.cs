@@ -9,6 +9,7 @@
 namespace DatabaseDeploy.Core.FileManagement
 {
     using System.IO;
+    using System.Text;
 
     /// <summary>
     ///     This class is purely a proxy for calls into the file system for FileService.
@@ -44,7 +45,7 @@ namespace DatabaseDeploy.Core.FileManagement
         /// <returns>A stream reader for the filename</returns>
         public StreamReader GetStreamReader(string fileName)
         {
-            return new StreamReader(fileName);
+            return new StreamReader(fileName, Encoding.UTF8);
         }
 
         /// <summary>
@@ -54,7 +55,7 @@ namespace DatabaseDeploy.Core.FileManagement
         /// <returns>A stream for the given filename.</returns>
         public StreamWriter GetStreamWriter(string fileName)
         {
-            return new StreamWriter(fileName);
+            return new StreamWriter(fileName, false, Encoding.UTF8);
         }
 
         /// <summary>
@@ -64,7 +65,7 @@ namespace DatabaseDeploy.Core.FileManagement
         /// <returns>An object of type System.String[].</returns>
         public string[] ReadAllLines(string fileName)
         {
-            return File.ReadAllLines(fileName);
+            return File.ReadAllLines(fileName, Encoding.UTF8);
         }
 
         /// <summary>
@@ -74,7 +75,7 @@ namespace DatabaseDeploy.Core.FileManagement
         /// <returns>An object of type System.String.</returns>
         public string ReadAllText(string fileName)
         {
-            return File.ReadAllText(fileName);
+            return File.ReadAllText(fileName, Encoding.UTF8);
         }
     }
 }
