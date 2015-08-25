@@ -79,6 +79,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\IConfigurationService.cs" />
+    <None Include="BuildTasks\ExtensionPack\License.rtf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="BuildTasks\ExtensionPack\MSBuild Extension Pack Help.chm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Database.targets">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
@@ -124,11 +130,44 @@
     <Compile Include="Utilities\TimeProvider.cs" />
     <Compile Include="Utilities\TokenEnum.cs" />
     <Compile Include="Utilities\TokenReplacer.cs" />
-    <None Include="rebuild.bat">
+    <None Include="rebuildDemo.bat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="BuildTasks\ExtensionPack\Interop.COMAdmin.DLL">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BuildTasks\ExtensionPack\Interop.IWshRuntimeLibrary.DLL">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BuildTasks\ExtensionPack\Ionic.Zip.DLL">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BuildTasks\ExtensionPack\IronPython.DLL">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BuildTasks\ExtensionPack\IronPython.Modules.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BuildTasks\ExtensionPack\IronRuby.DLL">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BuildTasks\ExtensionPack\IronRuby.Libraries.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BuildTasks\ExtensionPack\MSBuild.ExtensionPack.BizTalk.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BuildTasks\ExtensionPack\MSBuild.ExtensionPack.BizTalk.pdb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BuildTasks\ExtensionPack\MSBuild.ExtensionPack.Crm.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="BuildTasks\ExtensionPack\MSBuild.ExtensionPack.Crm.pdb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Database\Scripts\mssql\changelog.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

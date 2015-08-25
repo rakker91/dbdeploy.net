@@ -140,8 +140,6 @@ namespace DatabaseDeploy.Core.BuildTasks
             bool result = false;
             try
             {
-                Container.SetLifetimeManager<IConfigurationService>(new PerThreadLifetimeManager());
-
                 Container.UnityContainer.BuildUp(this);
 
                 this.ConfigurationService.ConnectionString = this.ConnectionString;
