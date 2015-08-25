@@ -94,8 +94,7 @@ namespace DatabaseDeploy.Core.IoC
                     registrationCallback.Invoke(Container);
                 }
 
-                // We have our own auto mapper, but this is better.  The automapper may still be used in some cases.
-                IList<Type> types = AllClasses.FromAssembliesInBasePath().Where(t => t.Namespace != null && t.Namespace.StartsWith("DatabaseDeploy")).ToList();
+                IList<Type> types = AllClasses.FromLoadedAssemblies().Where(t => t.Namespace != null && t.Namespace.StartsWith("DatabaseDeploy")).ToList();
                 Container.RegisterTypes(types, WithMappings.FromMatchingInterface, WithName.Default);
             }
 
