@@ -1,4 +1,4 @@
-﻿CREATE TABLE changelog (
+﻿CREATE TABLE $(ChangeLog) (
   change_number INTEGER NOT NULL,
   complete_dt DATETIME NOT NULL,
   applied_by VARCHAR(100) NOT NULL,
@@ -6,5 +6,5 @@
 )
 GO
 
-ALTER TABLE changelog ADD CONSTRAINT Pkchangelog PRIMARY KEY (change_number)
+ALTER TABLE $(ChangeLog) ADD CONSTRAINT Pk$(ChangeLog) PRIMARY KEY (change_number)
 GO
