@@ -4,6 +4,6 @@
 	applied_by,
 	description
 FROM
-	CHANGELOG
+	$(ChangeLog)
 ORDER BY
 	change_number

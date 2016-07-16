@@ -1,6 +1,6 @@
 ﻿/
 
-DELETE from changelog WHERE change_number = $(ScriptId);
+DELETE from $(ChangeLog) WHERE change_number = $(ScriptId);
 COMMIT;
 
 --------------- Fragment ends: $(ScriptName) ---------------
