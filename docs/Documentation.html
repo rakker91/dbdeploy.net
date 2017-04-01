@@ -1,0 +1,27 @@
+<div class="wikidoc">
+<p>DBDeploy is actually quite simple to use, but opens up many possibilities for managed database deployments.</p>
+<p>Tools for managing this complexity and difficulty are available.&nbsp; For example,
+<a href="http://www.red-gate.com/products/sql-development/sql-compare/">Red-Gate&rsquo;s Sql Compare</a> is a great tool for doing exactly that.&nbsp; However, these tools can be expensive and they have a major flaw:&nbsp; they rely on evaluating changes AFTER
+ those changes have happened.&nbsp; Often, changes will be missed by these tools, which can lead to aborted production migrations.&nbsp; Another major issue is that they don&rsquo;t work well for scenarios where you need to deploy a database update to many
+ clients that may all be at different versions of the database.</p>
+<p>DbDeploy.Net helps solve these problems.</p>
+<p>Making DbDeploy work requires the following rules:</p>
+<ol>
+<li>Every change must be scripted.&nbsp; This is a good thing:&nbsp; If it&rsquo;s scripted, you know it happened, you can version control it, and you can keep track of what changes have been applied to any given database.
+</li><li>Scripts that have been applied to a production environment should never be edited.&nbsp; Instead, create a new script that does the modification.
+</li><li>If you&rsquo;re doing DDL (CREATE, ALTER, etc) only include one statement in each script.
+</li><li>Name each of your scripts with a number followed by the description of the script.&nbsp; For example:&nbsp; 1 My First Script.sql, 2 My Second Script.sql.&nbsp; The number ensures that they&rsquo;re executed sequentially, the description will be placed
+ in the changelog table as a description of the script. </li><li>Check your scripts into source control.&nbsp; O.k., not a DbDeploy rule, but a good rule anyway!
+</li></ol>
+<p>&nbsp;</p>
+<p>Additional things you need to know:</p>
+<ol>
+<li>All of your change scripts are wrapped inside of a transaction. </li><li>DBDeploy is capable of creating an undo script.&nbsp; Place the actions that should be done into the script file first, then add the magic token &ndash;//@UNDO onto its own line and then below that token, add the steps to undo the script.&nbsp; This sounds
+ cool, but most people don&rsquo;t use it (how do you undo a DROP TABLE script anyway?)
+</li></ol>
+<p>&nbsp;</p>
+<p>For a quick start guide, see the <a href="https://dbdeploynet2.codeplex.com/wikipage?title=Quick%20Sample%20of%20Usage&IsNewlyCreatedPage=true">
+Quick Start Sample</a></p>
+<p>Command Line options are document on the <a title="Command Line Help" href="https://dbdeploynet2.codeplex.com/wikipage?title=Command%20Line%20Help">
+Command Line Help</a> page.</p>
+</div><div class="ClearBoth"></div>

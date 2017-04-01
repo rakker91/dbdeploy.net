@@ -1,0 +1,92 @@
+<div class="wikidoc">
+<p>The following command line options are available for use with dbdeploy.</p>
+<table border="0" cellspacing="0" cellpadding="0">
+<colgroup span="1"><col span="1"><col span="1"><col span="1"><col span="1"></colgroup>
+<tbody>
+<tr height="20">
+<td height="20"><strong>Short</strong></td>
+<td><strong>Long</strong></td>
+<td><strong>Description</strong></td>
+<td><strong>Example</strong></td>
+</tr>
+<tr height="20">
+<td height="20">c</td>
+<td>ConnectionString</td>
+<td>The connection string that will be used to connect to the database to evaluate dbdeploy scripts.</td>
+<td>DatabaseDeploy -c &quot;Server=localhost; Database=MyDatabase; User ID=MyUser; Password=MyPassword; Trusted_Connection=False; Encrypt=True; Connection Timeout=30; &quot;</td>
+</tr>
+<tr height="20">
+<td height="20">d</td>
+<td>DatabaseManagementSystem</td>
+<td>The database to use. Currently, only mssql is supported.</td>
+<td>DatabaseDeploy -d mssql</td>
+</tr>
+<tr height="20">
+<td height="20">p</td>
+<td>DatabaseScriptPath</td>
+<td>The path where database scripts can be found.</td>
+<td>DatabaseDeploy -p &quot;c:\temp\scripts&quot;</td>
+</tr>
+<tr height="20">
+<td height="20">n</td>
+<td>LastChangeToApply</td>
+<td>The number of the last script to apply to the database. Defaults to 0, or all available scripts.</td>
+<td>DatabaseDeploy -n 45</td>
+</tr>
+<tr height="20">
+<td height="20">f</td>
+<td>OutputFile</td>
+<td>The name of the file that will be created for the updates that need to be run. Defaults to DbDeploy</td>
+<td>DatabaseDeploy -f &quot;c:\temp\update.sql&quot;</td>
+</tr>
+<tr height="20">
+<td height="20">r</td>
+<td>Recursive</td>
+<td>Whether or not the path should be crawled recursively looking for database scripts.</td>
+<td>DatabaseDeploy -r</td>
+</tr>
+<tr height="20">
+<td height="20">o</td>
+<td>RootDirectory</td>
+<td>The path where dbdeploy should start running.</td>
+<td>DatabaseDeploy -o &quot;c:\temp&quot;</td>
+</tr>
+<tr height="20">
+<td height="20">l</td>
+<td>ScriptListFile</td>
+<td>The file that will contain a list of all of the scripts found.</td>
+<td>DatabaseDeploy -l &quot;c:\temp\scripts.txt&quot;</td>
+</tr>
+<tr height="20">
+<td height="20">w</td>
+<td>SearchPattern</td>
+<td>The wildcard pattern that should be used to match for scripts.</td>
+<td>DatabaseDeploy -w &quot;*.sql&quot;</td>
+</tr>
+<tr height="20">
+<td height="20">u</td>
+<td>UndoOutputFile</td>
+<td>The file that will contain undo scripts.</td>
+<td>DatabaseDeploy -u &quot;c:\temp\undo.sql&quot;</td>
+</tr>
+<tr height="20">
+<td height="20">t</td>
+<td>UseTransactions</td>
+<td>Whether or not transactions should be used. Personally, I'd put them in the script.</td>
+<td>DatabaseDeploy -t</td>
+</tr>
+<tr height="20">
+<td height="20">s</td>
+<td>Schema</td>
+<td>The schema to use for scripts.</td>
+<td>DatabaseDeploy -s dbo</td>
+</tr>
+<tr height="20">
+<td height="20">g</td>
+<td>ChangeLog</td>
+<td>The name of the ChangeLog table.</td>
+<td>DatabaseDeploy -g changelog</td>
+</tr>
+</tbody>
+</table>
+</div><div class="ClearBoth"></div>
