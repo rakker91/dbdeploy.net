@@ -11,11 +11,16 @@ namespace DatabaseDeploy.Core.Database.DatabaseInstances.SqlServer
     using System;
     using System.Data;
     using System.Data.Common;
-    using System.Data.SqlClient;
+    using System.Threading.Tasks;
+
+    using Azure.Core;
+    using Azure.Identity;
 
     using DatabaseDeploy.Core.Configuration;
     using DatabaseDeploy.Core.FileManagement;
     using DatabaseDeploy.Core.Utilities;
+
+    using Microsoft.Data.SqlClient;
 
     /// <summary>
     /// Represents a SQL Server database instance
@@ -34,6 +39,12 @@ namespace DatabaseDeploy.Core.Database.DatabaseInstances.SqlServer
             ITokenReplacer tokenReplacer)
             : base(configurationService, fileService, tokenReplacer)
         {
+            // if the connection string has an Authentication= parameter, use Azure credential
+            if (configurationService.ConnectionString.Contains("Authentication="))
+            {
+                // register Azure default credential provider
+                SqlAuthenticationProvider.SetProvider(SqlAuthenticationMethod.ActiveDirectoryDefault, new ClientSqlAuthenticationProvider(configurationService));
+            }
         }
 
         /// <summary>
@@ -92,6 +103,67 @@ namespace DatabaseDeploy.Core.Database.DatabaseInstances.SqlServer
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Implements the SQL Server autentication provider used with Azure credentials.
+        /// </summary>
+        private class ClientSqlAuthenticationProvider : SqlAuthenticationProvider
+        {
+            /// <summary>
+            /// The token request scope for the token credential.
+            /// </summary>
+            private static readonly TokenRequestContext TokenRequestContext = new TokenRequestContext(new string[] { "https://database.windows.net/.default" });
+
+            /// <summary>
+            /// The default Azure credential. Only Managed and Visual Studio credentials checked.
+            /// </summary>
+            private readonly DefaultAzureCredential credential = null;
+
+            public ClientSqlAuthenticationProvider(IConfigurationService configurationService)
+            {
+                // note we only handle Visual Studio and Managed Identity at the moment
+                this.credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions()
+                {
+                    ExcludeBrokerCredential = true,
+                    ExcludeAzureCliCredential = true,
+                    ExcludeVisualStudioCredential = false,
+                    ExcludeEnvironmentCredential = true,
+                    ExcludeAzurePowerShellCredential = true,
+                    ExcludeManagedIdentityCredential = false,
+                    ExcludeVisualStudioCodeCredential = true,
+                    ExcludeWorkloadIdentityCredential = true,
+                    ExcludeAzureDeveloperCliCredential = true,
+                    ExcludeInteractiveBrowserCredential = true,
+
+                    TenantId = configurationService.TenantId
+                });
+
+            }
+
+            /// <summary>
+            /// Override method specifying what authentication methods we support.
+            /// </summary>
+            /// <param name="authenticationMethod">The authentication method to inspect</param>
+            /// <returns>A flag indicating we support this authentication method</returns>
+            public override bool IsSupported(SqlAuthenticationMethod authenticationMethod)
+            {
+                return authenticationMethod == SqlAuthenticationMethod.ActiveDirectoryDefault;
+            }
+
+            /// <summary>
+            /// The override method to retrieve the SQL authentication token.
+            /// </summary>
+            /// <param name="parameters">The SQL authentication parameters</param>
+            /// <returns>The SQL authentication token</returns>
+            public override async Task<SqlAuthenticationToken> AcquireTokenAsync(SqlAuthenticationParameters parameters)
+            {
+                // retrieve access token from credential
+                AccessToken accessToken = await this.credential.GetTokenAsync(TokenRequestContext);
+
+                // and create SQL authentication token
+                return new SqlAuthenticationToken(accessToken.Token, accessToken.ExpiresOn);
+            }
         }
     }
 }

@@ -97,6 +97,11 @@ namespace DatabaseDeploy.Core.Configuration
         private string undoOutputFile = DefaultUndoFile;
 
         /// <summary>
+        /// The Entra ID tenant id.
+        /// </summary>
+        private string tenantId = null;
+
+        /// <summary>
         /// Gets or sets the name of the change log table.
         /// </summary>
         /// <value>The change log.</value>
@@ -348,6 +353,26 @@ namespace DatabaseDeploy.Core.Configuration
         }
 
         /// <summary>
+        /// Gets or sets the Azure Entra ID tenant id.
+        /// </summary>
+        /// <value>The tenant id.</value>
+        public string TenantId
+        {
+            get
+            {
+                return this.tenantId;
+            }
+
+            set
+            {
+                if (value != null && value.Trim() != string.Empty)
+                {
+                    this.tenantId = value;
+                }
+            }
+        }
+
+        /// <summary>
         /// Sets up the container to have the appropriate mappings for the appropriate database types.
         /// </summary>
         public void SetupDatabaseType()
@@ -388,20 +413,11 @@ namespace DatabaseDeploy.Core.Configuration
             builder.AppendLine(string.Format("SearchPattern: {0}", this.SearchPattern));
             builder.AppendLine(string.Format("FileNamePattern: {0}", this.FileNamePattern));
             builder.AppendLine(string.Format("UndoOutputFile: {0}", this.UndoOutputFile));
-            ////builder.AppendLine(string.Format("UseTransactions: {0}", this.UseTransactions));
+            builder.AppendLine(string.Format("TenantId: {0}", this.TenantId));
 
             string result = builder.ToString();
 
             return result;
         }
-
-        /////// <summary>
-        ///////   Gets or sets a value indicating whether or not transactions should be used for each script
-        /////// </summary>
-        /////// <remarks>
-        ///////   In my opinion, this option should not be used. Instead, put a transaction in the actual script file itself, as needed.
-        /////// </remarks>
-
-        ////public bool UseTransactions { get; set; }
     }
 }

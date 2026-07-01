@@ -31,7 +31,7 @@ We hope you find DbDeploy useful in your application.
 
 Full command line help information
 _____________________________________________________________________________________
-DatabaseDeploy 1.0.5714.30882
+DatabaseDeploy 1.1.0.0
 Copyright (c) DatabaseDeploy 2015.  This code is licensed under the Microsoft Pu
 blic License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
 
@@ -72,6 +72,9 @@ blic License (MS-PL).  http://www.opensource.org/licenses/MS-PL.
                                     match for scripts.
 
   -u, --UndoOutputFile              The file that will contain undo scripts.
+
+  -i, --TenantId                    The Entra ID tenant id for Azure Default
+                                    Credential, otherwise default
 
   --help                            Display this help screen.
 

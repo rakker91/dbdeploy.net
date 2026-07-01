@@ -82,15 +82,6 @@ namespace DatabaseDeploy.Console
         [Option('o', "RootDirectory", HelpText = "The path where dbdeploy should start running.", Required = false)]
         public string RootDirectory { get; set; }
 
-        /////// <summary>
-        ///////   Gets or sets a value indicating whether or not transactions should be used for each script
-        /////// </summary>
-        /////// <remarks>
-        ///////   In my opinion, this option should not be used. Instead, put a transaction in the actual script file itself, as needed.
-        /////// </remarks>
-        ////[Option('t', "UseTransactions", HelpText = "Whether or not transactions should be used.  Personally, I'd put them in the script.", Required = false)]
-        ////public bool UseTransactions { get; set; }
-
         /// <summary>
         ///     Gets or sets the schema to use as a prefix for the change log table.
         /// </summary>
@@ -118,5 +109,12 @@ namespace DatabaseDeploy.Console
         /// <value>The undo output file.</value>
         [Option('u', "UndoOutputFile", HelpText = "The file that will contain undo scripts.", Required = false)]
         public string UndoOutputFile { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the name of the Entra ID tenant id.
+        /// </summary>
+        /// <value>The change log.</value>
+        [Option('i', "TenantId", HelpText = "The tenant id for Entra ID credentials.", Required = false)]
+        public string TenantId { get; set; }
     }
 }

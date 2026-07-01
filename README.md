@@ -1,3 +1,22 @@
+# Willowglade dbdeploy.net
+A NuGet package is now available at http://nuget.org/packages/Willowglade.DbDeployNet2/
+
+This package is tailored for minimal Azure default credential authentication in connection strings is required. It **DOES NOT** remove deprecated password authentication support for SQL Server. MySQL and Oracle are unchanged from the original package.
+
+Azure default credential inclusion is as follows:
+
+* `ExcludeManagedIdentityCredential` is false
+* `ExcludeVisualStudioCredential` is false
+
+All other credential sources are excluded. A tenant id for the Azure default credential can be specified using the `-i`/`--TenantId` command line parameter.
+
+Other changes:
+
+* PostSharp has been removed
+* Extension packs for COM, Python, Ruby, Windoes Shell, BizTalk etc. have been removed
+* The `System.Data.SqlClient` package has been replaced with `Microsoft.Data.SqlClient` 5.2.3 for `Azure.Identity` support.
+
+
 # dbdeploy.net
 A NuGet package is now available at http://nuget.org/packages/DbDeployNet2/
 

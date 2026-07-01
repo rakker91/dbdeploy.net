@@ -1,4 +1,5 @@
 **Project Description**
+
 DbDeploy.Net 2 is a reimagining of DbDeploy.Net, which has atrophied.
 
 Based on DbDeploy, the popular Java version, DbDeploy.Net 2 is written using modern .net technologies and provides support for MsBuild and command line execution.
@@ -32,3 +33,9 @@ We plan on keeping this project active and making changes as needed based on sug
 Currently, this version is compatible with scripts made for other version of DbDeploy, but only Microsoft Sql Server is supported at this time!  If you'd like to help us out with other DBMS', please drop us a line.
 
 We appreciate your feedback.
+
+
+# Support for Azure default credential
+
+The Willowglade.DbDeployNet2 package was updated to allow use of Azure default credential with Azure.Identity.
+

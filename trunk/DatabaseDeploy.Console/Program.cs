@@ -109,6 +109,7 @@ namespace DatabaseDeploy.Console
                 ConfigurationService.UndoOutputFile = GetSetting<string>("UndoFile");
                 ConfigurationService.Schema = GetSetting<string>("Schema");
                 ConfigurationService.ChangeLog = GetSetting<string>("ChangeLog");
+                ConfigurationService.TenantId = GetSetting<string>("TenantId");
 
                 ParseCommandLine(args);
 
@@ -207,6 +208,10 @@ namespace DatabaseDeploy.Console
                     ConfigurationService.ChangeLog = string.IsNullOrEmpty(options.ChangeLog)
                                                          ? ConfigurationService.ChangeLog
                                                          : options.ChangeLog;
+
+                    ConfigurationService.TenantId = string.IsNullOrEmpty(options.TenantId)
+                                                         ? ConfigurationService.TenantId
+                                                         : options.TenantId;
                 }
             }
         }

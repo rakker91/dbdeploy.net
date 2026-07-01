@@ -72,14 +72,6 @@ namespace DatabaseDeploy.Core.Configuration
         /// <value>The root directory.</value>
         string RootDirectory { get; set; }
 
-        /////// <summary>
-        ///////   Gets or sets a value indicating whether or not transactions should be used for each script
-        /////// </summary>
-        /////// <remarks>
-        ///////   In my opinion, this option should not be used. Instead, put a transaction in the actual script file itself, as needed.
-        /////// </remarks>
-        ////bool UseTransactions { get; set; }
-
         /// <summary>
         /// Gets or sets the schema to use as a prefix for the change log table.
         /// </summary>
@@ -103,6 +95,12 @@ namespace DatabaseDeploy.Core.Configuration
         /// </summary>
         /// <value>The undo output file.</value>
         string UndoOutputFile { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the Entra ID tenant id.
+        /// </summary>
+        /// <value>The Entra ID tenant id.</value>
+        string TenantId { get; set; }
 
         /// <summary>
         /// Gets the database service that should be used for database operations.
